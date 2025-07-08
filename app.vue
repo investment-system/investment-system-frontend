@@ -8,6 +8,7 @@
 <style>
 
 :root {
+
   --primary-bg: #FDFCF9;
   --secondary-bg: #F5F5F5;
   --card-bg: #F1F1F1;
@@ -22,6 +23,18 @@
   --cancel-button-bg: #DDDDDD;
   --primary-text-color: #2C2C2C;
   --secondary-text-color: #666666;
+
+
+  --heading-1: 40px;
+  --heading-2: 32px;
+  --heading-3: 24px;
+  --heading-4: 20px;
+  --Body-Text: 16px;
+  --small-Text: 14px;
+  --text-button-Text: 16px;
+  --text-button-small: 14px;
+  --placeholder-text: 16px;
+  --label-text: 14px;
 
 }
 
