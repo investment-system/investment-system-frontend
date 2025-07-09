@@ -18,7 +18,7 @@ const links = [
     <nav class="nav-container">
       <NuxtLink to="/" class="nav-logo">
 
-        <img src="../public/images/logo.png" class="logo" alt="koprasi-logo">
+        <img src="./images/logo.png" class="logo" alt="koprasi-logo">
 
       </NuxtLink>
 
@@ -96,14 +96,14 @@ const links = [
       transition: all 0.3s ease-in-out;
 
       li a {
-        color: var(--primary-text-color);
+        color: var(--primary-text-color) !important;
         text-decoration: none;
         font-weight: 500;
         transition: color 0.3s;
 
         &:hover,
         &.active-link {
-          color: var(--accent-color);
+          color: var(--accent-color) !important;
         }
       }
     }
