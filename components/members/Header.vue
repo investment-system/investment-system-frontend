@@ -18,7 +18,7 @@ const handleLogout = () => {
   router.push('/login')
 }
 
-const logo = "./images/logo.png"
+const logo = new URL('/images/logo.png', import.meta.url).href
 
 </script>
 
