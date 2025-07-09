@@ -6,10 +6,10 @@ const isOpen = ref(false)
 const router = useRouter()
 
 const links = [
-  { id: 1, link: '/', label: 'Home' },
-  { id: 2, link: '/', label: 'Change Password' },
-  { id: 3, link: '/member/profile', label: 'Profile' },
-  { id: 4, link: '/', label: 'Logout' }
+  { id: 1, link: '/', label: 'Home', icon: 'home' },
+  { id: 2, link: '/', label: 'Change Password', icon: 'lock' },
+  { id: 3, link: '/member/profile', label: 'Profile', icon: 'user' },
+  { id: 4, link: '/', label: 'Logout', icon: 'log-out' }
 ]
 
 const handleLogout = () => {
@@ -17,7 +17,7 @@ const handleLogout = () => {
   router.push('/login')
 }
 
-const logo = "./images/logo.png"
+const logo = "/images/logo.png"
 
 </script>
 
