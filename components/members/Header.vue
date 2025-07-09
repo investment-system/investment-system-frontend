@@ -22,7 +22,7 @@ const handleLogout = () => {
   <header class="main-header">
     <nav class="nav-container">
       <NuxtLink to="/public" class="nav-logo">
-        <img src="/images/logo.png" class="logo" alt="koprasi-logo" />
+        <img src="./images/logo.png" class="logo" alt="koprasi-logo" />
       </NuxtLink>
 
       <button
