@@ -18,7 +18,7 @@ const links = [
     <nav class="nav-container">
       <NuxtLink to="/" class="nav-logo">
 
-        <img src="./images/logo.png" class="logo" alt="koprasi-logo">
+        <img src="/images/logo.png" class="logo" alt="koprasi-logo">
 
       </NuxtLink>
 
