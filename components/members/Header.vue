@@ -8,7 +8,7 @@ const router = useRouter()
 const links = [
   { id: 1, link: '/', label: 'Home' },
   { id: 2, link: '/', label: 'Change Password' },
-  { id: 3, link: '/', label: 'Profile' },
+  { id: 3, link: '/member/profile', label: 'Profile' },
   { id: 4, link: '/', label: 'Logout' }
 ]
 
