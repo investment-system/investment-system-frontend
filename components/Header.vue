@@ -5,9 +5,9 @@ const isOpen = ref(false)
 
 const links = [
   {id: 1, link: '/', label: 'Home'},
-  {id: 2, link: '/change-password', label: 'Change Password'},
-  {id: 3, link: '/profile', label: 'Profile'},
-  {id: 4, link: '/logout', label: 'Logout'},
+  {id: 2, link: '/', label: 'Change Password'},
+  {id: 3, link: '/', label: 'Profile'},
+  {id: 4, link: '/', label: 'Logout'},
 ]
 
 </script>
@@ -71,7 +71,7 @@ const links = [
         display: block;
         width: 25px;
         height: 3px;
-        background-color: #333;
+        background-color: var(--primary-text-color);
         transition: 0.3s;
 
         &.open:nth-child(1) {
@@ -96,19 +96,18 @@ const links = [
       transition: all 0.3s ease-in-out;
 
       li a {
-        color: #555;
+        color: var(--primary-text-color);
         text-decoration: none;
         font-weight: 500;
         transition: color 0.3s;
 
         &:hover,
         &.active-link {
-          color: #007bff;
+          color: var(--accent-color);
         }
       }
     }
 
-    // Mobile view
     @media (max-width: 768px) {
       .hamburger {
         display: flex;
@@ -118,8 +117,8 @@ const links = [
         flex-direction: column;
         width: 100%;
         display: none;
-        padding-top: 1rem;
-
+        padding: 1rem;
+        background: var(--card-bg);
         &.open {
           display: flex;
         }
