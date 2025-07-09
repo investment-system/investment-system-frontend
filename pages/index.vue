@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <Header/>
+  <MembersHeader />
 </template>
 
 <style scoped>
