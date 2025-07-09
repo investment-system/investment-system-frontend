@@ -36,6 +36,30 @@
   --placeholder-text: 16px;
   --label-text: 14px;
 
+  /* reset.scss */
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    line-height: 1;
+    font-family: sans-serif;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+
 }
 
 
