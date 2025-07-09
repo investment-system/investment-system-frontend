@@ -1,23 +1,24 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
 
 const isOpen = ref(false)
 const router = useRouter()
 
 const links = [
-  { id: 1, link: '/', label: 'Home', icon: 'home' },
-  { id: 2, link: '/', label: 'Change Password', icon: 'lock' },
-  { id: 3, link: '/member/profile', label: 'Profile', icon: 'user' },
-  { id: 4, link: '/', label: 'Logout', icon: 'log-out' }
+  {id: 1, link: '/', label: 'Home', icon: 'i-lucide-home'},
+  {id: 2, link: '/', label: 'Change Password', icon: 'i-lucide-lock'},
+  {id: 3, link: '/member/profile', label: 'Profile', icon: 'i-lucide-user'},
+  {id: 4, link: '/', label: 'Logout', icon: 'i-lucide-log-out'}
 ]
+
 
 const handleLogout = () => {
   console.log('Logging out...')
   router.push('/login')
 }
 
-const logo = "/images/logo.png"
+const logo = "./images/logo.png"
 
 </script>
 
@@ -25,7 +26,7 @@ const logo = "/images/logo.png"
   <header class="main-header">
     <nav class="nav-container">
       <a href="" class="nav-logo">
-        <img :src="logo" class="logo" alt="Koperasi-logo" />
+        <img :src="logo" class="logo" alt="Koperasi-logo"/>
       </a>
 
       <button
@@ -42,10 +43,16 @@ const logo = "/images/logo.png"
       <ul :class="['nav-links', { open: isOpen }]">
         <li v-for="item in links" :key="item.id">
           <template v-if="item.label === 'Logout'">
+
             <a href="#" @click.prevent="handleLogout">Logout</a>
           </template>
           <template v-else>
-            <NuxtLink :to="item.link" active-class="active-link">{{ item.label }}</NuxtLink>
+
+            <NuxtLink :to="item.link" active-class="active-link">
+              <UIcon :name="item.icon" class="icon"/>
+              {{ item.label }}
+            </NuxtLink>
+
           </template>
         </li>
       </ul>
@@ -118,6 +125,13 @@ const logo = "/images/logo.png"
         text-decoration: none;
         font-weight: 500;
         transition: color 0.3s;
+
+        .icon {
+          margin-right: 5px;
+          width: 15px;
+          height: 15px;
+          align-items: start;
+        }
 
         &:hover,
         &.active-link {
