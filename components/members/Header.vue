@@ -18,7 +18,7 @@ const handleLogout = () => {
   router.push('/login')
 }
 
-const logo = "./images/logo.png";
+const logo = "/images/logo.png";
 
 </script>
 

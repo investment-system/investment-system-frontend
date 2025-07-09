@@ -18,12 +18,15 @@
   --danger-color: #D32F2F;
   --button-bg: #F5B301;
   --hover-button-bg: #FFE599;
+  --button-disabled-bg: #FFE599;
   --hover-text-color: #2C2C2C;
   --input-field-bg: #EBEBEB;
   --cancel-button-bg: #DDDDDD;
   --primary-text-color: #2C2C2C;
   --secondary-text-color: #666666;
+  --error-text:#D32F2F;
 
+  --linear-gradient-bg: linear-gradient(135deg, #F5B301 0%, #FFC107 40%, #E0C281 70%, #FFE599 100%);
 
   --heading-1: 40px;
   --heading-2: 32px;
@@ -36,7 +39,10 @@
   --placeholder-text: 16px;
   --label-text: 14px;
 
-  /* reset.scss */
+
+  --transition: all 0.3s ease-in-out;
+
+
   *,
   *::before,
   *::after {
