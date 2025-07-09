@@ -16,13 +16,16 @@ const handleLogout = () => {
   console.log('Logging out...')
   router.push('/login')
 }
+
+const logo = "/images/logo.png"
+
 </script>
 
 <template>
   <header class="main-header">
     <nav class="nav-container">
       <a href="" class="nav-logo">
-        <img src="public/images/logo.png" class="logo" alt="Koperasi-logo" />
+        <img :src="logo" class="logo" alt="Koperasi-logo" />
       </a>
 
       <button
