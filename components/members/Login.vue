@@ -266,6 +266,7 @@ const handleLogin = () => {
     .image-container {
       width: 100%;
       max-width: 100%;
+      min-height: 450px;
       height: auto;
     }
 
@@ -284,6 +285,7 @@ const handleLogin = () => {
 
     .image-container img {
       max-width: 90%;
+      margin: 30px auto;
     }
   }
 
