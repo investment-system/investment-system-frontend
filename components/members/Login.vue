@@ -50,7 +50,7 @@ const handleLogin = () => {
 
           <p class="error" v-if="error">{{ error }}</p>
 
-          <button type="submit" :disabled="loading">
+          <button type="submit" class="login-btn" :disabled="loading">
             {{ loading ? 'Logging in...' : 'Login' }}
           </button>
         </form>
@@ -151,11 +151,6 @@ const handleLogin = () => {
         margin: 48px auto 0 auto;
         transition: var(--transition);
 
-        &:hover {
-          background-color: var(--button-hover-bg) !important;
-          color: var(--primary-text-hover);
-        }
-
         &:disabled {
           background-color: var(--button-disabled-bg);
           cursor: not-allowed;
@@ -163,6 +158,11 @@ const handleLogin = () => {
         }
       }
     }
+  }
+
+  .login-btn:hover {
+    background: var(--hover-button-bg);
+    color: var(--primary-text-hover);
   }
 
   .image-container {
