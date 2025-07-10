@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { z } from 'zod'
+import {reactive, ref} from 'vue'
+import {z} from 'zod'
 
 const loginQuestions = [
   {
@@ -8,14 +8,14 @@ const loginQuestions = [
     label: 'Email',
     type: 'email',
     placeholder: 'Enter your email',
-    validation: z.string().email({ message: 'Please enter a valid email address' })
+    validation: z.string().email({message: 'Please enter a valid email address'})
   },
   {
     id: 'password',
     label: 'Password',
     type: 'password',
     placeholder: 'Enter your password',
-    validation: z.string().min(6, { message: 'Password must be at least 6 characters' })
+    validation: z.string().min(6, {message: 'Password must be at least 6 characters'})
   }
 ]
 
@@ -157,6 +157,7 @@ const handleLogin = () => {
         max-width: 350px;
         height: 48px;
         margin: 0 auto;
+        outline: none;
       }
 
       .error {
