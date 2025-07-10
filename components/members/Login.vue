@@ -117,11 +117,11 @@ const handleLogin = () => {
       }
 
       input {
-        padding: 0.75rem;
+        padding: 15px;
         background-color: var(--input-field-bg);
         border-radius: 8px;
         border: none;
-        font-size: 1rem;
+        font-size: var(--font-size-small);
         transition: border-color 0.3s;
         width: 100%;
         max-width: 350px;
@@ -132,17 +132,17 @@ const handleLogin = () => {
       .error {
         color: var(--error-text);
         font-size: var(--small-font-size);
-        margin-bottom: 1rem;
+        margin-bottom: 15px;
         text-align: center;
       }
 
       button {
         background-color: var(--button-bg);
         color: var(--primary-text-color);
-        padding: 0.75rem;
+        padding: 10px;
         border: none;
         border-radius: 8px;
-        font-size: 1rem;
+        font-size: var(--text-button-Text);
         font-weight: bold;
         cursor: pointer;
         width: 100%;
@@ -172,7 +172,7 @@ const handleLogin = () => {
     max-width: 480px;
     height: 460px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 15px;
     text-align: center;
     border-radius: 25px;
 
@@ -193,10 +193,6 @@ const handleLogin = () => {
   }
 
   @media (max-width: 899px) {
-
-    section {
-      background: var(--button-bg);
-    }
 
     .container {
       flex-direction: column;
@@ -221,15 +217,37 @@ const handleLogin = () => {
       width: 90%;
     }
 
+    .login-form h2,
+    .image-container h3 {
+      margin: 20px auto;
+    }
+
     .image-container img {
       max-width: 90%;
     }
   }
 
   @media (max-width: 480px) {
-    .image-container h3 {
-      font-size: 1rem;
+
+    .login-container {
+      align-items: center;
+      background: var(--primary-bg) !important;
+      padding: 0;
     }
+
+    .image-container h3 {
+      font-size: var(--Body-Text);
+    }
+  }
+}
+
+
+@media (max-width: 899px) {
+
+  .login-container {
+    align-items: center;
+    background: var(--primary-bg) !important;
+    padding: 0;
   }
 }
 </style>
