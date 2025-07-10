@@ -1,25 +1,59 @@
 <script setup lang="ts">
-import {ref} from 'vue'
+import { reactive, ref } from 'vue'
+import { z } from 'zod'
 
-const email = ref('')
-const password = ref('')
-const error = ref('')
+const loginQuestions = [
+  {
+    id: 'email',
+    label: 'Email',
+    type: 'email',
+    placeholder: 'Enter your email',
+    validation: z.string().email({ message: 'Please enter a valid email address' })
+  },
+  {
+    id: 'password',
+    label: 'Password',
+    type: 'password',
+    placeholder: 'Enter your password',
+    validation: z.string().min(6, { message: 'Password must be at least 6 characters' })
+  }
+]
+
+const loginSchema = z.object(
+    Object.fromEntries(loginQuestions.map(q => [q.id, q.validation]))
+)
+
+const form = reactive(Object.fromEntries(loginQuestions.map(q => [q.id, ''])))
+const fieldErrors = ref<Record<string, string>>({})
+const generalError = ref('')
 const loading = ref(false)
 
 const handleLogin = () => {
-  error.value = ''
-  loading.value = true
+  fieldErrors.value = {}
+  generalError.value = ''
 
+  const result = loginSchema.safeParse(form)
+
+  if (!result.success) {
+    const formatted = result.error.format()
+    for (const q of loginQuestions) {
+      const error = formatted[q.id]?._errors?.[0]
+      if (error) fieldErrors.value[q.id] = error
+    }
+    return
+  }
+
+  // Simulated login logic
+  loading.value = true
   setTimeout(() => {
     loading.value = false
-    if (email.value === 'admin@example.com' && password.value === 'password') {
+    if (form.email === 'admin@example.com' && form.password === 'password') {
       alert('Login successful!')
     } else {
-      error.value = 'Invalid email or password.'
+      generalError.value = 'Invalid email or password.'
     }
   }, 1000)
 }
-
 
 </script>
 
@@ -30,30 +64,25 @@ const handleLogin = () => {
         <h2>Welcome back to Koperasi Masjid</h2>
 
         <form @submit.prevent="handleLogin">
-          <label for="email">Email</label>
-          <input
-              type="email"
-              id="email"
-              v-model="email"
-              required
-              placeholder="Enter your email"
-          />
+          <div v-for="q in loginQuestions" :key="q.id">
+            <label :for="q.id">{{ q.label }}</label>
+            <input
+                :type="q.type"
+                :id="q.id"
+                v-model="form[q.id]"
+                :placeholder="q.placeholder"
+                required
+            />
+            <p class="error" v-if="fieldErrors[q.id]">{{ fieldErrors[q.id] }}</p>
+          </div>
 
-          <label for="password">Password</label>
-          <input
-              type="password"
-              id="password"
-              v-model="password"
-              required
-              placeholder="Enter your password"
-          />
-
-          <p class="error" v-if="error">{{ error }}</p>
+          <p class="error" v-if="generalError">{{ generalError }}</p>
 
           <button type="submit" class="login-btn" :disabled="loading">
             {{ loading ? 'Logging in...' : 'Login' }}
           </button>
         </form>
+
       </div>
 
       <div class="image-container">
@@ -117,6 +146,7 @@ const handleLogin = () => {
       }
 
       input {
+        display: block;
         padding: 15px;
         background-color: var(--input-field-bg);
         border-radius: 8px;
