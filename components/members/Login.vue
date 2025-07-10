@@ -80,7 +80,7 @@ const handleLogin = () => {
     justify-content: center;
     align-items: center;
     background: var(--primary-bg);
-    max-width: 1080px;
+    max-width: 1020px;
     margin: 0 auto;
     height: 500px;
     border-radius: 50px;
@@ -170,7 +170,7 @@ const handleLogin = () => {
     background: var(--input-field-bg);
     width: 100%;
     max-width: 480px;
-    height: 450px;
+    height: 460px;
     margin: 0 auto;
     padding: 1rem;
     text-align: center;
