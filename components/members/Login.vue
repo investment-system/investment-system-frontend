@@ -20,10 +20,10 @@ const loginQuestions = [
 ]
 
 const loginSchema = z.object(
-    Object.fromEntries(loginQuestions.map(q => [q.id, q.validation]))
+    Object.fromEntries(loginQuestions.map(question => [question.id, question.validation]))
 )
 
-const form = reactive(Object.fromEntries(loginQuestions.map(q => [q.id, ''])))
+const form = reactive(Object.fromEntries(loginQuestions.map(question => [question.id, ''])))
 const fieldErrors = ref<Record<string, string>>({})
 const generalError = ref('')
 const loading = ref(false)
@@ -36,14 +36,13 @@ const handleLogin = () => {
 
   if (!result.success) {
     const formatted = result.error.format()
-    for (const q of loginQuestions) {
-      const error = formatted[q.id]?._errors?.[0]
-      if (error) fieldErrors.value[q.id] = error
+    for (const question of loginQuestions) {
+      const error = formatted[question.id]?._errors?.[0]
+      if (error) fieldErrors.value[question.id] = error
     }
     return
   }
 
-  // Simulated login logic
   loading.value = true
   setTimeout(() => {
     loading.value = false
@@ -64,19 +63,25 @@ const handleLogin = () => {
         <h2>Welcome back to Koperasi Masjid</h2>
 
         <form @submit.prevent="handleLogin">
-          <div v-for="q in loginQuestions" :key="q.id">
-            <label :for="q.id">{{ q.label }}</label>
+          <div v-for="question in loginQuestions" :key="question.id">
+            <label :for="question.id">{{ question.label }}</label>
             <input
-                :type="q.type"
-                :id="q.id"
-                v-model="form[q.id]"
-                :placeholder="q.placeholder"
+                :type="question.type"
+                :id="question.id"
+                v-model="form[question.id]"
+                :placeholder="question.placeholder"
                 required
             />
-            <p class="error" v-if="fieldErrors[q.id]">{{ fieldErrors[q.id] }}</p>
+            <p class="error" v-if="fieldErrors[question.id]">{{ fieldErrors[question.id] }}</p>
           </div>
 
           <p class="error" v-if="generalError">{{ generalError }}</p>
+
+          <div class="links">
+
+            <a href="">Sign Up </a> or <a href=""> Forgot Password? </a>
+
+          </div>
 
           <button type="submit" class="login-btn" :disabled="loading">
             {{ loading ? 'Logging in...' : 'Login' }}
@@ -143,6 +148,7 @@ const handleLogin = () => {
         margin: 0 auto;
         display: flex;
         align-items: center;
+        font-size: var(--label-text);
       }
 
       input {
@@ -151,7 +157,7 @@ const handleLogin = () => {
         background-color: var(--input-field-bg);
         border-radius: 8px;
         border: none;
-        font-size: var(--font-size-small);
+        font-size: var(--label-text);
         transition: border-color 0.3s;
         width: 100%;
         max-width: 350px;
@@ -162,9 +168,32 @@ const handleLogin = () => {
 
       .error {
         color: var(--error-text);
-        font-size: var(--small-font-size);
+        font-size: var(--label-text);
         margin-bottom: 15px;
         text-align: center;
+      }
+
+      .links {
+        display: flex;
+        width: 100%;
+        max-width: 350px;
+        gap: 5px;
+        height: 48px;
+        margin: 0 auto;
+        align-items: center;
+        justify-content: start;
+        font-size: var(--placeholder-text);
+        color: var(--secondary-text-color);
+
+        a {
+          text-decoration: none;
+
+          &:link:hover {
+            text-decoration: underline;
+          }
+
+        }
+
       }
 
       button {
@@ -179,7 +208,7 @@ const handleLogin = () => {
         width: 100%;
         max-width: 350px;
         height: 48px;
-        margin: 48px auto 0 auto;
+        margin: 0 auto;
         transition: var(--transition);
 
         &:disabled {
