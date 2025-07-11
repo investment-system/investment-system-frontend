@@ -4,6 +4,7 @@
 
 <template>
   <MemberHeader/>
+  <Footer/>
 </template>
 
 <style scoped>

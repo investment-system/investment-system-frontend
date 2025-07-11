@@ -3,6 +3,7 @@
 </script>
 
 <template>
+  <MemberHeader/>
   <Footer/>
 </template>
 
