@@ -101,7 +101,7 @@ const handleLogin = () => {
       </div>
 
       <div class="image-container">
-        <img src="public/images/investment-icon-png.png" alt="investment"/>
+        <img src="/images/investment-icon-png.png" alt="investment"/>
         <h3 class="text">
           Your trusted platform for secure and responsible Share.
         </h3>
