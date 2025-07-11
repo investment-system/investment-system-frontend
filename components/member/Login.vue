@@ -2,7 +2,6 @@
 import { reactive, ref } from 'vue'
 import { z } from 'zod'
 
-// Define your login form questions and validation rules
 const loginQuestions = [
   {
     id: 'email',
@@ -20,18 +19,15 @@ const loginQuestions = [
   }
 ]
 
-// Generate Zod schema dynamically
 const loginSchema = z.object(
     Object.fromEntries(loginQuestions.map(question => [question.id, question.validation]))
 )
 
-// Form state and error handling
 const form = reactive(Object.fromEntries(loginQuestions.map(question => [question.id, ''])))
 const fieldErrors = ref<Record<string, string>>({})
 const generalError = ref('')
 const loading = ref(false)
 
-// Handle login with validation
 const handleLogin = () => {
   fieldErrors.value = {}
   generalError.value = ''
@@ -89,7 +85,7 @@ const handleLogin = () => {
 
           <div class="links">
 
-            <a href="">Sign Up </a> or <a href=""> Forgot Password? </a>
+            <NuxtLink to="/member/signup">Sign Up</NuxtLink> or <a href=""> Forgot Password? </a>
 
           </div>
 
@@ -165,13 +161,13 @@ const handleLogin = () => {
         display: block;
         padding: 15px;
         background-color: var(--input-field-bg);
-        border-radius: 8px;
+        border-radius: 6px;
         border: none;
         font-size: var(--label-text);
         transition: border-color 0.3s;
         width: 100%;
         max-width: 350px;
-        height: 48px;
+        height: 36px;
         margin: 0 auto;
         outline: none;
       }
@@ -211,13 +207,13 @@ const handleLogin = () => {
         color: var(--primary-text-color);
         padding: 10px;
         border: none;
-        border-radius: 8px;
+        border-radius: 6px;
         font-size: var(--text-button-Text);
-        font-weight: bold;
+        font-weight: 600;
         cursor: pointer;
         width: 100%;
         max-width: 350px;
-        height: 48px;
+        height: 36px;
         margin: 0 auto;
         transition: var(--transition);
 

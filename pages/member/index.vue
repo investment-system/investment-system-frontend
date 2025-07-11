@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <MemberLogin/>
+  <Footer/>
 </template>
 
 <style scoped>
