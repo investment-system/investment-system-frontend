@@ -312,7 +312,7 @@ const handleLogin = () => {
     }
 
     .image-container h3 {
-      font-size: var(--Body-Text);
+      font-size: var(--body-text);
     }
   }
 }

@@ -32,8 +32,8 @@
   --heading-2: 32px;
   --heading-3: 24px;
   --heading-4: 20px;
-  --Body-Text: 16px;
-  --small-Text: 14px;
+  --body-text: 16px;
+  --small-text: 14px;
   --text-button-Text: 16px;
   --text-button-small: 14px;
   --placeholder-text: 14px;
