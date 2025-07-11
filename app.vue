@@ -36,7 +36,7 @@
   --small-Text: 14px;
   --text-button-Text: 16px;
   --text-button-small: 14px;
-  --placeholder-text: 16px;
+  --placeholder-text: 14px;
   --label-text: 14px;
 
   --transition: all 0.3s ease-in-out;

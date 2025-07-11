@@ -144,7 +144,7 @@ const handleLogin = () => {
       label {
         width: 100%;
         max-width: 350px;
-        height: 48px;
+        height: 36px;
         margin: 0 auto;
         display: flex;
         align-items: center;
@@ -178,11 +178,11 @@ const handleLogin = () => {
         width: 100%;
         max-width: 350px;
         gap: 5px;
-        height: 48px;
+        height: 36px;
         margin: 0 auto;
         align-items: center;
         justify-content: start;
-        font-size: var(--placeholder-text);
+        font-size: var(--text-button-small);
         color: var(--secondary-text-color);
 
         a {
@@ -302,7 +302,6 @@ const handleLogin = () => {
     }
   }
 }
-
 
 @media (max-width: 899px) {
 
