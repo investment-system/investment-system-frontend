@@ -17,6 +17,7 @@
     "zod": "^3.25.3"
   },
   "devDependencies": {
+    "nuxi": "^3.25.1",
     "sass": "^1.89.2",
     "sass-loader": "^16.0.5"
   }
