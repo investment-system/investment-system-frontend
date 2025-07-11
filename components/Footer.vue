@@ -15,10 +15,6 @@ const currentYear = new Date().getFullYear()
 
 <style scoped>
 .footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   text-align: center;
   background-color: var(--card-bg);
   font-size: var(--body-text);

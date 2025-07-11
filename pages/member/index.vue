@@ -1,10 +1,11 @@
 <script setup lang="ts">
 
+import MembersOverviewSection from "~/components/member/MembersOverviewSection.vue";
 </script>
 
 <template>
   <MemberHeader/>
-  <Footer/>
+  <MembersOverviewSection/>
 </template>
 
 <style scoped>
