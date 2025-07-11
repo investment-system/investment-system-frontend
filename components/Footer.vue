@@ -31,7 +31,7 @@ const currentYear = new Date().getFullYear()
 
 .link {
   text-decoration: none;
-
+  transition: var(--transition);
 }
 
 .link:hover {
