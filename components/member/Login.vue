@@ -2,7 +2,6 @@
 import { reactive, ref } from 'vue'
 import { z } from 'zod'
 
-// Define your login form questions and validation rules
 const loginQuestions = [
   {
     id: 'email',
@@ -20,18 +19,15 @@ const loginQuestions = [
   }
 ]
 
-// Generate Zod schema dynamically
 const loginSchema = z.object(
     Object.fromEntries(loginQuestions.map(question => [question.id, question.validation]))
 )
 
-// Form state and error handling
 const form = reactive(Object.fromEntries(loginQuestions.map(question => [question.id, ''])))
 const fieldErrors = ref<Record<string, string>>({})
 const generalError = ref('')
 const loading = ref(false)
 
-// Handle login with validation
 const handleLogin = () => {
   fieldErrors.value = {}
   generalError.value = ''
