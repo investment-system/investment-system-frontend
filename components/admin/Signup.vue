@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  Members
+
 </template>
 
 <style scoped>

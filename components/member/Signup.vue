@@ -70,7 +70,7 @@ const handleLogin = () => {
     <div class="container">
       <div class="login-form">
 
-        <h2>Welcome back to Koperasi Masjid</h2>
+        <h2>Welcome to Koperasi Masjid Members system</h2>
 
         <form @submit.prevent="handleLogin">
           <div v-for="question in loginQuestions" :key="question.id">
