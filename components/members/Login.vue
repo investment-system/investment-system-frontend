@@ -61,6 +61,7 @@ const handleLogin = () => {
   <section class="login-container">
     <div class="container">
       <div class="login-form">
+
         <h2>Welcome back to Koperasi Masjid</h2>
 
         <form @submit.prevent="handleLogin">
@@ -92,7 +93,7 @@ const handleLogin = () => {
       </div>
 
       <div class="image-container">
-        <img src="/images/investment-icon-png.png" alt="investment"/>
+        <img src="./images/investment-icon-png.png" alt="investment"/>
         <h3 class="text">
           Your trusted platform for secure and responsible Share.
         </h3>
