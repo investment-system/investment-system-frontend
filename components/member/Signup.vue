@@ -2,8 +2,7 @@
 import { reactive, ref } from 'vue'
 import { z } from 'zod'
 
-// Define your login form questions and validation rules
-const loginQuestions = [
+const signupQuestions = [
   {
     id: 'email',
     label: 'Email',
@@ -17,48 +16,52 @@ const loginQuestions = [
     type: 'password',
     placeholder: 'Enter your password',
     validation: z.string().min(6, { message: 'Password must be at least 6 characters' })
+  },
+  {
+    id: 'confirmPassword',
+    label: 'Confirm Password',
+    type: 'password',
+    placeholder: 'Re-enter your password',
+    validation: z.string().min(6, { message: 'Confirm Password must be at least 6 characters' }) // base validation
   }
 ]
 
-// Generate Zod schema dynamically
-const loginSchema = z.object(
-    Object.fromEntries(loginQuestions.map(question => [question.id, question.validation]))
+const signupSchema = z.object(
+    Object.fromEntries(signupQuestions.map(question => [question.id, question.validation]))
 )
 
-// Form state and error handling
-const form = reactive(Object.fromEntries(loginQuestions.map(question => [question.id, ''])))
+const form = reactive(Object.fromEntries(signupQuestions.map(question => [question.id, ''])))
 const fieldErrors = ref<Record<string, string>>({})
 const generalError = ref('')
 const loading = ref(false)
 
-// Handle login with validation
 const handleLogin = () => {
   fieldErrors.value = {}
   generalError.value = ''
 
   console.log('Form values before validation:', JSON.stringify(form, null, 2)) // 👈
 
-  const result = loginSchema.safeParse(form)
+  const result = signupSchema.safeParse(form)
 
   if (!result.success) {
-    console.log('Validation errors:', result.error.format()) // 👈
+    console.log('Validation errors:', result.error.format())
     const formatted = result.error.format()
-    for (const question of loginQuestions) {
+    for (const question of signupQuestions) {
       const error = formatted[question.id]?._errors?.[0]
       if (error) fieldErrors.value[question.id] = error
     }
     return
   }
 
-  console.log('Validation passed! Proceeding with login...') // 👈
+  console.log('Validation passed! Proceeding with signup...') // 👈
 
   loading.value = true
   setTimeout(() => {
     loading.value = false
     if (form.email === 'admin@example.com' && form.password === 'password') {
-      alert('Login successful!')
+      alert('Signup successful!')
     } else {
-      alert('Login not successful!')
+      alert('Signup not successful!')
       generalError.value = 'Invalid email or password.'
     }
   }, 1000)
@@ -66,14 +69,14 @@ const handleLogin = () => {
 </script>
 
 <template>
-  <section class="login-container">
+  <section class="signup-container">
     <div class="container">
-      <div class="login-form">
+      <div class="signup-form">
 
         <h2>Welcome to Koperasi Masjid Members system</h2>
 
         <form @submit.prevent="handleLogin">
-          <div v-for="question in loginQuestions" :key="question.id">
+          <div v-for="question in signupQuestions" :key="question.id">
             <label :for="question.id">{{ question.label }}</label>
             <input
                 :type="question.type"
@@ -89,12 +92,13 @@ const handleLogin = () => {
 
           <div class="links">
 
-            <NuxtLink to="/member/signup">Sign Up</NuxtLink> or <a href=""> Forgot Password? </a>
+            Already have an account
+            <NuxtLink to="/member/login">Login ?</NuxtLink>
 
           </div>
 
-          <button type="submit" class="login-btn" :disabled="loading">
-            {{ loading ? 'Logging in...' : 'Login' }}
+          <button type="submit" class="signup-btn" :disabled="loading">
+            {{ loading ? 'Logging in...' : 'Signup' }}
           </button>
         </form>
 
@@ -112,7 +116,7 @@ const handleLogin = () => {
 </template>
 
 <style scoped lang="scss">
-.login-container {
+.signup-container {
   align-items: center;
   min-height: 100vh;
   background: var(--linear-gradient-bg);
@@ -132,7 +136,7 @@ const handleLogin = () => {
     padding: 0;
   }
 
-  .login-form {
+  .signup-form {
     width: 100%;
     max-width: 480px;
     height: auto;
@@ -230,7 +234,7 @@ const handleLogin = () => {
     }
   }
 
-  .login-btn:hover {
+  .signup-btn:hover {
     background: var(--hover-button-bg);
     color: var(--primary-text-hover);
   }
@@ -272,7 +276,7 @@ const handleLogin = () => {
       margin: 40px 0;
     }
 
-    .login-form,
+    .signup-form,
     .image-container {
       width: 100%;
       max-width: 100%;
@@ -280,15 +284,15 @@ const handleLogin = () => {
       height: auto;
     }
 
-    .login-form h2,
-    .login-form form label,
-    .login-form form input,
-    .login-form form button,
+    .signup-form h2,
+    .signup-form form label,
+    .signup-form form input,
+    .signup-form form button,
     .image-container h3 {
       width: 90%;
     }
 
-    .login-form h2,
+    .signup-form h2,
     .image-container h3 {
       margin: 20px auto;
     }
@@ -301,7 +305,7 @@ const handleLogin = () => {
 
   @media (max-width: 480px) {
 
-    .login-container {
+    .signup-container {
       align-items: center;
       background: var(--primary-bg) !important;
       padding: 0;
@@ -315,7 +319,7 @@ const handleLogin = () => {
 
 @media (max-width: 899px) {
 
-  .login-container {
+  .signup-container {
     align-items: center;
     background: var(--primary-bg) !important;
     padding: 0;
