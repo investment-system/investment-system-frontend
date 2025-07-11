@@ -49,6 +49,7 @@ const handleLogin = () => {
     if (form.email === 'admin@example.com' && form.password === 'password') {
       alert('Login successful!')
     } else {
+      alert('Login not successful!')
       generalError.value = 'Invalid email or password.'
     }
   }, 1000)
