@@ -1,40 +1,47 @@
 <script setup lang="ts">
-import {reactive, ref} from 'vue'
-import {z} from 'zod'
+import { reactive, ref } from 'vue'
+import { z } from 'zod'
 
+// Define your login form questions and validation rules
 const loginQuestions = [
   {
     id: 'email',
     label: 'Email',
     type: 'email',
     placeholder: 'Enter your email',
-    validation: z.string().email({message: 'Please enter a valid email address'})
+    validation: z.string().email({ message: 'Please enter a valid email address' })
   },
   {
     id: 'password',
     label: 'Password',
     type: 'password',
     placeholder: 'Enter your password',
-    validation: z.string().min(6, {message: 'Password must be at least 6 characters'})
+    validation: z.string().min(6, { message: 'Password must be at least 6 characters' })
   }
 ]
 
+// Generate Zod schema dynamically
 const loginSchema = z.object(
     Object.fromEntries(loginQuestions.map(question => [question.id, question.validation]))
 )
 
+// Form state and error handling
 const form = reactive(Object.fromEntries(loginQuestions.map(question => [question.id, ''])))
 const fieldErrors = ref<Record<string, string>>({})
 const generalError = ref('')
 const loading = ref(false)
 
+// Handle login with validation
 const handleLogin = () => {
   fieldErrors.value = {}
   generalError.value = ''
 
+  console.log('Form values before validation:', JSON.stringify(form, null, 2)) // 👈
+
   const result = loginSchema.safeParse(form)
 
   if (!result.success) {
+    console.log('Validation errors:', result.error.format()) // 👈
     const formatted = result.error.format()
     for (const question of loginQuestions) {
       const error = formatted[question.id]?._errors?.[0]
@@ -42,6 +49,8 @@ const handleLogin = () => {
     }
     return
   }
+
+  console.log('Validation passed! Proceeding with login...') // 👈
 
   loading.value = true
   setTimeout(() => {
@@ -54,7 +63,6 @@ const handleLogin = () => {
     }
   }, 1000)
 }
-
 </script>
 
 <template>
