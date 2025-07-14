@@ -1,17 +1,16 @@
 <script setup>
-import {ref} from 'vue'
-import {useRouter} from 'vue-router'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const isOpen = ref(false)
 const router = useRouter()
 
 const links = [
-  {id: 1, link: '/member/', label: 'Home', icon: 'i-lucide-home'},
-  {id: 2, link: '/', label: 'Change Password', icon: 'i-lucide-lock'},
-  {id: 3, link: '/member/profile', label: 'Profile', icon: 'i-lucide-user'},
-  {id: 4, link: '/', label: 'Logout', icon: 'i-lucide-log-out'}
+  { id: 1, link: '/member/', label: 'Home', icon: 'i-lucide-home' },
+  { id: 2, link: '/', label: 'Change Password', icon: 'i-lucide-lock' },
+  { id: 3, link: '/member/profile', label: 'Profile', icon: 'i-lucide-user' },
+  { id: 4, link: '/', label: 'Logout', icon: 'i-lucide-log-out' }
 ]
-
 
 const handleLogout = () => {
   console.log('Logging out...')
@@ -19,14 +18,13 @@ const handleLogout = () => {
 }
 
 const logo = "/images/logo.png";
-
 </script>
 
 <template>
   <header class="main-header">
     <nav class="nav-container">
-      <a href="" class="nav-logo">
-        <img :src="logo" class="logo" alt="Koperasi-logo"/>
+      <a href="/" class="nav-logo">
+        <img :src="logo" class="logo" alt="Koperasi-logo" />
       </a>
 
       <button
@@ -43,16 +41,16 @@ const logo = "/images/logo.png";
       <ul :class="['nav-links', { open: isOpen }]">
         <li v-for="item in links" :key="item.id">
           <template v-if="item.label === 'Logout'">
+            <a href="#" @click.prevent="handleLogout">
 
-            <a href="#" @click.prevent="handleLogout">Logout</a>
+              <UIcon :name="item.icon" class="icon" />
+              Logout</a>
           </template>
           <template v-else>
-
             <NuxtLink :to="item.link" active-class="active-link">
-              <UIcon :name="item.icon" class="icon"/>
+              <UIcon :name="item.icon" class="icon" />
               {{ item.label }}
             </NuxtLink>
-
           </template>
         </li>
       </ul>
@@ -64,23 +62,29 @@ const logo = "/images/logo.png";
 .main-header {
   background-color: var(--card-bg);
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
   height: 80px;
-  display: flex;
-  align-items: center;
+  position: relative;
+  z-index: 1002;
 
   .nav-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin: 0 1rem;
-    width: 100%;
+    padding: 0 1rem;
+    height: 100%;
+    position: relative;
+    z-index: 2;
 
-    .logo {
-      width: 100px;
-      height: 60px;
+    .nav-logo {
+      display: flex;
+      align-items: center;
+
+      .logo {
+        width: 100px;
+        height: 60px;
+        object-fit: contain;
+      }
     }
 
     .hamburger {
@@ -118,7 +122,6 @@ const logo = "/images/logo.png";
       display: flex;
       gap: 1.5rem;
       margin: 0;
-      transition: all 0.3s ease-in-out;
 
       li a {
         color: var(--primary-text-color) !important;
@@ -130,12 +133,32 @@ const logo = "/images/logo.png";
           margin-right: 5px;
           width: 15px;
           height: 15px;
-          align-items: start;
+          vertical-align: middle;
         }
 
         &:hover,
         &.active-link {
           color: var(--accent-color) !important;
+        }
+      }
+
+      @media (max-width: 768px) {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background-color: var(--card-bg);
+        padding: 1rem;
+        display: none;
+        z-index: 9999;
+
+        &.open {
+          display: flex;
+        }
+
+        li {
+          padding: 0.5rem 0;
         }
       }
     }
@@ -146,19 +169,7 @@ const logo = "/images/logo.png";
       }
 
       .nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        padding: 1rem;
-        background: var(--card-bg);
-
-        &.open {
-          display: flex;
-        }
-
-        li {
-          padding: 0.5rem 0;
-        }
+        display: none; // initial state
       }
     }
   }
