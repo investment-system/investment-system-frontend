@@ -59,6 +59,8 @@ const handleLogin = () => {
     }
   }, 1000)
 }
+
+
 </script>
 
 <template>
@@ -99,7 +101,7 @@ const handleLogin = () => {
 
       <div class="image-container">
 
-        <img src="/images/investment-icon.png" alt="investment">
+        <img src="/images/investment-icon.png" alt="investment" />
 
         <h3 class="text">
           Your trusted platform for secure and responsible Share.
