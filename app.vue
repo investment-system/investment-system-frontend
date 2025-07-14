@@ -9,41 +9,6 @@
 
 :root {
 
-  --primary-bg: #FDFCF9;
-  --secondary-bg: #F5F5F5;
-  --card-bg: #F1F1F1;
-  --border-color: #E0C281;
-  --accent-color: #FFC107;
-  --profit-color: #2E7D32;
-  --danger-color: #D32F2F;
-  --button-bg: #F5B301;
-  --hover-button-bg: #FFE599;
-  --button-disabled-bg: #FFE599;
-  --hover-text-color: #2C2C2C;
-  --input-field-bg: #EBEBEB;
-  --cancel-button-bg: #DDDDDD;
-  --primary-text-color: #2C2C2C;
-  --secondary-text-color: #666666;
-  --special-text-color: #f5f5f5;
-
-  --error-text:#D32F2F;
-
-  --linear-gradient-bg: linear-gradient(135deg, #F5B301 0%, #FFC107 40%, #E0C281 70%, #FFE599 100%);
-
-  --heading-1: 40px;
-  --heading-2: 32px;
-  --heading-3: 24px;
-  --heading-4: 20px;
-  --body-text: 16px;
-  --small-text: 14px;
-  --text-button-Text: 16px;
-  --text-button-small: 14px;
-  --placeholder-text: 14px;
-  --label-text: 14px;
-
-  --transition: all 0.3s ease-in-out;
-
-
   *,
   *::before,
   *::after {
@@ -66,6 +31,41 @@
   ol {
     list-style: none;
   }
+
+
+  --primary-bg: #FDFCF9;
+  --secondary-bg: #F5F5F5;
+  --card-bg: #F1F1F1;
+  --border-color: #E0C281;
+  --accent-color: #FFC107;
+  --profit-color: #2E7D32;
+  --danger-color: #D32F2F;
+  --button-bg: #F5B301;
+  --hover-button-bg: #FFE599;
+  --button-disabled-bg: #FFE599;
+  --hover-text-color: #2C2C2C;
+  --input-field-bg: #EBEBEB;
+  --cancel-button-bg: #DDDDDD;
+  --primary-text-color: #2C2C2C;
+  --secondary-text-color: #666666;
+  --special-text-color: #f5f5f5;
+
+  --error-text: #D32F2F;
+
+  --linear-gradient-bg: linear-gradient(135deg, #F5B301 0%, #FFC107 40%, #E0C281 70%, #FFE599 100%);
+
+  --heading-1: 40px;
+  --heading-2: 32px;
+  --heading-3: 24px;
+  --heading-4: 20px;
+  --body-text: 16px;
+  --small-text: 14px;
+  --text-button-Text: 16px;
+  --text-button-small: 14px;
+  --placeholder-text: 14px;
+  --label-text: 14px;
+
+  --transition: all 0.3s ease-in-out;
 
 }
 

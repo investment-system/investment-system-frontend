@@ -1,6 +1,4 @@
-<script setup lang="ts">
-// No changes needed in script section for now
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <section class="dashboard">
@@ -31,7 +29,7 @@
 
     <div class="investment-overview">
 
-      <h2>Investment Overview</h2>
+      <h3>Investment Overview</h3>
 
       <FinancialIconDivider/>
 
@@ -210,7 +208,7 @@
 .investment-overview {
   display: block;
 
-  h2 {
+  h3 {
     font-size: var(--heading-3);
     color: var(--primary-text-color);
     height: 50px;
@@ -218,7 +216,7 @@
     align-items: center;
 
     @media (min-width: 1024px) {
-      font-size: var(--heading-2);
+      font-size: var(--heading-3);
     }
   }
 
