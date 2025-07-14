@@ -5,6 +5,8 @@
 <template>
   <MemberHeader/>
   <MemberMembersOverviewSection/>
+  <MemberTransactionTable/>
+  <Footer/>
 </template>
 
 <style scoped>

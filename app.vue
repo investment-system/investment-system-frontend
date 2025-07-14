@@ -49,8 +49,10 @@
   --primary-text-color: #2C2C2C;
   --secondary-text-color: #666666;
   --special-text-color: #f5f5f5;
-
   --error-text: #D32F2F;
+
+  --table-header-bg: rgba(255, 229, 153, 0.5);
+
 
   --linear-gradient-bg: linear-gradient(135deg, #F5B301 0%, #FFC107 40%, #E0C281 70%, #FFE599 100%);
 
