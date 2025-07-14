@@ -1,4 +1,5 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <template>
   <section class="dashboard">
@@ -37,14 +38,14 @@
         <div class="overview-card">
           <span class="card-title">
             <span class="icon-container">
-              <UIcon name="mdi-clipboard-list-outline"/>
+              <UIcon name="mdi-calendar-check-outline"/>
             </span>
             Total Activities
           </span>
           <h4>
             <span class="number">12</span>
             <span class="title">
-              <UIcon name="mdi-plus" class="icon"/>
+              <UIcon name="mdi-trending-up" class="icon" />
             </span>
           </h4>
         </div>
@@ -52,14 +53,15 @@
         <div class="overview-card">
           <span class="card-title">
             <span class="icon-container">
-              <UIcon name="mdi-account-group-outline"/>
+              <UIcon name="mdi-users-group-outline"/>
+
             </span>
             Total Members
           </span>
           <h4>
             <span class="number">500</span>
             <span class="title">
-              <UIcon name="mdi-plus" class="icon"/>
+              <UIcon name="mdi-trending-up" class="icon" />
             </span>
           </h4>
         </div>
@@ -67,7 +69,7 @@
         <div class="overview-card">
           <span class="card-title">
             <span class="icon-container">
-              <UIcon name="mdi-cash-multiple"/>
+              <UIcon name="mdi-bank-transfer"/>
             </span>
             Total Investment
           </span>
@@ -292,7 +294,7 @@
         width: 120px;
 
         @media (min-width: 1024px) {
-          font-size: var(--heading-3);
+          font-size: var(--heading-4);
         }
       }
     }
