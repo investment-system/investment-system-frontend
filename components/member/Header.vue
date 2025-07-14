@@ -14,7 +14,7 @@ const links = [
 
 const handleLogout = () => {
   console.log('Logging out...')
-  router.push('/login')
+  router.push('/member/login')
 }
 
 const logo = "/images/logo.png";
