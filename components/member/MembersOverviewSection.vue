@@ -86,7 +86,6 @@
   display: grid;
   grid-template-columns: 1fr;
   width: calc(100% - 40px);
-  max-width: 1280px;
   margin: 20px;
 
   @media (min-width: 1024px) {
@@ -227,11 +226,11 @@
     width: 100%;
 
     @media (min-width: 768px) {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
 
     @media (min-width: 1024px) {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
 
     .overview-card {
