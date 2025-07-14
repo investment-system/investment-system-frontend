@@ -29,7 +29,6 @@
     </div>
 
     <div class="investment-overview">
-
       <h3>Investment Overview</h3>
 
       <FinancialIconDivider/>
@@ -45,7 +44,7 @@
           <h4>
             <span class="number">12</span>
             <span class="title">
-              <UIcon name="mdi-trending-up" class="icon" />
+              <UIcon name="mdi-trending-up" class="icon"/>
             </span>
           </h4>
         </div>
@@ -54,14 +53,13 @@
           <span class="card-title">
             <span class="icon-container">
               <UIcon name="mdi-users-group-outline"/>
-
             </span>
             Total Members
           </span>
           <h4>
             <span class="number">500</span>
             <span class="title">
-              <UIcon name="mdi-trending-up" class="icon" />
+              <UIcon name="mdi-trending-up" class="icon"/>
             </span>
           </h4>
         </div>
@@ -240,18 +238,51 @@
       padding: 16px;
       border-radius: 12px;
       height: 120px;
+      transition: all 0.3s ease;
+      position: relative;
+
+      .icon-container {
+        padding: 10px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+      }
+
+      &:nth-child(1) {
+        background: linear-gradient(135deg, #1976d2 0%, #bbdefb 100%);
+
+        .icon-container {
+          color: #0d47a1;
+        }
+      }
+
+      &:nth-child(2) {
+        background: linear-gradient(135deg, #ffb74d 0%, #ffe0b2 100%);
+
+        .icon-container {
+          color:#f57c00;
+        }
+      }
+
+      &:nth-child(3) {
+        background: linear-gradient(135deg, #a8e6cf 0%, #388e3c 100%);
+
+        .icon-container {
+          color: #388e3c;
+        }
+      }
 
       .card-title {
         display: grid;
         grid-template-columns: 1fr 3fr;
         align-items: center;
         font-size: var(--body-text);
-        color: var(--secondary-text-color);
+        color: var(--primary-text-color);
 
         .icon-container {
           padding: 12px;
-          background: var(--hover-button-bg);
-          color: var(--primary-text-color);
           font-size: var(--heading-3);
           align-items: center;
           justify-content: center;
@@ -259,6 +290,7 @@
           max-width: 50px;
           height: 50px;
           border-radius: 6px;
+          transition: all 0.3s ease;
         }
 
         @media (min-width: 1024px) {
