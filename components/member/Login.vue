@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { z } from 'zod'
+import {reactive, ref} from 'vue'
+import {z} from 'zod'
 
 const loginQuestions = [
   {
@@ -8,14 +8,14 @@ const loginQuestions = [
     label: 'Email',
     type: 'email',
     placeholder: 'Enter your email',
-    validation: z.string().email({ message: 'Please enter a valid email address' })
+    validation: z.string().email({message: 'Please enter a valid email address'})
   },
   {
     id: 'password',
     label: 'Password',
     type: 'password',
     placeholder: 'Enter your password',
-    validation: z.string().min(6, { message: 'Password must be at least 6 characters' })
+    validation: z.string().min(6, {message: 'Password must be at least 6 characters'})
   }
 ]
 
@@ -66,7 +66,7 @@ const handleLogin = () => {
     <div class="container">
       <div class="login-form">
 
-        <h2>Welcome back to Koperasi Masjid</h2>
+        <h2> Welcome back to Koperasi Masjid</h2>
 
         <form @submit.prevent="handleLogin">
           <div v-for="question in loginQuestions" :key="question.id">
@@ -85,7 +85,8 @@ const handleLogin = () => {
 
           <div class="links">
 
-            <NuxtLink to="/member/signup">Sign Up</NuxtLink> or <a href=""> Forgot Password? </a>
+            <NuxtLink to="/member/signup">Sign Up</NuxtLink>
+            or <a href=""> Forgot Password? </a>
 
           </div>
 
@@ -97,10 +98,13 @@ const handleLogin = () => {
       </div>
 
       <div class="image-container">
-        <img src="/images/investment-icon-png.png" alt="investment"/>
+
+        <img src="/images/investment-icon.png" alt="investment">
+
         <h3 class="text">
           Your trusted platform for secure and responsible Share.
         </h3>
+
       </div>
     </div>
 
