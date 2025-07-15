@@ -3,6 +3,7 @@
 
 <template>
   <section class="dashboard">
+
     <div class="bank-card">
       <div class="bank-card__header">
         <img src="/images/malaysia%20flag.png" alt="Flag of Malaysia" class="flag-container"/>
@@ -29,6 +30,7 @@
     </div>
 
     <div class="investment-overview">
+
       <h3>Investment Overview</h3>
 
       <FinancialIconDivider/>
@@ -307,7 +309,7 @@
 
       .title {
         font-size: var(--heading-2);
-        color: var(--secondary-text-color);
+        color: var(--primary-text-color);
         margin-left: 10px;
         width: 30px;
         height: 30px;
