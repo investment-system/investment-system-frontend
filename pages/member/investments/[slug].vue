@@ -3,7 +3,9 @@
 </script>
 
 <template>
-
+  <MemberHeader/>
+  <InvoiceDetails/>
+  <Footer/>
 </template>
 
 <style scoped>
