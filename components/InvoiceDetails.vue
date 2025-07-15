@@ -1,12 +1,5 @@
 <script setup>
 
-const invoiceDetails = [
-  {label: 'Invoice ID', value: 'INV-20250012'},
-  {label: 'Transaction ID', value: 'TXN-INV-20250012'},
-  {label: 'Invoice Date', value: '2025-06-27'},
-  {label: 'Investment ID', value: 'INVST-00123'},
-  {label: 'Status', value: 'Active'},
-];
 
 </script>
 
@@ -89,7 +82,11 @@ const invoiceDetails = [
         <div class="item"><span class="label">Final Return:</span><span class="data">RM 11,000.00</span></div>
         <div class="item"><span class="label">Adjusted Return:</span><span class="data">RM 9,500.00</span></div>
       </div>
+
     </div>
+
+    <button class="print-btn">Print</button>
+
   </section>
 </template>
 
@@ -167,6 +164,22 @@ const invoiceDetails = [
           }
         }
       }
+    }
+  }
+
+  .print-btn {
+    margin-left: 20px;
+    font-size: var(--text-button-Text);
+    width: 150px;
+    height: 48px;
+    background-color: var(--button-bg);
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    transition: var(--transition);
+
+    &:hover {
+      background-color: var(--hover-button-bg);
     }
   }
 }
