@@ -154,7 +154,7 @@
 
     .title {
       font-size: var(--body-text);
-      color: var(--secondary-text-color);
+      color: var(--primary-text-color);
     }
 
     .total-amount {
