@@ -1,10 +1,11 @@
 <script setup lang="ts">
 
+import InvestmentDetails from "~/components/member/InvestmentDetails.vue";
 </script>
 
 <template>
   <MemberHeader/>
-  <InvoiceDetails/>
+  <InvestmentDetails/>
   <Footer/>
 </template>
 
