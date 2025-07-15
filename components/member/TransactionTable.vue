@@ -1,7 +1,31 @@
 <script setup>
 
-const transactions = [];
-
+const transactions = [
+  {
+    payment_id: 'PAY-20250715001',
+    member_name: 'Ahmad bin Salleh',
+    amount_paid: 1500.00,
+    date_Invested: '2025-07-12',
+    profit_amount: 120.00,
+    status: 'confirmed',
+  },
+  {
+    payment_id: 'PAY-20250715002',
+    member_name: 'Siti Nur Aisyah',
+    amount_paid: 2000.00,
+    date_Invested: '2025-07-10',
+    profit_amount: 150.00,
+    status: 'pending',
+  },
+  {
+    payment_id: 'PAY-20250715003',
+    member_name: 'Mohd Faizal',
+    amount_paid: 1800.00,
+    date_Invested: '2025-07-09',
+    profit_amount: 130.00,
+    status: 'confirmed',
+  }
+];
 </script>
 
 <template>
@@ -34,11 +58,11 @@ const transactions = [];
           </td>
         </tr>
         <tr v-else v-for="(item, index) in transactions" :key="index">
-          <td>{{ item.transactionId }}</td>
-          <td>{{ item.memberName }}</td>
-          <td>{{ item.amount }}</td>
-          <td>{{ item.dateInvested }}</td>
-          <td class="profit">{{ item.profit }}</td>
+          <td>{{ item.payment_id }}</td>
+          <td>{{ item.member_name }}</td>
+          <td>{{ item.amount_paid }}</td>
+          <td>{{ item.date_Invested }}</td>
+          <td class="profit">{{ item.profit_amount }}</td>
           <td>{{ item.status }}</td>
           <td>
             <button class="invoice-btn">
