@@ -4,8 +4,8 @@
 
 <template>
   <MemberHeader/>
-  <MemberMembersOverviewSection/>
-  <MemberTransactionTable/>
+  <MemberInvestorDashboard/>
+  <MemberInvestmentList/>
   <Footer/>
 </template>
 
