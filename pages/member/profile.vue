@@ -4,6 +4,7 @@
 
 <template>
   <MemberHeader/>
+  <MemberProfile/>
   <Footer/>
 </template>
 
