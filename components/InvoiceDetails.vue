@@ -112,12 +112,8 @@ const printInvoice = () => {
 
     <div class="print-only print-footer">
       <div class="contact-info">
-        <p>
-        <span>
-        Koperasi masjid
-      </span>
-        </p>
-        <p>Email: info@koperasimasjid.com | Phone: +60 19-335 5368</p>
+        <p><span>Koperasi masjid</span></p>
+        <p><span> Email: </span> info@koperasimasjid.com | <span>Phone: </span> +60 19-335 5368</p>
       </div>
       <div>
         <img src="/images/logo.png" alt="koperasi masjid logo" class="logo small-logo"/>
@@ -246,13 +242,14 @@ const printInvoice = () => {
 }
 
 @media print {
-
   .no-print {
     display: none !important;
   }
 
   .print-only {
     display: block !important;
+    width: 100%;
+    max-width: 1200px;
   }
 
   @page {
@@ -260,38 +257,22 @@ const printInvoice = () => {
     padding: 0;
   }
 
-  html, body {
+  html,
+  body {
     font-family: 'Inter', sans-serif;
-    background: var(--primary-bg) !important;
     font-size: var(--body-text);
   }
 
   .section {
-    background-color: white !important;
     box-shadow: none;
+    background: var(--primary-bg) !important;
     border-radius: 0 !important;
     margin: 0 auto !important;
   }
 
-  .print-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    margin-bottom: 20px;
-    padding-bottom: 1rem;
-  }
-
-  .print-header h1 {
-    font-size: var(--heading-1);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-  }
-
-  .btn-container {
-    display: none !important;
-  }
-
+  .btn-container,
   .invoice-content {
-    display: none;
+    display: none !important;
   }
 
   .invoice {
@@ -302,12 +283,6 @@ const printInvoice = () => {
     color: var(--primary-text-color);
   }
 
-  .print-only {
-    display: block !important;
-    width: 100%;
-    max-width: 1200px;
-  }
-
   .print-header {
     width: 90%;
     margin: 0 auto;
@@ -315,45 +290,50 @@ const printInvoice = () => {
     display: flex !important;
     align-items: center;
     justify-content: space-between;
-  }
 
-  .print-header .logo {
-    width: 120px;
-    height: 80px;
-    margin-bottom: 0.5rem;
-  }
+    h1 {
+      font-size: var(--heading-1);
+      color: var(--accent-color);
+      margin: 0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
 
-  .print-header h1 {
-    font-size: var(--heading-1);
-    color: var(--accent-color);
-    margin: 0;
-    letter-spacing: 2px;
+    .logo {
+      width: 120px;
+      height: 80px;
+      margin-bottom: 0.5rem;
+    }
   }
 
   .print-footer {
-    width: 90%;
-    margin: 0 auto;
-    padding: 10px 20px !important;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
     display: flex !important;
     align-items: center;
     justify-content: space-between;
-    background-color: red !important;
-  }
 
-  .print-footer .contact-info p {
-    margin: 0.2rem 0;
-    font-size: var(--small-text);
-  }
+    .contact-info {
+      p {
+        margin: 0.2rem 0;
+        font-size: var(--small-text);
 
-  .print-footer .contact-info p span {
-    color: var(--secondary-text-color);
-    padding: 5px;
-    margin: 0 10px;
-  }
+        span {
+          color: var(--secondary-text-color);
+          font-weight: 600;
+          padding: 5px;
+          margin: 0 10px;
+          font-size: var(--base-text);
+        }
+      }
+    }
 
-  .print-footer .small-logo {
-    width: 120px;
-    margin-top: 0.5rem;
+    .small-logo {
+      width: 120px;
+      margin-top: 0.5rem;
+    }
   }
 }
 
