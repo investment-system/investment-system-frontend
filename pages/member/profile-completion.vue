@@ -3,7 +3,7 @@
 </script>
 
 <template>
-
+  <MemberProfileCompletion/>
 </template>
 
 <style scoped>
