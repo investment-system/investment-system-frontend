@@ -17,6 +17,7 @@ const printInvoice = () => {
 
 
 <template>
+
   <div class="no-print">
     <MemberHeader/>
   </div>
@@ -112,9 +113,9 @@ const printInvoice = () => {
     <div class="print-only print-footer">
       <div class="contact-info">
         <p>
-          <span>
-          Koperasi masjid
-        </span>
+        <span>
+        Koperasi masjid
+      </span>
         </p>
         <p>Email: info@koperasimasjid.com | Phone: +60 19-335 5368</p>
       </div>
@@ -136,6 +137,7 @@ const printInvoice = () => {
   <div class="no-print">
     <Footer/>
   </div>
+
 
 </template>
 
@@ -268,14 +270,13 @@ const printInvoice = () => {
     background-color: white !important;
     box-shadow: none;
     border-radius: 0 !important;
-    margin: 0  auto!important;
+    margin: 0 auto !important;
   }
 
   .print-header {
     display: flex !important;
     justify-content: space-between !important;
     margin-bottom: 20px;
-    border-bottom: 2px solid var(--primary-bg);
     padding-bottom: 1rem;
   }
 
@@ -332,11 +333,11 @@ const printInvoice = () => {
   .print-footer {
     width: 90%;
     margin: 0 auto;
-    padding: 0;
+    padding: 10px 20px !important;
     display: flex !important;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
+    background-color: red !important;
   }
 
   .print-footer .contact-info p {
@@ -355,12 +356,5 @@ const printInvoice = () => {
     margin-top: 0.5rem;
   }
 }
-
-@media screen {
-  .print-only {
-    display: none !important;
-  }
-}
-
 
 </style>
