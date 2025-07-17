@@ -85,7 +85,9 @@
 
     </div>
 
-    <button class="print-btn">Print</button>
+    <div class="section btn-container">
+      <button class="print-btn">Print</button>
+    </div>
 
   </section>
 </template>
@@ -98,12 +100,17 @@
   .section {
     background: var(--input-field-bg);
     padding: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
 
     @media (min-width: 600px) {
       width: calc(100% - 40px);
       margin: 0 auto 2rem;
       border-radius: 12px;
+
+      &.btn-container {
+        background: transparent;
+      }
+
     }
 
     h3 {
@@ -168,7 +175,6 @@
   }
 
   .print-btn {
-    margin-left: 20px;
     font-size: var(--text-button-Text);
     width: 150px;
     height: 48px;
