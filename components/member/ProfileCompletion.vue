@@ -211,12 +211,13 @@ function saveChanges() {
   width: calc(100% - 40px);
   margin: 20px auto 0 auto;
 
+
   .profile-header {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin: 20px auto;
     background: var(--card-bg);
     padding: 1rem;
     border-radius: 12px;
@@ -302,7 +303,7 @@ function saveChanges() {
     text-align: left;
 
     button {
-      width: 150px;
+      width: 100%;
       height: 48px;
       padding: 0.6rem 1.2rem;
       border: none;
@@ -316,6 +317,14 @@ function saveChanges() {
       &:hover {
         background: var(--hover-button-bg);
         color: var(--secondary-text-color);
+      }
+
+      @media (min-width: 768px) {
+        width: 150px;
+      }
+
+      @media (min-width: 1024px) {
+        width: 150px;
       }
     }
   }
@@ -341,7 +350,7 @@ function saveChanges() {
     margin: 0 auto;
 
     .form-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 }
