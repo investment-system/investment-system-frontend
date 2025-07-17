@@ -8,7 +8,7 @@ const router = useRouter()
 const links = [
   { id: 1, link: '/member/', label: 'Home', icon: 'i-lucide-home' },
   { id: 3, link: '/member/investments', label: 'Investments', icon: 'mdi-bar-chart' },
-  { id: 3, link: '/member/profile', label: 'Profile', icon: 'i-lucide-user' },
+  { id: 3, link: '/member/profile', label: 'Setting', icon: 'i-lucide-user' },
   { id: 4, link: '/', label: 'Logout', icon: 'i-lucide-log-out' }
 ]
 
@@ -17,14 +17,13 @@ const handleLogout = () => {
   router.push('/member/login')
 }
 
-const logo = "/images/logo.png";
 </script>
 
 <template>
   <header class="main-header">
     <nav class="nav-container">
       <a href="/" class="nav-logo">
-        <img :src="logo" class="logo" alt="Koperasi-logo" />
+        <img src="/images/logo.png" class="logo" alt="Koperasi-masjid-logo" />
       </a>
 
       <button
