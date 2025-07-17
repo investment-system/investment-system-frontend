@@ -36,7 +36,6 @@ const printInvoice = () => {
         <div class="item"><span class="label">Transaction ID:</span><span class="data">TXN-INV-20250012</span></div>
         <div class="item"><span class="label">Invoice Date:</span><span class="data">2025-06-27</span></div>
         <div class="item"><span class="label">Investment ID:</span><span class="data">INVST-00123</span></div>
-        <div class="item"><span class="label">Status:</span><span class="data">Active</span></div>
       </div>
     </div>
 
@@ -76,6 +75,9 @@ const printInvoice = () => {
 
     <div class="section">
       <h3>Payment Methods</h3>
+
+      <hr class="divider"/>
+
       <div class="grid">
         <div class="item"><span class="label">Received via:</span><span class="data">Bank Transfer</span></div>
         <div class="item"><span class="label">Returned via:</span><span class="data">Online</span></div>
@@ -107,11 +109,6 @@ const printInvoice = () => {
 
     </div>
 
-    <div class="print-only signature-section">
-      <p>__________________________</p>
-      <p>Authorized Signature</p>
-    </div>
-
     <div class="print-only print-footer">
       <div class="contact-info">
         <p>
@@ -119,8 +116,6 @@ const printInvoice = () => {
           Koperasi masjid
         </span>
         </p>
-        <p>1, Jln Hang Tuah, Bukit Bintang, 55200 Kuala Lumpur</p>
-        <p> Wilayah Persekutuan Kuala Lumpur</p>
         <p>Email: info@koperasimasjid.com | Phone: +60 19-335 5368</p>
       </div>
       <div>
@@ -138,7 +133,10 @@ const printInvoice = () => {
 
   </section>
 
-  <Footer/>
+  <div class="no-print">
+    <Footer/>
+  </div>
+
 </template>
 
 <style scoped lang="scss">
@@ -270,6 +268,7 @@ const printInvoice = () => {
     background-color: white !important;
     box-shadow: none;
     border-radius: 0 !important;
+    margin: 0  auto!important;
   }
 
   .print-header {
@@ -287,10 +286,6 @@ const printInvoice = () => {
   }
 
   .btn-container {
-    display: none !important;
-  }
-
-  Footer {
     display: none !important;
   }
 
@@ -329,21 +324,9 @@ const printInvoice = () => {
 
   .print-header h1 {
     font-size: var(--heading-1);
+    color: var(--accent-color);
     margin: 0;
     letter-spacing: 2px;
-  }
-
-  .signature-section {
-    width: 90%;
-    display: flex;
-    justify-content: end;
-    text-align: end;
-    font-size: var(--body-text);
-    margin: 5rem 0;
-  }
-
-  .signature-section p:first-child {
-    margin-bottom: 0.5rem;
   }
 
   .print-footer {
