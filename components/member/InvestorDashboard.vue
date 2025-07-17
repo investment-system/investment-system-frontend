@@ -156,7 +156,7 @@
 
     .title {
       font-size: var(--body-text);
-      color: var(--primary-text-color);
+      color: var(--special-text-color);
     }
 
     .total-amount {
@@ -165,7 +165,7 @@
       font-size: var(--heading-3);
 
       @media (min-width: 1024px) {
-        font-size: 24px;
+        font-size: var(--heading-3);
       }
     }
   }
@@ -189,6 +189,7 @@
     .date-title {
       color: var(--special-text-color);
       font-size: var(--body-text);
+      font-weight: normal;
     }
 
     .bank-account-number,
@@ -198,6 +199,7 @@
       gap: 12px;
       padding: 12px 0;
       text-align: left;
+      font-weight: normal;
 
       @media (min-width: 1024px) {
         font-size: 18px;
