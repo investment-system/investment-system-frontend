@@ -1,11 +1,33 @@
 <script setup>
 
+import {ref} from 'vue'
+
+const invoiceSection = ref(null)
+
+const printInvoice = () => {
+  const originalTitle = document.title
+  document.title = 'Invoice_INV'
+  window.print()
+  setTimeout(() => {
+    document.title = originalTitle
+  }, 1000)
+}
 
 </script>
 
 
 <template>
-  <section class="invoice">
+  <div class="no-print">
+    <MemberHeader/>
+  </div>
+
+  <section class="invoice invoice-body" ref="invoiceSection">
+
+    <div class="print-only print-header">
+      <img src="/images/logo.png" alt="koperasi masjid logo" class="koperasi masjid logo"/>
+      <h1>INVOICE</h1>
+    </div>
+
     <div class="section">
       <h3>Invoice Info</h3>
       <hr class="divider"/>
@@ -60,7 +82,7 @@
       </div>
     </div>
 
-    <div class="section canceled">
+    <div class="section">
       <h3>If Investment is Canceled</h3>
       <hr class="divider"/>
 
@@ -85,14 +107,46 @@
 
     </div>
 
+    <div class="print-only signature-section">
+      <p>__________________________</p>
+      <p>Authorized Signature</p>
+    </div>
+
+    <div class="print-only print-footer">
+      <div class="contact-info">
+        <p>
+          <span>
+          Koperasi masjid
+        </span>
+        </p>
+        <p>1, Jln Hang Tuah, Bukit Bintang, 55200 Kuala Lumpur</p>
+        <p> Wilayah Persekutuan Kuala Lumpur</p>
+        <p>Email: info@koperasimasjid.com | Phone: +60 19-335 5368</p>
+      </div>
+      <div>
+        <img src="/images/logo.png" alt="koperasi masjid logo" class="logo small-logo"/>
+      </div>
+
+    </div>
+
+
     <div class="section btn-container">
-      <button class="print-btn">Print</button>
+
+      <button class="print-btn" @click="printInvoice">Print / Save PDF</button>
+
     </div>
 
   </section>
+
+  <Footer/>
 </template>
 
 <style scoped lang="scss">
+
+.print-only {
+  display: none;
+}
+
 .invoice {
   padding: 1.5rem 0;
   color: var(--primary-text-color);
@@ -103,7 +157,7 @@
     margin-bottom: 0;
 
     @media (min-width: 600px) {
-      width: calc(100% - 40px);
+      width: calc(100% - 80px);
       margin: 0 auto 2rem;
       border-radius: 12px;
 
@@ -178,6 +232,7 @@
     font-size: var(--text-button-Text);
     width: 150px;
     height: 48px;
+    margin: 0 !important;
     background-color: var(--button-bg);
     border: none;
     outline: none;
@@ -189,4 +244,140 @@
     }
   }
 }
+
+@media print {
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  @page {
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    font-family: 'Inter', sans-serif;
+    background: var(--primary-bg) !important;
+    font-size: var(--body-text);
+  }
+
+  .section {
+    background-color: white !important;
+    box-shadow: none;
+    border-radius: 0 !important;
+  }
+
+  .print-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary-bg);
+    padding-bottom: 1rem;
+  }
+
+  .print-header h1 {
+    font-size: var(--heading-1);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .btn-container {
+    display: none !important;
+  }
+
+  Footer {
+    display: none !important;
+  }
+
+  .invoice-content {
+    display: none;
+  }
+
+  .invoice {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--primary-bg);
+    color: var(--primary-text-color);
+  }
+
+  .print-only {
+    display: block !important;
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  .print-header {
+    width: 90%;
+    margin: 0 auto;
+    padding: 0;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .print-header .logo {
+    width: 120px;
+    height: 80px;
+    margin-bottom: 0.5rem;
+  }
+
+  .print-header h1 {
+    font-size: var(--heading-1);
+    margin: 0;
+    letter-spacing: 2px;
+  }
+
+  .signature-section {
+    width: 90%;
+    display: flex;
+    justify-content: end;
+    text-align: end;
+    font-size: var(--body-text);
+    margin: 5rem 0;
+  }
+
+  .signature-section p:first-child {
+    margin-bottom: 0.5rem;
+  }
+
+  .print-footer {
+    width: 90%;
+    margin: 0 auto;
+    padding: 0;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .print-footer .contact-info p {
+    margin: 0.2rem 0;
+    font-size: var(--small-text);
+  }
+
+  .print-footer .contact-info p span {
+    color: var(--secondary-text-color);
+    padding: 5px;
+    margin: 0 10px;
+  }
+
+  .print-footer .small-logo {
+    width: 120px;
+    margin-top: 0.5rem;
+  }
+}
+
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+
 </style>
