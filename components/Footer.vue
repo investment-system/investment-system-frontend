@@ -13,26 +13,33 @@
 const currentYear = new Date().getFullYear()
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
 .footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
   text-align: center;
   background-color: var(--card-bg);
   font-size: var(--body-text);
-  color: var(--body-text);
-  height: 80px;
-  align-items: center;
-  justify-content: center;
-  display: flex;
+  color: var(--primary-text-color);
+  min-height: 80px;
+  line-height: 1.5;
+  word-break: break-word;
 }
 
 .link {
   text-decoration: none;
+  color: var(--primary-color);
   transition: var(--transition);
-
 }
 
 .link:hover {
   color: var(--accent-color);
   text-decoration: underline;
 }
+
+
 </style>
