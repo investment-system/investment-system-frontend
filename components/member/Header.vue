@@ -14,7 +14,7 @@ const links = [
 
 const handleLogout = () => {
   console.log('Logging out...')
-  router.push('/member/login')
+  router.push('/member/auth/login')
 }
 
 </script>

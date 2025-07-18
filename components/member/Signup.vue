@@ -93,7 +93,7 @@ const handleLogin = () => {
           <div class="links">
 
             Already have an account
-            <NuxtLink to="/member/login">Login ?</NuxtLink>
+            <NuxtLink to="/member/auth/login">Login ?</NuxtLink>
 
           </div>
 
