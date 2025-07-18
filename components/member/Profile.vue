@@ -11,7 +11,7 @@ const settingLinks = [
     icon: "mdi-account",
   },
   {
-    link: "",
+    link: "/sl",
     title: "Change Password",
     icon: "mdi-lock",
   }
@@ -136,7 +136,6 @@ section {
   @media (min-width: 1024px) {
     max-width: 1280px;
     grid-template-columns:  1fr 3fr;
-    gap: 20px;
   }
 
   .profile-header {
