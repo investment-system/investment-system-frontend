@@ -11,7 +11,7 @@ const settingLinks = [
     icon: "mdi-account",
   },
   {
-    link: "/sl",
+    link: "",
     title: "Change Password",
     icon: "mdi-lock",
   }
