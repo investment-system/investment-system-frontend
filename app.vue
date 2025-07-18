@@ -36,19 +36,26 @@
   --primary-bg: #FDFCF9;
   --secondary-bg: #F5F5F5;
   --card-bg: #F1F1F1;
+
   --border-color: #E0C281;
+
   --accent-color: #FFC107;
   --profit-color: #2E7D32;
   --danger-color: #D32F2F;
+
   --button-bg: #F5B301;
   --hover-button-bg: #FFE599;
   --button-disabled-bg: #FFE599;
+  --cancel-button-bg: #DDDDDD;
+
+
   --hover-text-color: #2C2C2C;
   --input-field-bg: #EBEBEB;
-  --cancel-button-bg: #DDDDDD;
+
   --primary-text-color: #2C2C2C;
   --secondary-text-color: #666666;
   --special-text-color: #f5f5f5;
+
   --error-text: #D32F2F;
 
   --table-header-bg: rgba(255, 229, 153, 0.5);
