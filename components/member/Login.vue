@@ -37,7 +37,7 @@ const handleLogin = () => {
   const result = loginSchema.safeParse(form)
 
   if (!result.success) {
-    console.log('Validation errors:', result.error.format()) // 👈
+    console.log('Validation errors:', result.error.format())
     const formatted = result.error.format()
     for (const question of loginQuestions) {
       const error = formatted[question.id]?._errors?.[0]
@@ -87,7 +87,7 @@ const handleLogin = () => {
 
           <div class="links">
 
-            <NuxtLink to="/member/signup">Sign Up</NuxtLink>
+            <NuxtLink to="/member/auth/sign-up">Sign Up</NuxtLink>
             or <a href=""> Forgot Password? </a>
 
           </div>
