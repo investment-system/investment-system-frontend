@@ -189,6 +189,7 @@ section {
         color: var(--primary-text-color);
         text-align: center;
         align-content: center;
+        cursor: pointer;
         transition: var(--transition);
 
         &::before {
