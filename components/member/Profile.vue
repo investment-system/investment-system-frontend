@@ -11,7 +11,7 @@ const settingLinks = [
     icon: "mdi-account",
   },
   {
-    link: "",
+    link: "/member/change-password",
     title: "Change Password",
     icon: "mdi-lock",
   }
@@ -208,11 +208,6 @@ section {
           background-color: var(--accent-color);
         }
       }
-    }
-
-    .profile-divider{
-      border: 1px solid var(--accent-color);
-      padding: 0.5rem;
     }
 
 
