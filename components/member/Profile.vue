@@ -146,6 +146,7 @@ section {
     background: var(--card-bg);
     padding: 1rem;
     max-height: 300px;
+    margin-bottom: 20px;
 
     .avatar-wrapper {
       width: 150px;
