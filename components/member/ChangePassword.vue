@@ -187,7 +187,7 @@ section {
 .profile-member-container {
   min-height: 100vh;
   width: calc(100% - 40px);
-  margin: 20px;
+  margin: 0 20px;
   display: grid;
 
 
@@ -273,7 +273,7 @@ section {
       margin: 20px auto;
       display: flex;
       flex-direction: column;
-      padding: 1rem;
+      padding: 10px;
       border-radius: 10px;
 
       form {
