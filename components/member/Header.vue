@@ -8,7 +8,7 @@ const router = useRouter()
 const links = [
   { id: 1, link: '/member/dashboard', label: 'Home', icon: 'i-lucide-home' },
   { id: 3, link: '/member/investments', label: 'Investments', icon: 'mdi-bar-chart' },
-  { id: 3, link: '/member/profile', label: 'Setting', icon: 'i-lucide-user' },
+  { id: 3, link: '/member/profile', label: 'Profile', icon: 'i-lucide-user' },
   { id: 4, link: '/', label: 'Logout', icon: 'i-lucide-log-out' }
 ]
 
