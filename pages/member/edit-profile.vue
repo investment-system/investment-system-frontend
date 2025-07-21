@@ -4,7 +4,7 @@
 
 <template>
   <MemberHeader/>
-  <EditProfile/>
+  <MemberEditProfile/>
   <Footer/>
 </template>
 
