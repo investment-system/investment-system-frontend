@@ -341,7 +341,6 @@ section {
       }
     }
   }
-
 }
 
 .profile-member-container {
@@ -411,11 +410,6 @@ section {
         span {
           color: var(--secondary-text-color);
         }
-
-        &.unsaved-changes {
-          color: var(--warning-color);
-          font-size: 0.9rem;
-        }
       }
     }
   }
@@ -424,7 +418,7 @@ section {
     .form-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      gap: 10px;
 
       @media (min-width: 768px) {
         grid-template-columns: repeat(2, 1fr);
@@ -445,9 +439,10 @@ section {
         flex-direction: column;
 
         .form-label {
-          font-weight: 600;
-          margin-bottom: 0.5rem;
+          font-size: var(--body-text);
           color: var(--primary-text-color);
+          height: 48px;
+          align-content: center;
 
           .required {
             color: var(--error-color);
@@ -458,34 +453,13 @@ section {
           padding: 0.75rem;
           border: 1px solid var(--border-color);
           border-radius: 4px;
-          font-size: 1rem;
+          font-size: var(--placeholder-text);
           transition: var(--transition);
 
           &:focus {
             outline: none;
             border-color: var(--accent-color);
             box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.1);
-          }
-
-          &.error {
-            border-color: var(--error-color);
-          }
-
-          &:disabled {
-            background-color: var(--disabled-bg);
-            cursor: not-allowed;
-          }
-        }
-
-        .error-message {
-          color: var(--error-color);
-          font-size: 0.875rem;
-          margin-top: 0.25rem;
-        }
-
-        &.has-error {
-          .form-label {
-            color: var(--error-color);
           }
         }
       }
@@ -504,7 +478,7 @@ section {
         padding: 0.75rem 1.5rem;
         border: none;
         border-radius: 4px;
-        font-size: 1rem;
+        font-size: var(--text-button-Text);
         cursor: pointer;
         background: var(--button-bg);
         color: var(--primary-text-color);
@@ -515,31 +489,6 @@ section {
         }
       }
     }
-
-    .message {
-      padding: 1rem;
-      margin-top: 1rem;
-      border-radius: 4px;
-
-      &.success {
-        background-color: var(--success-bg);
-        color: var(--success-color);
-        border: 1px solid var(--success-border);
-      }
-
-      &.error {
-        background-color: var(--error-bg);
-        color: var(--error-color);
-        border: 1px solid var(--error-border);
-      }
-
-      &.info {
-        background-color: var(--info-bg);
-        color: var(--info-color);
-        border: 1px solid var(--info-border);
-      }
-    }
   }
-
 }
 </style>
