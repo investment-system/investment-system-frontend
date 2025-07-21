@@ -330,6 +330,7 @@ section {
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: flex-start;
+      gap: 0;
 
       .setting-container {
         flex-direction: row;
@@ -341,43 +342,6 @@ section {
     }
   }
 
-}
-
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid var(--accent-color);
-    border-top: 4px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  p {
-    margin-top: 1rem;
-    color: white;
-  }
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 .profile-member-container {
@@ -398,12 +362,13 @@ section {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    width: 100%;
+    min-width: 270px;
     gap: 1rem;
     background: var(--card-bg);
     padding: 1rem;
     max-height: 300px;
     margin-bottom: 20px;
-    position: relative;
 
     .avatar-wrapper {
       position: relative;

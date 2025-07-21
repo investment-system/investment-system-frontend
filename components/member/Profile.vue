@@ -172,6 +172,7 @@ section {
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: flex-start;
+      gap: 0;
 
       .setting-container {
         flex-direction: row;
