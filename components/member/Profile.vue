@@ -4,10 +4,10 @@ import {useRoute} from 'vue-router'
 
 const route = useRoute()
 
-const settingLinks = [
+const settingLinks = ref([
   {
-    link: "/member/profile",
-    title: "Profile",
+    link: "/member/edit-profile",
+    title: "Edit Profile",
     icon: "mdi-account",
   },
   {
@@ -15,14 +15,29 @@ const settingLinks = [
     title: "Change Password",
     icon: "mdi-lock",
   }
-]
+])
 
 </script>
 
 <template>
 
   <section>
-    <h2>Account Setting</h2>
+    <h2>Account Settings</h2>
+
+    <div class="setting-tabs">
+      <div class="setting-container" v-for="settingLink in settingLinks" :key="settingLink.link">
+        <nuxt-link
+            :to="settingLink.link"
+            class="setting-link"
+            :class="{ active: route.path.includes(settingLink.link.toLowerCase()) }"
+        >
+          <UIcon :name="settingLink.icon"/>
+          {{ settingLink.title }}
+        </nuxt-link>
+      </div>
+    </div>
+
+
   </section>
 
   <section class="profile-member-container">
@@ -31,27 +46,12 @@ const settingLinks = [
         <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
       </div>
       <div class="user-info">
-        <p>User ID : <span>KM2025</span></p>
-        <p>Email: <span>mohammed@gmail.com</span></p>
+        <p>ID: <span>KM2025</span></p>
+        <p><span>mohammed@gmail.com</span></p>
       </div>
     </div>
 
     <div class="profile-info">
-
-      <div class="setting-container" v-for="settingLink in settingLinks">
-
-        <nuxt-link
-            :to="settingLink.link"
-            class="setting-link"
-            :class="{ active: route.path.includes(settingLink.link.toLowerCase()) }"
-        >
-          <UIcon
-              :name="settingLink.icon"
-          />
-
-          {{ settingLink.title }}
-        </nuxt-link>
-      </div>
 
       <div class="form-grid">
         <div class="form-item">
@@ -101,21 +101,88 @@ const settingLinks = [
       </div>
     </div>
   </section>
+
 </template>
 
 <style scoped lang="scss">
 
 section {
-  width: calc(100% - 40px);
+  margin: 0 auto;
 
   h2 {
     font-size: var(--heading-3);
     color: var(--secondary-text-color);
-    height: 100px;
+    height: 50px;
     font-weight: normal;
     align-content: center;
-    margin-left: 20px;
+    margin: 0 20px;
   }
+
+  .setting-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    margin: 0 auto;
+
+    .setting-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+
+      .setting-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        height: 48px;
+        box-sizing: border-box;
+        border: 1px solid var(--accent-color);
+        color: var(--primary-text-color);
+        text-align: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 3px;
+          width: 100%;
+          background-color: transparent;
+          transition: var(--transition);
+        }
+
+        &:hover::before,
+        &.active::before {
+          background-color: var(--accent-color);
+        }
+
+        &.active {
+          background-color: var(--accent-color-light);
+        }
+      }
+    }
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+
+      .setting-container {
+        flex-direction: row;
+
+        .setting-link {
+          width: 160px;
+        }
+      }
+    }
+  }
+
 }
 
 .profile-member-container {
@@ -177,40 +244,6 @@ section {
   }
 
   .profile-info {
-
-    .setting-container {
-      display: inline-grid;
-
-      .setting-link {
-        position: relative;
-        width: 160px;
-        height: 48px;
-        box-sizing: border-box;
-        border: 1px solid var(--accent-color);
-        color: var(--primary-text-color);
-        text-align: center;
-        align-content: center;
-        cursor: pointer;
-        transition: var(--transition);
-
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 3px;
-          width: 100%;
-          background-color: transparent;
-          transition: var(--transition);
-        }
-
-        &:hover::before,
-        &.active::before {
-          background-color: var(--accent-color);
-        }
-      }
-    }
-
 
     .form-grid {
       display: grid;
