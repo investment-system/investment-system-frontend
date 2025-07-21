@@ -194,7 +194,6 @@ section {
   grid-template-columns: 1fr;
   gap: 20px;
 
-
   @media (min-width: 768px) {
     max-width: 1280px;
     grid-template-columns:  1fr 3fr;
@@ -248,14 +247,12 @@ section {
 
     .form-grid {
       display: grid;
-      gap: 20px;
+      gap: 0 10px;
 
       .form-item {
 
         label {
           display: block;
-          font-weight: 600;
-          margin-bottom: 0.25rem;
           color: var(--primary-text-color);
           height: 48px;
           align-content: center;
