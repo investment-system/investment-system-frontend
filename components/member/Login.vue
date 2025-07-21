@@ -88,7 +88,7 @@ const handleLogin = () => {
           <div class="links">
 
             <NuxtLink to="/member/auth/sign-up">Sign Up</NuxtLink>
-            or <a href=""> Forgot Password? </a>
+            or <NuxtLink href="/member/auth/password-reset-email"> Forgot Password? </NuxtLink>
 
           </div>
 
