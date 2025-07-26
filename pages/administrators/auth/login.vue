@@ -3,6 +3,7 @@
 </script>
 
 <template>
+  <AdministratorsLogin/>
 </template>
 
 <style scoped>
