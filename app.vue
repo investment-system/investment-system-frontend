@@ -50,7 +50,7 @@
 
 
   --hover-text-color: #2C2C2C;
-  --input-field-bg: #EBEBEB;
+  --input-field-bg: #ffffff;
 
   --primary-text-color: #2C2C2C;
   --secondary-text-color: #666666;

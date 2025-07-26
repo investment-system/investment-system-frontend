@@ -6,24 +6,24 @@ const isOpen = ref(false)
 const router = useRouter()
 
 const links = [
-  { id: 1, link: '/', label: 'Home' },
-  { id: 2, link: '/', label: 'Change Password' },
-  { id: 3, link: '/', label: 'Profile' },
-  { id: 4, link: '/', label: 'Logout' }
-]
+  { id: 1, link: '/administrators', label: 'Dashboard', icon: 'i-lucide-home' },
+  { id: 2, link: '/administrators/auth/create', label: 'Create Administrator', icon: 'i-lucide-user-plus' },
+  { id: 3, link: '/', label: 'Logout', icon: 'i-lucide-log-out' }
+];
 
 const handleLogout = () => {
   console.log('Logging out...')
-  router.push('/login')
+  router.push('/member/auth/log-in')
 }
+
 </script>
 
 <template>
   <header class="main-header">
     <nav class="nav-container">
-      <NuxtLink to="/public" class="nav-logo">
-        <img src="/images/logo.png" class="logo" alt="koprasi-logo" />
-      </NuxtLink>
+      <a href="/" class="nav-logo">
+        <img src="/images/logo.png" class="logo" alt="Koperasi-masjid-logo" />
+      </a>
 
       <button
           class="hamburger"
@@ -39,10 +39,16 @@ const handleLogout = () => {
       <ul :class="['nav-links', { open: isOpen }]">
         <li v-for="item in links" :key="item.id">
           <template v-if="item.label === 'Logout'">
-            <a href="#" @click.prevent="handleLogout">Logout</a>
+            <a href="#" @click.prevent="handleLogout">
+
+              <UIcon :name="item.icon" class="icon" />
+              Logout</a>
           </template>
           <template v-else>
-            <NuxtLink :to="item.link" active-class="active-link">{{ item.label }}</NuxtLink>
+            <NuxtLink :to="item.link" active-class="active-link">
+              <UIcon :name="item.icon" class="icon" />
+              {{ item.label }}
+            </NuxtLink>
           </template>
         </li>
       </ul>
@@ -54,23 +60,29 @@ const handleLogout = () => {
 .main-header {
   background-color: var(--card-bg);
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
   height: 80px;
-  display: flex;
-  align-items: center;
+  position: relative;
+  z-index: 1002;
 
   .nav-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin: 0 1rem;
-    width: 100%;
+    padding: 0 1rem;
+    height: 100%;
+    position: relative;
+    z-index: 2;
 
-    .logo {
-      width: 100px;
-      height: 60px;
+    .nav-logo {
+      display: flex;
+      align-items: center;
+
+      .logo {
+        width: 100px;
+        height: 60px;
+        object-fit: contain;
+      }
     }
 
     .hamburger {
@@ -108,7 +120,6 @@ const handleLogout = () => {
       display: flex;
       gap: 1.5rem;
       margin: 0;
-      transition: all 0.3s ease-in-out;
 
       li a {
         color: var(--primary-text-color) !important;
@@ -116,9 +127,36 @@ const handleLogout = () => {
         font-weight: 500;
         transition: color 0.3s;
 
+        .icon {
+          margin-right: 5px;
+          width: 15px;
+          height: 15px;
+          vertical-align: middle;
+        }
+
         &:hover,
         &.active-link {
           color: var(--accent-color) !important;
+        }
+      }
+
+      @media (max-width: 768px) {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background-color: var(--card-bg);
+        padding: 1rem;
+        display: none;
+        z-index: 9999;
+
+        &.open {
+          display: flex;
+        }
+
+        li {
+          padding: 0.5rem 0;
         }
       }
     }
@@ -129,19 +167,7 @@ const handleLogout = () => {
       }
 
       .nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        padding: 1rem;
-        background: var(--card-bg);
-
-        &.open {
-          display: flex;
-        }
-
-        li {
-          padding: 0.5rem 0;
-        }
+        display: none; // initial state
       }
     }
   }
