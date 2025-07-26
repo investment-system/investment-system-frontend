@@ -32,7 +32,7 @@ const handleLogin = () => {
   fieldErrors.value = {}
   generalError.value = ''
 
-  console.log('Form values before validation:', JSON.stringify(form, null, 2)) // 👈
+  console.log('Form values before validation:', JSON.stringify(form, null, 2))
 
   const result = loginSchema.safeParse(form)
 
