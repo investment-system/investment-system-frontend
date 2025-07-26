@@ -51,7 +51,7 @@ const handleLogin = () => {
   loading.value = true
   setTimeout(() => {
     loading.value = false
-    if (form.email === 'admin@example.com' && form.password === 'password') {
+    if (form.email === 'administrators@example.com' && form.password === 'password') {
       alert('Login successful!')
     } else {
       alert('Login not successful!')
