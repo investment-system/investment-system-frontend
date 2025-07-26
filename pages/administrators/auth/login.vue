@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <InvoiceDetails/>
+
 </template>
 
 <style scoped>
