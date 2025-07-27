@@ -7,7 +7,7 @@ const links = [
   },
   {
     id: '2',
-    link: '',
+    link: '/administrators/profile/edit',
     label: 'Update Profile',
   },
   {
@@ -172,8 +172,7 @@ const profileInfo = {
 }
 
 .nav-link:hover {
-  color: var(--accent-color);
-
+  color: var(--secondary-text-color);
 }
 
 .nav-link.active {
