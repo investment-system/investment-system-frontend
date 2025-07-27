@@ -8,13 +8,15 @@ const router = useRouter()
 const links = [
   { id: 1, link: '/administrators', label: 'Dashboard', icon: 'i-lucide-home' },
   { id: 2, link: '/administrators/auth/create', label: 'Create Administrator', icon: 'i-lucide-user-plus' },
-  { id: 3, link: '/', label: 'Logout', icon: 'i-lucide-log-out' }
+  { id: 3, link: '/administrators/profile', label: 'Profile', icon: 'i-lucide-settings' },
+  { id: 4, link: '/', label: 'Logout', icon: 'i-lucide-log-out' }
 ];
 
 const handleLogout = () => {
   console.log('Logging out...')
   router.push('/member/auth/log-in')
 }
+
 
 </script>
 
