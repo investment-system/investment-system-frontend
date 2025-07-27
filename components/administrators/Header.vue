@@ -6,7 +6,7 @@ const isOpen = ref(false)
 const router = useRouter()
 
 const links = [
-  { id: 1, link: '/administrators', label: 'Dashboard', icon: 'i-lucide-home' },
+  { id: 1, link: '/administrators', label: 'Dashboard', icon: 'i-lucide-layout-dashboard' },
   { id: 2, link: '/administrators/auth/create', label: 'Create Administrator', icon: 'i-lucide-user-plus' },
   { id: 3, link: '/administrators/profile', label: 'Profile', icon: 'i-lucide-settings' },
   { id: 4, link: '/', label: 'Logout', icon: 'i-lucide-log-out' }
