@@ -102,7 +102,7 @@ const profileInfo = {
 .profile-page {
   width: 100%;
   margin: 0 auto;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .header {
@@ -217,6 +217,7 @@ const profileInfo = {
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr;
+  padding: 20px 0;
 
   @media (min-width: 640px) {
     grid-template-columns: 1fr 1fr;
@@ -234,7 +235,7 @@ const profileInfo = {
 .profile-item {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 0 20px;
   border-radius: 0.5rem;
 }
 
