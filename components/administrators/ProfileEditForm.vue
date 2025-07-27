@@ -46,10 +46,9 @@ function handleAvatarChange(event: Event) {
 }
 
 function handleCancel() {
-
   setTimeout(() => {
     location.reload()
-  },1000)
+  }, 1000)
 }
 
 
@@ -142,9 +141,10 @@ function handleCancel() {
         <div class="profile-item">
           <label class="profile-item-label">Position</label>
           <select v-model="profileForm.position" class="profile-input">
-            <option value="manager">Manager</option>
-            <option value="staff">Staff</option>
-            <option value="executive">Executive</option>
+            <option value="Project Coordinator">Project Coordinator</option>
+            <option value="Manager">Manager</option>
+            <option value="Staff">Staff</option>
+            <option value="Executive">Executive</option>
           </select>
         </div>
 
