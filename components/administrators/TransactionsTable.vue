@@ -87,9 +87,8 @@ const deleteSelected = () => {
             class="transaction-search"
             placeholder="Search Transactions ... "
         />
-
-        <nuxt-link to="" class="transaction-create-btn">Create
-          transaction
+        <nuxt-link to="" class="transaction-create-btn">
+          Create transaction
         </nuxt-link>
 
       </div>
@@ -127,7 +126,7 @@ const deleteSelected = () => {
           <span>{{ transaction.created_at.slice(0, 10) }}</span>
           <div class="transaction-actions">
             <NuxtLink to="" class="btn btn--update">
-              <UIcon name="mdi-eye" class="icon"/>
+              <UIcon name="mdi-file-eye" class="icon" />
               View
             </NuxtLink>
           </div>
@@ -161,7 +160,7 @@ const deleteSelected = () => {
     font-size: var(--heading-4);
     color: var(--primary-text-color);
     font-weight: normal;
-    height: 48px;
+    height: 36px;
     align-content: center;
   }
 
@@ -175,7 +174,7 @@ const deleteSelected = () => {
     border-radius: 6px;
     padding: 10px;
     text-align: center;
-    height: 48px;
+    height: 36px;
     align-content: center;
     transition: var(--transition);
 
@@ -191,7 +190,7 @@ const deleteSelected = () => {
   .transaction-header-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 
     @media (min-width: 640px) {
       flex-direction: row;
@@ -202,7 +201,7 @@ const deleteSelected = () => {
 
   &-search {
     padding: 10px 20px;
-    height: 48px;
+    height: 36px;
     border: 2px solid var(--secondary-text-color);
     color: var(--primary-text-color);
     border-radius: 6px;
@@ -313,7 +312,7 @@ const deleteSelected = () => {
     margin-top: 20px;
     border: none;
     width: 150px;
-    height: 48px;
+    height: 36px;
     align-content: center;
 
     &:hover:not(:disabled) {
@@ -353,7 +352,7 @@ const deleteSelected = () => {
 
   .btn {
     width: 150px;
-    height: 48px;
+    height: 36px;
     align-content: center;
     font-size: var(--button-font-size);
   }

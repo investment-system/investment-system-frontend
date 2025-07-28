@@ -48,7 +48,6 @@ const dashboardStats = [
   },
 ]
 
-
 </script>
 
 <template>
@@ -120,7 +119,7 @@ const dashboardStats = [
     margin: 20px auto;
     grid-template-columns: 1fr 2fr;
     gap: 20px;
-    width: calc(100% - 60px);
+    width: calc(100% - 40px);
   }
 }
 
@@ -259,7 +258,7 @@ const dashboardStats = [
     }
 
     @media (min-width: 1024px) {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     }
 
     .overview-card {
@@ -280,6 +279,7 @@ const dashboardStats = [
 
       &:nth-child(1) {
         background: linear-gradient(135deg, rgba(13, 71, 161, 0.15) 0%, rgba(25, 118, 210, 0.15) 100%);
+
         .icon-container {
           color: #0d47a1;
         }
@@ -287,6 +287,7 @@ const dashboardStats = [
 
       &:nth-child(2) {
         background: linear-gradient(135deg, rgba(46, 125, 50, 0.15) 0%, rgba(165, 214, 167, 0.15) 100%);
+
         .icon-container {
           color: #1b5e20;
         }
@@ -294,6 +295,7 @@ const dashboardStats = [
 
       &:nth-child(3) {
         background: linear-gradient(135deg, rgba(0, 105, 92, 0.15) 0%, rgba(178, 223, 219, 0.15) 100%);
+
         .icon-container {
           color: #004d40;
         }
@@ -301,6 +303,7 @@ const dashboardStats = [
 
       &:nth-child(4) {
         background: linear-gradient(135deg, rgba(55, 71, 79, 0.15) 0%, rgba(144, 164, 174, 0.15) 100%);
+
         .icon-container {
           color: #263238;
         }
@@ -308,6 +311,7 @@ const dashboardStats = [
 
       &:nth-child(5) {
         background: linear-gradient(135deg, rgba(40, 53, 147, 0.15) 0%, rgba(159, 168, 218, 0.15) 100%);
+
         .icon-container {
           color: #1a237e;
         }
@@ -315,6 +319,7 @@ const dashboardStats = [
 
       &:nth-child(6) {
         background: linear-gradient(135deg, rgba(249, 168, 37, 0.15) 0%, rgba(255, 245, 157, 0.15) 100%);
+
         .icon-container {
           color: #f57f17;
         }
@@ -322,6 +327,7 @@ const dashboardStats = [
 
       &:nth-child(7) {
         background: linear-gradient(135deg, rgba(109, 76, 65, 0.15) 0%, rgba(215, 204, 200, 0.15) 100%);
+
         .icon-container {
           color: #4e342e;
         }
@@ -329,6 +335,7 @@ const dashboardStats = [
 
       &:nth-child(8) {
         background: linear-gradient(135deg, rgba(0, 131, 143, 0.15) 0%, rgba(178, 235, 242, 0.15) 100%);
+
         .icon-container {
           color: #006064;
         }
@@ -370,7 +377,7 @@ const dashboardStats = [
       }
 
       .title {
-        font-size: var(--heading-2);
+        font-size: var(--body-text);
         color: var(--primary-text-color);
         margin-left: 10px;
         width: 30px;
