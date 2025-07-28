@@ -3,6 +3,7 @@ import {ref, computed} from 'vue'
 
 const search = ref('')
 const selectedTransactions = ref<number[]>([])
+const selectedType = ref('All')
 
 const transactions = ref([
   {
@@ -51,13 +52,18 @@ const transactions = ref([
   }
 ])
 
-const filteredTransactions = computed(() =>
-    transactions.value.filter((transaction) =>
-        `${transaction.member_id} ${transaction.source_type} ${transaction.transaction_code}, ${transaction.direction}`
-            .toLowerCase()
-            .includes(search.value.toLowerCase())
-    )
-)
+const filteredTransactions = computed(() => {
+  return transactions.value.filter((transaction) => {
+    const matchesSearch = `${transaction.member_id} ${transaction.source_type} ${transaction.transaction_code} ${transaction.direction}`
+        .toLowerCase()
+        .includes(search.value.toLowerCase())
+
+    const matchesType =
+        selectedType.value === 'All' || transaction.source_type === selectedType.value
+
+    return matchesSearch && matchesType
+  })
+})
 
 const deleteSelected = () => {
   transactions.value = transactions.value.filter(
