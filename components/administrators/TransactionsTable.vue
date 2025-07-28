@@ -2,120 +2,137 @@
 import {ref, computed} from 'vue'
 
 const search = ref('')
-const selectedAdmins = ref<number[]>([])
+const selectedTransactions = ref<number[]>([])
 
-const admins = ref([
+const transactions = ref([
   {
-    id: 1,
-    full_name: 'Adnan Madi',
-    email: 'adnan@example.com',
-    position: 'Manager',
-    phone_number: '0123456789',
-    admin_code: 'AKM-20250727-0001',
+    transaction_id: 1,
+    transaction_code: 'DTKM-20250728-0001',
+    member_id: 101,
+    source_type: 'deposit',
+    reference_id: 'REF-001',
+    direction: 'in',
+    amount: 500.00,
+    payment_method: 'bank_transfer',
+    created_at: '2025-07-28T10:00:00',
   },
   {
-    id: 2,
-    full_name: 'Sara Lee',
-    email: 'sara@example.com',
-    position: 'HR',
-    phone_number: '0111111111',
-    admin_code: 'AKM-20250727-0002',
+    transaction_id: 2,
+    transaction_code: 'WTKM-20250728-0002',
+    member_id: 102,
+    source_type: 'withdrawal',
+    reference_id: 'REF-002',
+    direction: 'out',
+    amount: 200.00,
+    payment_method: 'cash',
+    created_at: '2025-07-28T11:30:00',
   },
   {
-    id: 3,
-    full_name: 'Adnan Madi',
-    email: 'adnan@example.com',
-    position: 'Manager',
-    phone_number: '0123456789',
-    admin_code: 'AKM-20250727-0001',
+    transaction_id: 3,
+    transaction_code: 'STKM-20250728-0003',
+    member_id: 103,
+    source_type: 'share',
+    reference_id: 'REF-003',
+    direction: 'in',
+    amount: 750.50,
+    payment_method: 'card',
+    created_at: '2025-07-28T13:45:00',
   },
   {
-    id: 4,
-    full_name: 'Sara Lee',
-    email: 'sara@example.com',
-    position: 'HR',
-    phone_number: '0111111111',
-    admin_code: 'AKM-20250727-0002',
-  },
+    transaction_id: 4,
+    transaction_code: 'RTKM-20250728-0004',
+    member_id: 104,
+    source_type: 'registration_payments',
+    reference_id: 'REF-004',
+    direction: 'in',
+    amount: 120.00,
+    payment_method: 'ewallet',
+    created_at: '2025-07-28T14:15:00',
+  }
 ])
 
-const filteredAdmins = computed(() =>
-    admins.value.filter((admin) =>
-        `${admin.full_name} ${admin.email} ${admin.admin_code}`
+const filteredTransactions = computed(() =>
+    transactions.value.filter((transaction) =>
+        `${transaction.member_id} ${transaction.source_type} ${transaction.transaction_code}, ${transaction.direction}`
             .toLowerCase()
             .includes(search.value.toLowerCase())
     )
 )
 
 const deleteSelected = () => {
-  admins.value = admins.value.filter(
-      (admin) => !selectedAdmins.value.includes(admin.id)
+  transactions.value = transactions.value.filter(
+      (transaction) => !selectedTransactions.value.includes(transaction.transaction_id)
   )
-  selectedAdmins.value = []
+  selectedTransactions.value = []
 }
 </script>
 
 <template>
-  <div class="admin">
-    <div class="admin-header">
+  <div class="transaction">
+    <div class="transaction-header">
 
-      <h2 class="admin-title">Manage Administrators</h2>
+      <h2 class="transaction-title">Manage Transactions</h2>
 
-      <div class="admin-header-container">
+      <div class="transaction-header-container">
 
         <input
             type="text"
             v-model="search"
-            class="admin-search"
-            placeholder="Search Administrative ... "
+            class="transaction-search"
+            placeholder="Search Transactions ... "
         />
 
-        <nuxt-link to="/administrators/auth/create" class="administrators-create-btn">Create Administrator</nuxt-link>
+        <nuxt-link to="" class="transaction-create-btn">Create
+          transaction
+        </nuxt-link>
 
       </div>
     </div>
 
-    <div class="admin-table-wrapper">
-      <div class="admin-table">
-        <div class="admin-row admin-row--head">
+    <div class="transaction-table-wrapper">
+      <div class="transaction-table">
+        <div class="transaction-row transaction-row--head">
           <span></span>
-          <span>Full Name</span>
-          <span>Email</span>
-          <span>Position</span>
-          <span>Phone</span>
-          <span>Code</span>
+          <span>Transaction Code</span>
+          <span>Source Type</span>
+          <span>Direction</span>
+          <span>Amount (RM)</span>
+          <span>Payment Method</span>
+          <span>Date</span>
           <span>Actions</span>
         </div>
 
         <div
-            v-for="admin in filteredAdmins"
-            :key="admin.id"
-            class="admin-row"
+            v-for="transaction in filteredTransactions"
+            :key="transaction.transaction_id"
+            class="transaction-row"
         >
           <input
               type="checkbox"
-              v-model="selectedAdmins"
-              :value="admin.id"
-              class="admin-checkbox"
+              v-model="selectedTransactions"
+              :value="transaction.transaction_id"
+              class="transaction-checkbox"
           />
-          <span>{{ admin.full_name }}</span>
-          <span>{{ admin.email }}</span>
-          <span>{{ admin.position }}</span>
-          <span>{{ admin.phone_number }}</span>
-          <span>{{ admin.admin_code }}</span>
-          <div class="admin-actions">
+          <span>{{ transaction.transaction_code }}</span>
+          <span>{{ transaction.source_type }}</span>
+          <span>{{ transaction.direction }}</span>
+          <span>RM {{ parseFloat(transaction.amount).toFixed(2) }}</span>
+          <span>{{ transaction.payment_method }}</span>
+          <span>{{ transaction.created_at.slice(0, 10) }}</span>
+          <div class="transaction-actions">
             <NuxtLink to="" class="btn btn--update">
-              <UIcon name="mdi-file" class="icon"/>
-              Update
+              <UIcon name="mdi-eye" class="icon"/>
+              View
             </NuxtLink>
           </div>
         </div>
       </div>
+
     </div>
 
     <button
         class="btn btn--danger"
-        :disabled="selectedAdmins.length === 0"
+        :disabled="selectedTransactions.length === 0"
         @click="deleteSelected"
     >
       Delete Selected
@@ -124,7 +141,7 @@ const deleteSelected = () => {
 </template>
 
 <style scoped lang="scss">
-.admin {
+.transaction {
   padding: 15px;
 
   &-header {
@@ -142,7 +159,7 @@ const deleteSelected = () => {
     align-content: center;
   }
 
-  .administrators-create-btn {
+  .transaction-create-btn {
     width: 100%;
     font-size: var(--button-font-size);
     color: var(--primary-text-color);
@@ -165,7 +182,7 @@ const deleteSelected = () => {
     }
   }
 
-  .admin-header-container {
+  .transaction-header-container {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -199,15 +216,16 @@ const deleteSelected = () => {
   &-table {
     display: flex;
     flex-direction: column;
-    min-width: 800px;
+    min-width: 1000px;
   }
 
   &-row {
     display: grid;
     grid-template-columns:
-    30px
-    minmax(120px, 1fr)
+    40px
     minmax(160px, 1fr)
+    minmax(160px, 1fr)
+    minmax(80px, 1fr)
     minmax(100px, 1fr)
     minmax(150px, 1fr)
     minmax(100px, 1fr)
@@ -223,11 +241,11 @@ const deleteSelected = () => {
       background-color: var(--table-header-bg);
       color: var(--primary-text-color);
       font-size: var(--body-text);
-      border-radius: 6px 6px 0 0;
       font-weight: 600;
       position: sticky;
       top: 0;
       z-index: 10;
+      border-radius: 6px 6px 0 0;
     }
 
     span {
@@ -310,7 +328,7 @@ const deleteSelected = () => {
     display: none;
   }
 
-  .admin {
+  .transaction {
     &-header {
       flex-direction: row;
       justify-content: space-between;
@@ -322,7 +340,7 @@ const deleteSelected = () => {
     }
 
     &-row {
-      grid-template-columns: 40px 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
       gap: 20px;
     }
   }
@@ -336,7 +354,7 @@ const deleteSelected = () => {
 }
 
 @media (min-width: 1024px) {
-  .admin {
+  .transaction {
     padding: 20px;
 
     &-title {
@@ -349,7 +367,7 @@ const deleteSelected = () => {
     }
 
     &-row {
-      grid-template-columns: 40px 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
       gap: 0;
       padding: 0;
       height: 48px;
