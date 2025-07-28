@@ -4,7 +4,7 @@
 
 <template>
   <AdministratorsHeader/>
-  <AdministratorsCreateAdmin/>
+  <AdministratorsAdminUserCreateForm/>
   <Footer/>
 </template>
 

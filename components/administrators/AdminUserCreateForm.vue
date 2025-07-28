@@ -248,7 +248,7 @@ function saveChanges() {
   display: grid;
   grid-template-columns: 1fr;
   background: var(--card-bg);
-  border-radius: 6px;
+  border-radius: 12px;
 
   @media (min-width: 768px) {
     grid-template-columns: 1fr 3fr;
@@ -339,7 +339,7 @@ function saveChanges() {
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0 20px;
+  gap: 10px 20px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
@@ -359,8 +359,7 @@ function saveChanges() {
     color: var(--primary-text-color);
     display: flex;
     align-items: center;
-    height: 48px;
-
+    height: 36px;
   }
 
   .input-container {
@@ -370,9 +369,10 @@ function saveChanges() {
   .form-input,
   .form-select {
     width: 100%;
-    padding: 1rem 1.25rem;
+    height: 36px;
+    padding: 10px 15px;
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: var(--body-text);
     background: var(--input-field-bg);
     border: none;
     transition: var(--transition);
@@ -417,19 +417,19 @@ function saveChanges() {
 
 .btn-primary,
 .btn-secondary {
-  padding: 1rem 2rem;
+  padding: 10px 15px;
+  height: 36px;
   border-radius: 6px;
   font-size: var(--text-button-Text);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
-  width: 100%;
+  width: 100px;
 
   @media (min-width: 768px) {
     width: auto;
-    min-width: 160px;
+    min-width: 100px;
   }
 }
 
@@ -449,7 +449,6 @@ function saveChanges() {
   background: var(--cancel-button-bg);
   color: var(--primary-text-color);
   border: none;
-
 }
 
 </style>
