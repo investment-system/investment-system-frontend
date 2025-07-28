@@ -138,7 +138,7 @@ const deleteSelected = () => {
     font-size: var(--heading-4);
     color: var(--primary-text-color);
     font-weight: normal;
-    height: 48px;
+    height: 36px;
     align-content: center;
   }
 
@@ -152,7 +152,7 @@ const deleteSelected = () => {
     border-radius: 6px;
     padding: 10px;
     text-align: center;
-    height: 48px;
+    height: 36px;
     align-content: center;
     transition: var(--transition);
 
@@ -179,7 +179,7 @@ const deleteSelected = () => {
 
   &-search {
     padding: 10px 20px;
-    height: 48px;
+    height: 36px;
     border: 2px solid var(--secondary-text-color);
     color: var(--primary-text-color);
     border-radius: 6px;

@@ -5,6 +5,7 @@ import AdminTable from "~/components/administrators/AdminTable.vue";
 
 <template>
   <AdministratorsHeader/>
+  <AdministratorsAdminsAnalytics/>
   <AdminTable/>
   <Footer/>
 </template>
