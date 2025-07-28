@@ -94,20 +94,29 @@ const dashboardStats = [
     width: 100%;
 
     @media (min-width: 768px) {
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
 
     @media (min-width: 1024px) {
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
 
     .overview-card {
       background: var(--card-bg);
       padding: 12px;
       border-radius: 6px;
-      height: 120px;
+      height: 100px;
       transition: all 0.3s ease;
       position: relative;
+
+
+      @media (min-width: 768px) {
+        height: 100px;
+      }
+
+      @media (min-width: 1024px) {
+        height: 100px;
+      }
 
       .icon-container {
         padding: 10px;
@@ -186,7 +195,7 @@ const dashboardStats = [
       }
 
       .title {
-        font-size: var(--heading-2);
+        font-size: var(--body-text);
         color: var(--primary-text-color);
         margin-left: 10px;
         width: 30px;
