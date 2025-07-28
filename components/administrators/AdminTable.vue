@@ -67,7 +67,7 @@ const deleteSelected = () => {
             type="text"
             v-model="search"
             class="admin-search"
-            placeholder="Search by name, email, or code..."
+            placeholder="Search Administrative ... "
         />
 
         <nuxt-link to="/administrators/auth/create" class="administrators-create-btn">Create Administrator</nuxt-link>
