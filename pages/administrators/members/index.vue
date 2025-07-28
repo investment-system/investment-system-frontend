@@ -4,7 +4,7 @@
 
 <template>
   <AdministratorsHeader/>
-  <AdministratorsMemberAnalytics/>
+  <AdministratorsMembersAnalytics/>
   <AdministratorsMembersTable/>
   <Footer/>
 </template>
