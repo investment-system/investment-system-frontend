@@ -215,6 +215,7 @@ const deleteSelected = () => {
     align-items: center;
     border-bottom: 1px solid var(--border-color);
     font-size: var(--small-text);
+    color: var(--secondary-text-color);
     height: 48px;
     padding: 0;
 
@@ -245,6 +246,7 @@ const deleteSelected = () => {
     width: 18px;
     height: 18px;
     margin: 0 auto;
+    border-radius: 6px;
   }
 
   &-actions {
@@ -271,10 +273,12 @@ const deleteSelected = () => {
   white-space: nowrap;
 
   &--update {
-    color: var(--secondary-text-color);
+    font-size: var(--body-text);
+    color: var(--primary-text-color);
+    transition: var(--transition);
 
     &:hover {
-      color: var(--primary-text-color);
+      color: var(--accent-color);
     }
   }
 
