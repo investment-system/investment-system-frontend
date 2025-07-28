@@ -24,9 +24,9 @@ const dashboardStats = [
 </script>
 
 <template>
-  <section class="dashboard">
+  <section class="dashboard-members-analytics">
 
-    <div class="investment-overview">
+    <div class="members-overview">
       <div class="overview-cards">
         <div
             v-for="(stat, index) in dashboardStats"
@@ -56,14 +56,14 @@ const dashboardStats = [
 </template>
 
 <style scoped lang="scss">
-.dashboard {
+.dashboard-members-analytics {
   display: block;
   width: calc(100% - 40px);
   margin: 20px;
   height: auto;
 }
 
-.investment-overview {
+.members-overview {
   display: block;
 
   h3 {

@@ -33,7 +33,7 @@ const dashboardStats = [
 </script>
 
 <template>
-  <section class="transaction-transactions-analytics">
+  <section class="dashboard-transactions-analytics">
 
     <div class="investment-overview">
       <div class="overview-cards">
@@ -65,7 +65,7 @@ const dashboardStats = [
 </template>
 
 <style scoped lang="scss">
-.transaction-transactions-analytics {
+.dashboard-transactions-analytics {
   display: block;
   width: calc(100% - 40px);
   margin: 20px;
