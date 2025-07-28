@@ -118,8 +118,6 @@ const dashboardStats = [
         font-size: 24px;
       }
 
-
-
       &:nth-child(1) {
         background: linear-gradient(135deg, rgba(13, 71, 161, 0.15) 0%, rgba(25, 118, 210, 0.15) 100%);
 
@@ -144,22 +142,6 @@ const dashboardStats = [
         }
       }
 
-      &:nth-child(4) {
-        background: linear-gradient(135deg, rgba(55, 71, 79, 0.15) 0%, rgba(144, 164, 174, 0.15) 100%);
-
-        .icon-container {
-          color: #263238;
-        }
-      }
-
-      &:nth-child(5) {
-        background: linear-gradient(135deg, rgba(40, 53, 147, 0.15) 0%, rgba(159, 168, 218, 0.15) 100%);
-
-        .icon-container {
-          color: #1a237e;
-        }
-      }
-
       .card-title {
         display: grid;
         grid-template-columns: 1fr 3fr;
@@ -168,14 +150,12 @@ const dashboardStats = [
         color: var(--primary-text-color);
 
         .icon-container {
-          padding: 12px;
-          font-size: var(--small-text);
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          max-width: 50px;
-          height: 50px;
-          border-radius: 6px;
+          font-size: var(--body-text);
+          align-items: start;
+          justify-content: start;
+          text-align: start;
+          margin: 0;
+          padding-left: 0;
           transition: all 0.3s ease;
 
           span {

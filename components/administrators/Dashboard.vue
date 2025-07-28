@@ -349,14 +349,12 @@ const dashboardStats = [
         color: var(--primary-text-color);
 
         .icon-container {
-          padding: 12px;
           font-size: var(--body-text);
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          max-width: 50px;
-          height: 50px;
-          border-radius: 6px;
+          align-items: start;
+          justify-content: start;
+          text-align: start;
+          margin: 0;
+          padding-left: 0;
           transition: all 0.3s ease;
 
           span {
