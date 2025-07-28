@@ -1,15 +1,15 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
 
 const isOpen = ref(false)
 const router = useRouter()
 
 const links = [
-  { id: 1, link: '/administrators', label: 'Dashboard', icon: 'i-lucide-layout-dashboard' },
-  { id: 2, link: '/administrators/auth/create', label: 'Create Administrator', icon: 'i-lucide-user-plus' },
-  { id: 3, link: '/administrators/profile', label: 'Profile', icon: 'i-lucide-settings' },
-  { id: 4, link: '/', label: 'Logout', icon: 'i-lucide-log-out' }
+  {id: 1, link: '/administrators', label: 'Dashboard', icon: 'i-lucide-layout-dashboard'},
+  {id: 2, link: '/administrators/manage', label: 'Manage Admins', icon: 'i-lucide-users'},
+  {id: 3, link: '/administrators/profile', label: 'Profile', icon: 'i-lucide-settings'},
+  {id: 4, link: '/', label: 'Logout', icon: 'i-lucide-log-out'}
 ];
 
 const handleLogout = () => {
@@ -24,7 +24,7 @@ const handleLogout = () => {
   <header class="main-header">
     <nav class="nav-container">
       <a href="/" class="nav-logo">
-        <img src="/images/logo.png" class="logo" alt="Koperasi-masjid-logo" />
+        <img src="/images/logo.png" class="logo" alt="Koperasi-masjid-logo"/>
       </a>
 
       <button
@@ -43,12 +43,12 @@ const handleLogout = () => {
           <template v-if="item.label === 'Logout'">
             <a href="#" @click.prevent="handleLogout">
 
-              <UIcon :name="item.icon" class="icon" />
+              <UIcon :name="item.icon" class="icon"/>
               Logout</a>
           </template>
           <template v-else>
             <NuxtLink :to="item.link" active-class="active-link">
-              <UIcon :name="item.icon" class="icon" />
+              <UIcon :name="item.icon" class="icon"/>
               {{ item.label }}
             </NuxtLink>
           </template>
