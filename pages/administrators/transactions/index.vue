@@ -5,6 +5,7 @@ import TransactionsTable from "~/components/administrators/TransactionsTable.vue
 
 <template>
   <AdministratorsHeader/>
+  <AdministratorsTransactionsAnalytics/>
   <TransactionsTable/>
   <Footer/>
 </template>
