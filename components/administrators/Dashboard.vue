@@ -8,40 +8,40 @@ const dashboardStats = [
     trendIcon: 'mdi-trending-up',
   },
   {
-    title: 'Total Active Members',
+    title: 'Active Members',
     icon: 'mdi-account-check-outline',
     value: 350,
     trendIcon: 'mdi-trending-up',
   },
   {
-    title: 'Total Inactive Members',
+    title: 'Inactive Members',
     icon: 'mdi-account-off-outline',
     value: 150,
     trendIcon: 'mdi-trending-down',
   },
   {
-    title: 'Total Share',
+    title: 'Share Amount',
     icon: 'mdi-chart-donut',
     value: 1200,
   },
   {
-    title: 'Total Share Completed',
+    title: 'Share Completed',
     icon: 'mdi-check-circle-outline',
     value: 800,
   },
   {
-    title: 'Total Share Canceled',
+    title: 'Share Canceled',
     icon: 'mdi-cancel',
     value: 100,
   },
   {
-    title: 'Total Investment',
+    title: 'Transactions',
     icon: 'mdi-bank-transfer',
     value: '1000.00',
     unit: 'RM',
   },
   {
-    title: 'Total Expected Profit',
+    title: 'Expected Profit',
     icon: 'mdi-currency-usd',
     value: '850.00',
     unit: 'RM',
@@ -88,14 +88,14 @@ const dashboardStats = [
         >
         <span class="card-title">
           <span class="icon-container">
-            <UIcon :name="stat.icon" />
+            <UIcon :name="stat.icon"/>
           </span>
           {{ stat.title }}
         </span>
           <p>
             <span class="number">{{ stat.value }}</span>
             <span class="title" v-if="stat.trendIcon">
-            <UIcon :name="stat.trendIcon" class="icon" />
+            <UIcon :name="stat.trendIcon" class="icon"/>
           </span>
             <span class="title" v-else-if="stat.unit">
             {{ stat.unit }}
@@ -114,7 +114,6 @@ const dashboardStats = [
   grid-template-columns: 1fr;
   width: calc(100% - 40px);
   margin: 20px;
-  min-height: 100vh ;
 
   @media (min-width: 1024px) {
     max-width: 1280px;
@@ -266,10 +265,10 @@ const dashboardStats = [
     .overview-card {
       background: var(--card-bg);
       padding: 12px;
-      border-radius: 6px;
       height: 100px;
-      transition: all 0.3s ease;
+      transition: var(--transition);
       position: relative;
+      border-radius: 6px;
 
       .icon-container {
         padding: 10px;
@@ -277,60 +276,59 @@ const dashboardStats = [
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
       }
 
       &:nth-child(1) {
-        background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+        background: linear-gradient(135deg, rgba(13, 71, 161, 0.15) 0%, rgba(25, 118, 210, 0.15) 100%);
         .icon-container {
           color: #0d47a1;
         }
       }
 
       &:nth-child(2) {
-        background: linear-gradient(135deg, #2e7d32 0%, #a5d6a7 100%);
+        background: linear-gradient(135deg, rgba(46, 125, 50, 0.15) 0%, rgba(165, 214, 167, 0.15) 100%);
         .icon-container {
           color: #1b5e20;
         }
       }
 
       &:nth-child(3) {
-        background: linear-gradient(135deg, #00695c 0%, #b2dfdb 100%);
+        background: linear-gradient(135deg, rgba(0, 105, 92, 0.15) 0%, rgba(178, 223, 219, 0.15) 100%);
         .icon-container {
           color: #004d40;
         }
       }
 
       &:nth-child(4) {
-        background: linear-gradient(135deg, #37474f 0%, #90a4ae 100%);
+        background: linear-gradient(135deg, rgba(55, 71, 79, 0.15) 0%, rgba(144, 164, 174, 0.15) 100%);
         .icon-container {
           color: #263238;
         }
       }
 
       &:nth-child(5) {
-        background: linear-gradient(135deg, #283593 0%, #9fa8da 100%);
+        background: linear-gradient(135deg, rgba(40, 53, 147, 0.15) 0%, rgba(159, 168, 218, 0.15) 100%);
         .icon-container {
           color: #1a237e;
         }
       }
 
       &:nth-child(6) {
-        background: linear-gradient(135deg, #f9a825 0%, #fff59d 100%);
+        background: linear-gradient(135deg, rgba(249, 168, 37, 0.15) 0%, rgba(255, 245, 157, 0.15) 100%);
         .icon-container {
           color: #f57f17;
         }
       }
 
       &:nth-child(7) {
-        background: linear-gradient(135deg, #6d4c41 0%, #d7ccc8 100%);
+        background: linear-gradient(135deg, rgba(109, 76, 65, 0.15) 0%, rgba(215, 204, 200, 0.15) 100%);
         .icon-container {
           color: #4e342e;
         }
       }
 
       &:nth-child(8) {
-        background: linear-gradient(135deg, #00838f 0%, #b2ebf2 100%);
+        background: linear-gradient(135deg, rgba(0, 131, 143, 0.15) 0%, rgba(178, 235, 242, 0.15) 100%);
         .icon-container {
           color: #006064;
         }
@@ -345,7 +343,7 @@ const dashboardStats = [
 
         .icon-container {
           padding: 12px;
-          font-size: var(--small-text);
+          font-size: var(--body-text);
           align-items: center;
           justify-content: center;
           text-align: center;
@@ -353,6 +351,11 @@ const dashboardStats = [
           height: 50px;
           border-radius: 6px;
           transition: all 0.3s ease;
+
+          span {
+            font-size: var(--heading-3);
+          }
+
         }
 
         @media (min-width: 1024px) {
@@ -361,9 +364,8 @@ const dashboardStats = [
       }
 
       p {
-        font-size: var(--body-text) !important;
+        font-size: var(--heading-4);
         width: 120px;
-        margin: 10px 0;
         display: flow;
       }
 
@@ -376,7 +378,7 @@ const dashboardStats = [
         align-content: start;
 
         @media (min-width: 1024px) {
-          font-size: var(--body-text);
+          font-size: var(--heading-4);
           margin-left: 10px;
         }
       }
@@ -388,7 +390,7 @@ const dashboardStats = [
         width: 120px;
 
         @media (min-width: 1024px) {
-          font-size: var(--body-text);
+          font-size: var(--heading-4);
         }
       }
     }
