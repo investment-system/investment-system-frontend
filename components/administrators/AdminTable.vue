@@ -289,7 +289,7 @@ const deleteSelected = () => {
     margin-top: 20px;
     border: none;
     width: 150px;
-    height: 48px;
+    height: 36px;
     align-content: center;
 
     &:hover:not(:disabled) {
@@ -329,7 +329,7 @@ const deleteSelected = () => {
 
   .btn {
     width: 150px;
-    height: 48px;
+    height: 36px;
     align-content: center;
     font-size: var(--button-font-size);
   }
