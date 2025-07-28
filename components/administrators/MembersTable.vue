@@ -110,7 +110,7 @@ const filteredMembers = computed(() => {
           <span>{{ member.date_joined.slice(0, 10) }}</span>
           <div class="member-actions">
             <NuxtLink to="" class="btn btn--update">
-              <UIcon name="mdi-eye" class="icon"/>
+              <UIcon name="mdi:file-eye" class="icon" />
               View
             </NuxtLink>
           </div>
@@ -136,7 +136,7 @@ const filteredMembers = computed(() => {
     font-size: var(--heading-4);
     color: var(--primary-text-color);
     font-weight: normal;
-    height: 48px;
+    height: 36px;
     align-content: center;
   }
 
@@ -154,7 +154,7 @@ const filteredMembers = computed(() => {
 
   &-search {
     padding: 10px 20px;
-    height: 48px;
+    height: 36px;
     border: 2px solid var(--secondary-text-color);
     color: var(--primary-text-color);
     border-radius: 6px;
@@ -259,7 +259,7 @@ const filteredMembers = computed(() => {
   }
 
   .btn {
-    height: 48px;
+    height: 36px;
     align-content: center;
     font-size: var(--button-font-size);
   }

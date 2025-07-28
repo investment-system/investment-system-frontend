@@ -96,9 +96,10 @@ const dashboardStats = [
       background: var(--card-bg);
       padding: 12px;
       border-radius: 6px;
-      height: 120px;
+      height: 100px;
       transition: all 0.3s ease;
       position: relative;
+
 
       @media (min-width: 768px) {
         height: 100px;
@@ -117,27 +118,45 @@ const dashboardStats = [
         font-size: 24px;
       }
 
+
+
       &:nth-child(1) {
-        background: linear-gradient(135deg, #2e7d32 0%, #a5d6a7 100%);
+        background: linear-gradient(135deg, rgba(13, 71, 161, 0.15) 0%, rgba(25, 118, 210, 0.15) 100%);
+
+        .icon-container {
+          color: #0d47a1;
+        }
+      }
+
+      &:nth-child(2) {
+        background: linear-gradient(135deg, rgba(46, 125, 50, 0.15) 0%, rgba(165, 214, 167, 0.15) 100%);
 
         .icon-container {
           color: #1b5e20;
         }
       }
 
-      &:nth-child(2) {
-        background: linear-gradient(135deg, #00695c 0%, #b2dfdb 100%);
+      &:nth-child(3) {
+        background: linear-gradient(135deg, rgba(0, 105, 92, 0.15) 0%, rgba(178, 223, 219, 0.15) 100%);
 
         .icon-container {
           color: #004d40;
         }
       }
 
-      &:nth-child(3) {
-        background: linear-gradient(135deg, #f9a825 0%, #fff59d 100%);
+      &:nth-child(4) {
+        background: linear-gradient(135deg, rgba(55, 71, 79, 0.15) 0%, rgba(144, 164, 174, 0.15) 100%);
 
         .icon-container {
-          color: #f57f17;
+          color: #263238;
+        }
+      }
+
+      &:nth-child(5) {
+        background: linear-gradient(135deg, rgba(40, 53, 147, 0.15) 0%, rgba(159, 168, 218, 0.15) 100%);
+
+        .icon-container {
+          color: #1a237e;
         }
       }
 
@@ -158,6 +177,11 @@ const dashboardStats = [
           height: 50px;
           border-radius: 6px;
           transition: all 0.3s ease;
+
+          span {
+            font-size: var(--heading-3);
+          }
+
         }
 
         @media (min-width: 1024px) {
@@ -166,14 +190,13 @@ const dashboardStats = [
       }
 
       p {
-        font-size: var(--body-text) !important;
+        font-size: var(--body-text);
         width: 120px;
-        margin: 10px 0;
         display: flow;
       }
 
       .title {
-        font-size: var(--heading-2);
+        font-size: var(--body-text);
         color: var(--primary-text-color);
         margin-left: 10px;
         width: 30px;
@@ -193,7 +216,7 @@ const dashboardStats = [
         width: 120px;
 
         @media (min-width: 1024px) {
-          font-size: var(--body-text);
+          font-size: var(--heading-3);
         }
       }
     }
