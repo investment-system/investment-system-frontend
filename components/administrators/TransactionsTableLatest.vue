@@ -264,7 +264,6 @@ const filteredTransactions = computed(() => {
 .btn {
   display: inline-block;
   border-radius: 6px;
-  text-align: center;
   cursor: pointer;
   transition: var(--transition);
   text-decoration: none;

@@ -112,12 +112,13 @@ const deleteSelected = () => {
             :key="transaction.transaction_id"
             class="transaction-row"
         >
-          <input
-              type="checkbox"
-              v-model="selectedTransactions"
-              :value="transaction.transaction_id"
-              class="transaction-checkbox"
-          />
+<!--          <input-->
+<!--              type="checkbox"-->
+<!--              v-model="selectedTransactions"-->
+<!--              :value="transaction.transaction_id"-->
+<!--              class="transaction-checkbox"-->
+<!--          />-->
+          <span></span>
           <span>{{ transaction.transaction_code }}</span>
           <span>{{ transaction.source_type }}</span>
           <span>{{ transaction.direction }}</span>
@@ -126,7 +127,7 @@ const deleteSelected = () => {
           <span>{{ transaction.created_at.slice(0, 10) }}</span>
           <div class="transaction-actions">
             <NuxtLink to="" class="btn btn--update">
-              <UIcon name="mdi-file-eye" class="icon" />
+              <UIcon name="mdi-file-eye" class="icon"/>
               View
             </NuxtLink>
           </div>
@@ -135,13 +136,6 @@ const deleteSelected = () => {
 
     </div>
 
-    <button
-        class="btn btn--danger"
-        :disabled="selectedTransactions.length === 0"
-        @click="deleteSelected"
-    >
-      Delete Selected
-    </button>
   </div>
 </template>
 
@@ -227,7 +221,7 @@ const deleteSelected = () => {
   &-row {
     display: grid;
     grid-template-columns:
-    40px
+    30px
     minmax(160px, 1fr)
     minmax(160px, 1fr)
     minmax(80px, 1fr)
@@ -290,16 +284,17 @@ const deleteSelected = () => {
 .btn {
   display: inline-block;
   border-radius: 6px;
-  text-align: center;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   text-decoration: none;
   white-space: nowrap;
+  text-align: center;
 
   &--update {
     font-size: var(--body-text);
     color: var(--primary-text-color);
     transition: var(--transition);
+    text-align: start;
 
     &:hover {
       color: var(--accent-color);
@@ -307,21 +302,23 @@ const deleteSelected = () => {
   }
 
   &--danger {
-    background: var(--cancel-button-bg);
-    color: var(--danger-color);
+    display: block;
+    background: var(--danger-color);
+    color: var(--primary-text-color);
     margin-top: 20px;
     border: none;
     width: 150px;
     height: 36px;
-    align-content: center;
+    align-content: end;
+    transition: var(--transition);
 
     &:hover:not(:disabled) {
-      background: var(--cancel-button-bg);
-      color: var(--danger-color);
+      background: var(--danger-color);
+      color: var(--secondary-text-color);
     }
 
     &:disabled {
-      background-color: var(--cancel-button-bg);
+      background-color: var(--danger-color);
       color: var(--primary-text-color);
       cursor: not-allowed;
     }
@@ -345,7 +342,7 @@ const deleteSelected = () => {
     }
 
     &-row {
-      grid-template-columns: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 30px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
       gap: 20px;
     }
   }
@@ -372,7 +369,7 @@ const deleteSelected = () => {
     }
 
     &-row {
-      grid-template-columns: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 30px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
       gap: 0;
       padding: 0;
       height: 48px;
