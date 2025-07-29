@@ -1,4 +1,26 @@
 <script setup lang="ts">
+
+const dashboardStats = [
+  {
+    title: 'Total Members',
+    icon: 'mdi-account-group',
+    value: 500,
+    trendIcon: 'mdi-trending-up',
+  },
+  {
+    title: 'Share Amount',
+    icon: 'mdi-chart-donut',
+    value: 1200,
+    trendIcon: 'mdi-trending-up',
+  },
+  {
+    title: 'Share Completed',
+    icon: 'mdi-check-circle-outline',
+    value: 800,
+    trendIcon: 'mdi-check',
+  },
+]
+
 </script>
 
 <template>
@@ -35,50 +57,30 @@
 
       <FinancialIconDivider/>
 
-      <div class="overview-cards">
-        <div class="overview-card">
-          <span class="card-title">
-            <span class="icon-container">
-              <UIcon name="mdi-calendar-check-outline"/>
-            </span>
-            Total Activities
-          </span>
-          <h4>
-            <span class="number">12</span>
-            <span class="title">
-              <UIcon name="mdi-trending-up" class="icon"/>
-            </span>
-          </h4>
-        </div>
+      <div class="investment-overview">
+        <div class="overview-cards">
+          <div
+              v-for="(stat, index) in dashboardStats"
+              :key="index"
+              class="overview-card"
+          >
+            <span class="card-title">
+        <span class="icon-container">
+          <UIcon :name="stat.icon" class="main-icon"/>
+        </span>
+        {{ stat.title }}
+      </span>
 
-        <div class="overview-card">
-          <span class="card-title">
-            <span class="icon-container">
-              <UIcon name="mdi-users-group-outline"/>
-            </span>
-            Total Members
-          </span>
-          <h4>
-            <span class="number">500</span>
-            <span class="title">
-              <UIcon name="mdi-trending-up" class="icon"/>
-            </span>
-          </h4>
-        </div>
-
-        <div class="overview-card">
-          <span class="card-title">
-            <span class="icon-container">
-              <UIcon name="mdi-bank-transfer"/>
-            </span>
-            Total Investment
-          </span>
-          <h4>
-            <span class="number">1000.00</span>
-            <span class="title">RM</span>
-          </h4>
+            <p class="stat-details">
+              <span class="number">{{ stat.value }}</span>
+              <span class="trend-icon">
+          <UIcon :name="stat.trendIcon" class="icon"/>
+        </span>
+            </p>
+          </div>
         </div>
       </div>
+
     </div>
   </section>
 </template>
@@ -226,24 +228,24 @@
   .overview-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    gap: 10px;
     width: 100%;
 
     @media (min-width: 768px) {
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 
     @media (min-width: 1024px) {
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 
     .overview-card {
       background: var(--card-bg);
-      padding: 16px;
-      border-radius: 12px;
-      height: 120px;
-      transition: all 0.3s ease;
+      padding: 12px;
+      height: 100px;
+      transition: var(--transition);
       position: relative;
+      border-radius: 6px;
 
       .icon-container {
         padding: 10px;
@@ -251,11 +253,10 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
       }
 
       &:nth-child(1) {
-        background: linear-gradient(135deg, #1976d2 0%, #bbdefb 100%);
+        background: linear-gradient(135deg, rgba(13, 71, 161, 0.15) 0%, rgba(25, 118, 210, 0.15) 100%);
 
         .icon-container {
           color: #0d47a1;
@@ -263,18 +264,58 @@
       }
 
       &:nth-child(2) {
-        background: linear-gradient(135deg, #ffb74d 0%, #ffe0b2 100%);
+        background: linear-gradient(135deg, rgba(46, 125, 50, 0.15) 0%, rgba(165, 214, 167, 0.15) 100%);
 
         .icon-container {
-          color:#f57c00;
+          color: #1b5e20;
         }
       }
 
       &:nth-child(3) {
-        background: linear-gradient(135deg, #a8e6cf 0%, #388e3c 100%);
+        background: linear-gradient(135deg, rgba(0, 105, 92, 0.15) 0%, rgba(178, 223, 219, 0.15) 100%);
 
         .icon-container {
-          color: #388e3c;
+          color: #004d40;
+        }
+      }
+
+      &:nth-child(4) {
+        background: linear-gradient(135deg, rgba(55, 71, 79, 0.15) 0%, rgba(144, 164, 174, 0.15) 100%);
+
+        .icon-container {
+          color: #263238;
+        }
+      }
+
+      &:nth-child(5) {
+        background: linear-gradient(135deg, rgba(40, 53, 147, 0.15) 0%, rgba(159, 168, 218, 0.15) 100%);
+
+        .icon-container {
+          color: #1a237e;
+        }
+      }
+
+      &:nth-child(6) {
+        background: linear-gradient(135deg, rgba(249, 168, 37, 0.15) 0%, rgba(255, 245, 157, 0.15) 100%);
+
+        .icon-container {
+          color: #f57f17;
+        }
+      }
+
+      &:nth-child(7) {
+        background: linear-gradient(135deg, rgba(109, 76, 65, 0.15) 0%, rgba(215, 204, 200, 0.15) 100%);
+
+        .icon-container {
+          color: #4e342e;
+        }
+      }
+
+      &:nth-child(8) {
+        background: linear-gradient(135deg, rgba(0, 131, 143, 0.15) 0%, rgba(178, 235, 242, 0.15) 100%);
+
+        .icon-container {
+          color: #006064;
         }
       }
 
@@ -286,31 +327,33 @@
         color: var(--primary-text-color);
 
         .icon-container {
-          padding: 12px;
-          font-size: var(--heading-3);
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          max-width: 50px;
-          height: 50px;
-          border-radius: 6px;
+          font-size: var(--body-text);
+          align-items: start;
+          justify-content: start;
+          text-align: start;
+          margin: 0;
+          padding-left: 0;
           transition: all 0.3s ease;
+
+          span {
+            font-size: var(--heading-3);
+          }
+
         }
 
         @media (min-width: 1024px) {
-          font-size: var(--heading-4);
+          font-size: var(--danger-color);
         }
       }
 
-      h4 {
-        font-size: var(--body-text) !important;
+      p {
+        font-size: var(--heading-4);
         width: 120px;
-        margin: 10px 0;
         display: flow;
       }
 
       .title {
-        font-size: var(--heading-2);
+        font-size: var(--body-text);
         color: var(--primary-text-color);
         margin-left: 10px;
         width: 30px;
@@ -318,7 +361,7 @@
         align-content: start;
 
         @media (min-width: 1024px) {
-          font-size: var(--heading-3);
+          font-size: var(--heading-4);
           margin-left: 10px;
         }
       }
@@ -326,7 +369,7 @@
       .number {
         font-weight: bold;
         color: var(--primary-text-color);
-        font-size: var(--heading-4);
+        font-size: var(--body-text);
         width: 120px;
 
         @media (min-width: 1024px) {
@@ -335,5 +378,7 @@
       }
     }
   }
+
 }
+
 </style>
