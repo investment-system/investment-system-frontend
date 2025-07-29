@@ -58,11 +58,11 @@ const dashboardStats = [
       <FinancialIconDivider/>
 
       <div class="investment-overview">
-        <div class="overview-cards">
+        <div class="investor-overview-cards">
           <div
               v-for="(stat, index) in dashboardStats"
               :key="index"
-              class="overview-card"
+              class="investor-overview-card"
           >
             <span class="card-title">
         <span class="icon-container">
@@ -225,7 +225,7 @@ const dashboardStats = [
     }
   }
 
-  .overview-cards {
+  .investor-overview-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 10px;
@@ -239,7 +239,7 @@ const dashboardStats = [
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 
-    .overview-card {
+    .investor-overview-card {
       background: var(--card-bg);
       padding: 12px;
       height: 100px;
