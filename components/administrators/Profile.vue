@@ -14,7 +14,7 @@ const links = [
     id: '3',
     link: '',
     label: 'Change Password',
-  }
+  },
 ]
 
 const profileInfo = {
@@ -52,11 +52,11 @@ const profileInfo = {
   },
 }
 
-
 </script>
 
 <template>
   <section class="profile-page">
+
     <div class="header">
       <div class="header-bg">
         <img src="/images/profile-bg.jpg" alt="Profile Header Background"/>
@@ -64,7 +64,7 @@ const profileInfo = {
 
       <div class="profile-info">
         <div class="avatar">
-          <img src="/images/user.png" alt="Profile Image"/>
+          <img src="/images/profile-user-pic.jpg" alt="Profile Image"/>
         </div>
         <div class="info-text">
           <span class="user-id">ID: AKM-20250726-0001</span>
@@ -85,11 +85,19 @@ const profileInfo = {
       </nav>
     </div>
 
-    <div class="profile-section">
-      <div class="profile-grid">
-        <div class="profile-item" v-for="(item, key) in profileInfo" :key="key">
-          <span class="profile-item-label">{{ item.label }}:</span>
-          <span class="profile-item-value">{{ item.value }}</span>
+    <div class="profile-details">
+
+      <div class="profile-header-container">
+
+        <h4>My Profile</h4>
+        <hr class="profile-divider"/>
+
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-item" v-for="(item, key) in profileInfo" :key="key">
+          <label class="item-label">{{ item.label }}</label>
+          <p class="item-value">{{ item.value }}</p>
         </div>
       </div>
     </div>
@@ -108,6 +116,7 @@ const profileInfo = {
 .header {
   background-color: var(--card-bg);
   overflow: hidden;
+  border-radius: 12px;
 }
 
 .header-bg img {
@@ -115,21 +124,22 @@ const profileInfo = {
   height: 150px;
   object-fit: cover;
   display: block;
+  border-radius: 12px 12px 0 0;
 }
 
 .profile-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   padding: 0 10px;
-  margin-top: -20px;
+  margin-top: -25px;
 }
 
 .avatar img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  border: 3px solid var(--border-color);
+  border: 3px solid var(--card-bg);
   background-color: var(--card-bg);
   object-fit: cover;
 }
@@ -162,8 +172,8 @@ const profileInfo = {
 }
 
 .nav-link {
-  padding: 5px 10px;
-  border-radius: 3px 3px 0 0;
+  padding: 10px 15px;
+  border-radius: 6px 6px 0 0;
   text-decoration: none;
   height: 36px;
   align-content: center;
@@ -171,12 +181,9 @@ const profileInfo = {
   transition: var(--transition);
 }
 
-.nav-link:hover {
-  color: var(--secondary-text-color);
-}
-
+.nav-link:hover,
 .nav-link.active {
-  background-color: var(--button-bg);
+  background-color: var(--primary-bg);
 }
 
 @media (min-width: 768px) {
@@ -188,6 +195,7 @@ const profileInfo = {
 
   .profile-info {
     gap: 20px;
+    margin-left: 20px;
   }
 
   .avatar img {
@@ -207,52 +215,63 @@ const profileInfo = {
   }
 }
 
-.profile-section {
-  width: 100%;
+.profile-details {
+  flex: 1;
   background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 30px;
   margin: 20px 0;
-}
 
-.profile-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  padding: 20px 0;
+  .profile-header-container {
 
-  @media (min-width: 640px) {
-    grid-template-columns: 1fr 1fr;
+    h4 {
+      font-size: var(--heading-4);
+      color: var(--primary-text-color);
+      font-weight: normal;
+    }
+
+    .profile-divider {
+      width: 100%;
+      height: 3px;
+      margin: 20px 0;
+      background-color: var(--secondary-text-color);
+    }
   }
 
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @media (min-width: 640px) {
+      grid-template-columns: 1fr 1fr ;
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .detail-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+
+      .item-label {
+        font-size: var(--body-text);
+        color: var(--primary-text-color);
+        font-weight: 600;
+        height: 36px;
+        align-items: center;
+      }
+
+      .item-value {
+        font-size: var(--body-text);
+        color: var(--secondary-text-color);
+        height: 36px;
+        align-items: center;
+      }
+    }
   }
-
-  @media (min-width: 1280px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.profile-item {
-  display: flex;
-  flex-direction: column;
-  padding: 0 20px;
-  border-radius: 0.5rem;
-}
-
-.profile-item-label {
-  font-size: var(--body-text);
-  color: var(--primary-text-color);
-  height: 48px;
-  align-content: center;
-}
-
-.profile-item-value {
-  font-size: 1rem;
-  color: var(--secondary-text-color);
-  height: 48px;
-  align-content: center;
-  background-color: var(--input-field-bg);
-  padding: 0 20px;
-  border-radius: 6px;
 }
 
 
