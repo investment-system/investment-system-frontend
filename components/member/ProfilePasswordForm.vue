@@ -83,7 +83,7 @@ let {$axios} = useNuxtApp()
 const api = $axios
 
 const resetForm = () => {
-  AdminPasswordQuestions.forEach(({ id }) => {
+  AdminPasswordQuestions.forEach(({id}) => {
     form[id] = "";
     errors[id] = "";
   });
@@ -106,7 +106,6 @@ const handleSubmit = async () => {
     }
   }
 };
-
 
 </script>
 

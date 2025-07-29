@@ -4,7 +4,7 @@
 
 <template>
   <MemberHeader/>
-  <MemberChangePassword/>
+  <MemberProfilePasswordForm/>
   <Footer/>
 </template>
 
