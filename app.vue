@@ -47,6 +47,7 @@
   --hover-button-bg: #FFE599;
   --button-disabled-bg: #FFE599;
   --cancel-button-bg: #DDDDDD;
+  --cancel-hover-button-bg: #c6c6c6;
 
 
   --hover-text-color: #2C2C2C;

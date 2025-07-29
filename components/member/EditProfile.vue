@@ -1,17 +1,17 @@
 <script setup>
-import {useRoute} from 'vue-router'
+
 import {ref, reactive, onMounted, computed, onUnmounted} from 'vue'
+import {useRoute} from 'vue-router'
 
 const route = useRoute()
-
 const settingLinks = ref([
   {
-    link: "/member",
+    link: "/member/profile",
     title: "Profile",
     icon: "mdi-account",
   },
   {
-    link: "/member/edit",
+    link: "/member/profile/edit",
     title: "Edit Profile",
     icon: "mdi-account",
   },
@@ -22,6 +22,7 @@ const settingLinks = ref([
   }
 ])
 
+const nonEditableFields = ['email', 'full_name', 'gender']
 const formFields = ref([
   {key: 'full_name', label: 'Full Name', type: 'text'},
   {key: 'ic_number', label: 'IC Number', type: 'text'},
@@ -43,7 +44,6 @@ const formFields = ref([
   {key: 'account_holder_name', label: 'Account Holder', type: 'text'},
   {key: 'bank_account_number', label: 'Account Number', type: 'text'}
 ])
-
 const form = reactive({
   full_name: '',
   ic_number: '',
@@ -62,7 +62,6 @@ const form = reactive({
 
 const loading = ref(false)
 const savedMessage = ref('')
-
 const userProfile = ref({
   userId: '',
   email: '',
@@ -70,7 +69,6 @@ const userProfile = ref({
 })
 
 const originalData = ref({})
-
 const hasUnsavedChanges = computed(() => {
   return Object.keys(form).some(key => form[key] !== originalData.value[key])
 })
@@ -126,17 +124,15 @@ const saveProfile = async () => {
     originalData.value = {...form}
     showMessage('Profile updated successfully!', 'success')
   } catch (error) {
-    showMessage('Failed to save profile. Please try again.', 'error')
   } finally {
     loading.value = false
   }
 }
 
 const resetForm = () => {
-  Object.keys(form).forEach(key => {
-    form[key] = originalData.value[key] || ''
-  })
-  showMessage('Form reset to last saved version', 'info')
+  setTimeout(() => {
+    location.reload()
+  }, 2000)
 }
 
 const showMessage = (message, type = 'success') => {
@@ -161,11 +157,27 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
 })
+
+const avatarFile = ref(null)
+
+const handleAvatarUpload = (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+
+  avatarFile.value = file
+  const reader = new FileReader()
+  reader.onload = () => {
+    userProfile.value.avatar = reader.result
+  }
+  reader.readAsDataURL(file)
+}
+
+
 </script>
 
 <template>
+
   <section>
-    <h2>Account Settings</h2>
 
     <div class="setting-tabs">
       <div class="setting-container" v-for="settingLink in settingLinks" :key="settingLink.link">
@@ -180,32 +192,27 @@ onUnmounted(() => {
       </div>
     </div>
 
+    <div class="profile-header-container">
 
-  </section>
+      <h4>Edit Profile</h4>
+      <hr class="profile-divider"/>
 
-  <section class="profile-member-container">
-
-    <div class="profile-header">
-
-      <div class="avatar-wrapper">
-        <label for="avatar-upload">
-          <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
-        </label>
-        <input id="avatar-upload" type="file" @change="handleAvatarUpload" accept="image/*"/>
-      </div>
-
-      <div class="user-info">
-        <p>ID: <span>{{ userProfile.userId }}</span></p>
-        <p>Eml: <span>{{ userProfile.email }}</span></p>
-        <p v-if="hasUnsavedChanges" class="unsaved-changes">
-          <UIcon name="mdi-circle"/>
-          Unsaved changes
-        </p>
-      </div>
     </div>
 
-    <div class="profile-info">
+    <div class="profile-member-container">
 
+      <div class="profile-header">
+        <div class="avatar-wrapper">
+          <label for="avatar-upload">
+            <img class="avatar-img" :src="userProfile.avatar" alt="Profile Picture"/>
+          </label>
+          <input id="avatar-upload" type="file" @change="handleAvatarUpload" accept="image/*"/>
+        </div>
+        <div class="user-info">
+          <p>ID: <span>KM2025</span></p>
+          <p><span>mohammed@gmail.com</span></p>
+        </div>
+      </div>
 
       <div class="profile-form">
         <div class="form-grid">
@@ -224,276 +231,301 @@ onUnmounted(() => {
                   :type="field.type"
                   v-model="form[field.key]"
                   :placeholder="`Enter ${field.label.toLowerCase()}`"
-                  :disabled="loading"
+                  :disabled="loading || nonEditableFields.includes(field.key)"
               />
 
               <select
                   v-else-if="field.type === 'select'"
                   :id="field.key"
                   v-model="form[field.key]"
-                  :disabled="loading"
+                  :disabled="loading || nonEditableFields.includes(field.key)"
               >
-
                 <option value="">Select {{ field.label }}</option>
                 <option
                     v-for="option in field.options"
-                    :key="option"
+                    :key="option.value"
                     :value="option.value"
                 >
                   {{ option.label }}
                 </option>
               </select>
+
             </div>
           </template>
         </div>
 
         <div class="form-actions">
+
+          <button class="cancel-btn" @click="resetForm">Cancel</button>
+
           <button
               @click="saveProfile"
               class="save-btn"
           >
-            <UIcon v-if="loading" name="mdi-loading" class="spin"/>
-            <UIcon v-else name="mdi-content-save"/>
             {{ loading ? 'Saving...' : 'Save Changes' }}
+
           </button>
 
         </div>
 
-        <div v-if="savedMessage" class="message" :class="savedMessage.type">
-          {{ savedMessage.text }}
-        </div>
       </div>
+
     </div>
   </section>
+
 </template>
 
 <style scoped lang="scss">
 
 section {
-  margin: 0 auto;
+  width: calc(100% - 40px);
+  margin: 20px auto;
+  background: var(--card-bg);
+  height: auto;
+  border-radius: 12px;
 
-  h2 {
-    font-size: var(--heading-3);
-    color: var(--secondary-text-color);
-    height: 50px;
-    font-weight: normal;
-    align-content: center;
-    margin: 0 20px;
+  .profile-header-container {
+
+    h4 {
+      font-size: var(--heading-4);
+      color: var(--primary-text-color);
+      margin: 20px;
+      font-weight: normal;
+    }
+
+    .profile-divider {
+      width: calc(100% - 40px);
+      height: 3px;
+      margin: 20px;
+      background-color: var(--secondary-text-color);
+    }
   }
 
   .setting-tabs {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
     padding: 20px;
-    margin: 0 auto;
+    gap: 10px;
 
-    .setting-container {
+    @media (min-width: 1024px) {
       display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      gap: 20px;
+      margin: 0 auto;
+    }
 
-      .setting-link {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+    .setting-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      color: var(--secondary-text-color);
+      text-decoration: none;
+      transition: var(--transition);
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
         width: 100%;
-        height: 48px;
-        box-sizing: border-box;
-        border: 1px solid var(--accent-color);
-        color: var(--primary-text-color);
-        text-align: center;
-        justify-content: center;
-        cursor: pointer;
+        height: 3px;
+        background-color: transparent;
         transition: var(--transition);
-        text-decoration: none;
 
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 3px;
-          width: 100%;
-          background-color: transparent;
-          transition: var(--transition);
-        }
+      }
 
-        &:hover::before,
-        &.active::before {
+      &:hover {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+
+        &::after {
           background-color: var(--accent-color);
         }
+      }
 
-        &.active {
-          background-color: var(--accent-color-light);
+      &.active {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+
+        &::after {
+          background-color: var(--accent-color);
         }
       }
     }
+  }
+
+  .profile-member-container {
+    width: calc(100% - 40px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
 
     @media (min-width: 768px) {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      gap: 0;
-
-      .setting-container {
-        flex-direction: row;
-
-        .setting-link {
-          width: 160px;
-        }
-      }
+      max-width: 1280px;
+      grid-template-columns:  1fr 3fr;
+      gap: 20px;
     }
-  }
-}
 
-.profile-member-container {
-  min-height: 100vh;
-  width: calc(100% - 40px);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+    @media (min-width: 1024px) {
+      max-width: 1280px;
+      grid-template-columns:  1fr 3fr;
+    }
 
-  @media (min-width: 768px) {
-    max-width: 1280px;
-    grid-template-columns: 1fr 3fr;
-    gap: 20px;
-  }
+    .profile-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      background: var(--card-bg);
+      padding: 20px;
+      max-height: 300px;
+      margin-bottom: 20px;
+      text-align: center;
 
-  .profile-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    width: 100%;
-    min-width: 270px;
-    gap: 1rem;
-    background: var(--card-bg);
-    padding: 1rem;
-    max-height: 300px;
-    margin-bottom: 20px;
-
-    .avatar-wrapper {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      margin: 0 auto;
-
-      label {
-        cursor: pointer;
-        display: block;
-        width: 100%;
-        height: 100%;
-        border-radius: 12px;
-        border: 2px solid var(--border-color, #ccc);
-        overflow: hidden;
-        transition: transform 0.3s ease;
+      .avatar-wrapper {
+        width: 150px;
+        height: 150px;
+        margin: 10px auto;
 
         .avatar-img {
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+        }
+
+        label {
+          cursor: pointer;
+          display: block;
           width: 100%;
           height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-      }
+          border-radius: 12px;
+          overflow: hidden;
+          transition: transform 0.3s ease;
 
-      input[type='file'] {
-        display: none;
-      }
-    }
-
-    .user-info {
-      flex: 1;
-      width: calc(100% - 40px);
-      margin: 0 auto;
-
-      p {
-        margin: 10px 0;
-        color: var(--primary-text-color);
-
-        span {
-          color: var(--secondary-text-color);
-        }
-      }
-    }
-  }
-
-  .profile-form {
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-
-      @media (min-width: 768px) {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      @media (min-width: 1024px) {
-        grid-template-columns: repeat(4, 1fr);
-      }
-
-      .col-span-2 {
-        @media (min-width: 768px) {
-          grid-column: span 2;
-        }
-      }
-
-      .form-item {
-        display: flex;
-        flex-direction: column;
-
-        .form-label {
-          font-size: var(--body-text);
-          color: var(--primary-text-color);
-          height: 48px;
-          align-content: center;
-
-          .required {
-            color: var(--error-color);
+          .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
           }
         }
 
-        input, select, textarea {
-          padding: 0.75rem;
-          border: 1px solid var(--border-color);
-          border-radius: 4px;
-          font-size: var(--placeholder-text);
+        input[type='file'] {
+          display: none;
+        }
+      }
+
+      .user-info {
+        flex: 1;
+        width: calc(100% - 40px);
+        margin: 0 auto;
+
+        p {
+          margin: 10px 0;
+          color: var(--primary-text-color);
+
+          span {
+            color: var(--secondary-text-color);
+          }
+        }
+      }
+    }
+
+    .profile-form {
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+
+        @media (min-width: 768px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (min-width: 1024px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .col-span-2 {
+          @media (min-width: 768px) {
+            grid-column: span 2;
+          }
+        }
+
+        .form-item {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+
+          .form-label {
+            font-size: var(--body-text);
+            color: var(--primary-text-color);
+            height: 36px;
+            align-content: center;
+
+            .required {
+              color: var(--error-color);
+            }
+          }
+
+          input, select, textarea {
+            padding: 0.75rem;
+            border: none;
+            outline: none;
+            border-radius: 4px;
+            font-size: var(--placeholder-text);
+            transition: var(--transition);
+            height: 36px;
+            align-content: center;
+
+            &:focus {
+              outline: none;
+              border-color: var(--accent-color);
+            }
+          }
+          input:disabled,
+          select:disabled {
+            cursor: not-allowed;
+          }
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 20px;
+        margin: 20px;
+
+        button {
+          display: flex;
+          align-items: center;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 6px;
+          font-size: var(--text-button-Text);
+          cursor: pointer;
+          background: var(--button-bg);
+          color: var(--primary-text-color);
           transition: var(--transition);
 
-          &:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.1);
+          &:hover {
+            background-color: var(--hover-button-bg);
+          }
+        }
+
+        .cancel-btn {
+          background: var(--cancel-button-bg);
+
+          &:hover {
+            background: var(--cancel-hover-button-bg);
           }
         }
       }
     }
 
-    .form-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-
-      button {
-
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        font-size: var(--text-button-Text);
-        cursor: pointer;
-        background: var(--button-bg);
-        color: var(--primary-text-color);
-        transition: var(--transition);
-
-        &:hover {
-          background-color: var(--hover-button-bg);
-        }
-      }
-    }
   }
+
 }
 </style>
