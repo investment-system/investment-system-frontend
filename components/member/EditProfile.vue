@@ -6,7 +6,12 @@ const route = useRoute()
 
 const settingLinks = ref([
   {
-    link: "/member/edit-profile",
+    link: "/member",
+    title: "Profile",
+    icon: "mdi-account",
+  },
+  {
+    link: "/member/edit",
     title: "Edit Profile",
     icon: "mdi-account",
   },

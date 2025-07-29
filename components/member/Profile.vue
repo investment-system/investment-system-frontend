@@ -1,12 +1,18 @@
 <script setup>
 
+import { ref } from 'vue'
 import {useRoute} from 'vue-router'
 
 const route = useRoute()
 
 const settingLinks = ref([
   {
-    link: "/member/edit-profile",
+    link: "/member",
+    title: "Profile",
+    icon: "mdi-account",
+  },
+  {
+    link: "/member/profile/edit",
     title: "Edit Profile",
     icon: "mdi-account",
   },
@@ -17,12 +23,26 @@ const settingLinks = ref([
   }
 ])
 
+const profileData = ref([
+  { label: 'Full Name', value: 'Mohammed Adnan' },
+  { label: 'IC Number', value: '123456-78-9012' },
+  { label: 'Gender', value: 'Male' },
+  { label: 'Date of Birth', value: '1995-05-20' },
+  { label: 'Phone Number', value: '+60123456789' },
+  { label: 'Country', value: 'Malaysia' },
+  { label: 'City', value: 'Kuala Lumpur' },
+  { label: 'State', value: 'Selangor' },
+  { label: 'Bank Name', value: 'Maybank' },
+  { label: 'Account Holder Name', value: 'Mohammed Adnan' },
+  { label: 'Bank Account Number', value: '1234567890' },
+])
+
+
 </script>
 
 <template>
 
   <section>
-    <h2>Account Settings</h2>
 
     <div class="setting-tabs">
       <div class="setting-container" v-for="settingLink in settingLinks" :key="settingLink.link">
@@ -37,68 +57,35 @@ const settingLinks = ref([
       </div>
     </div>
 
+    <div class="profile-header-container">
 
-  </section>
+      <h4>My Profile</h4>
+      <hr class="profile-divider"/>
 
-  <section class="profile-member-container">
-    <div class="profile-header">
-      <div class="avatar-wrapper">
-        <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
-      </div>
-      <div class="user-info">
-        <p>ID: <span>KM2025</span></p>
-        <p><span>mohammed@gmail.com</span></p>
-      </div>
     </div>
 
-    <div class="profile-info">
+    <div class="profile-member-container">
 
-      <div class="form-grid">
-        <div class="form-item">
-          <label>Full Name</label>
-          <p>Mohammed Adnan</p>
+      <div class="profile-header">
+        <div class="avatar-wrapper">
+          <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
         </div>
-        <div class="form-item">
-          <label>IC Number</label>
-          <p>123456-78-9012</p>
-        </div>
-        <div class="form-item">
-          <label>Gender</label>
-          <p>Male</p>
-        </div>
-        <div class="form-item">
-          <label>Date of Birth</label>
-          <p>1995-05-20</p>
-        </div>
-        <div class="form-item">
-          <label>Phone Number</label>
-          <p>+60123456789</p>
-        </div>
-        <div class="form-item">
-          <label>Country</label>
-          <p>Malaysia</p>
-        </div>
-        <div class="form-item">
-          <label>City</label>
-          <p>Kuala Lumpur</p>
-        </div>
-        <div class="form-item">
-          <label>State</label>
-          <p>Selangor</p>
-        </div>
-        <div class="form-item">
-          <label>Bank Name</label>
-          <p>Maybank</p>
-        </div>
-        <div class="form-item">
-          <label>Account Holder Name</label>
-          <p>Mohammed Adnan</p>
-        </div>
-        <div class="form-item">
-          <label>Bank Account Number</label>
-          <p>1234567890</p>
+        <div class="user-info">
+          <p>ID: <span>KM2025</span></p>
+          <p><span>mohammed@gmail.com</span></p>
         </div>
       </div>
+
+      <div class="profile-info">
+        <div class="form-grid">
+          <div class="form-item" v-for="(item, index) in profileData" :key="index">
+            <label>{{ item.label }}</label>
+            <p>{{ item.value }}</p>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </section>
 
@@ -107,185 +94,189 @@ const settingLinks = ref([
 <style scoped lang="scss">
 
 section {
-  margin: 0 auto;
+  width: calc(100% - 40px);
+  margin: 20px auto;
+  background: var(--card-bg);
+  height: auto;
+  border-radius: 12px;
 
-  h2 {
-    font-size: var(--heading-3);
-    color: var(--secondary-text-color);
-    height: 50px;
-    font-weight: normal;
-    align-content: center;
-    margin: 0 20px;
+  .profile-header-container {
+
+    h4 {
+      font-size: var(--heading-4);
+      color: var(--primary-text-color);
+      margin: 20px;
+      font-weight: normal;
+    }
+
+    .profile-divider{
+      width: calc(100% - 40px);
+      height: 3px;
+      margin: 20px ;
+      background-color: var(--secondary-text-color);
+    }
   }
 
   .setting-tabs {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
     padding: 20px;
-    margin: 0 auto;
+    gap: 10px;
 
-    .setting-container {
+    @media (min-width: 1024px) {
       display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      gap: 20px;
+      margin: 0 auto;
+    }
 
-      .setting-link {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+    .setting-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      color: var(--secondary-text-color);
+      text-decoration: none;
+      transition: var(--transition);
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
         width: 100%;
-        height: 48px;
-        box-sizing: border-box;
-        border: 1px solid var(--accent-color);
-        color: var(--primary-text-color);
-        text-align: center;
-        justify-content: center;
-        cursor: pointer;
+        height: 3px;
+        background-color: transparent;
         transition: var(--transition);
-        text-decoration: none;
 
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 3px;
-          width: 100%;
-          background-color: transparent;
-          transition: var(--transition);
-        }
+      }
 
-        &:hover::before,
-        &.active::before {
+      &:hover {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+
+        &::after {
           background-color: var(--accent-color);
         }
+      }
 
-        &.active {
-          background-color: var(--accent-color-light);
+      &.active {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+
+        &::after {
+          background-color: var(--accent-color);
+        }
+      }
+    }
+  }
+
+  .profile-member-container {
+    width: calc(100% - 40px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @media (min-width: 768px) {
+      max-width: 1280px;
+      grid-template-columns:  1fr 3fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 1024px) {
+      max-width: 1280px;
+      grid-template-columns:  1fr 3fr;
+    }
+
+    .profile-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      background: var(--card-bg);
+      padding: 20px;
+      max-height: 300px;
+      margin-bottom: 20px;
+      text-align: center;
+
+      .avatar-wrapper {
+        width: 150px;
+        height: 150px;
+        margin: 10px auto;
+
+        .avatar-img {
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+        }
+      }
+
+      .user-info {
+        flex: 1;
+        width: calc(100% - 40px);
+        margin: 0 auto;
+
+        p {
+          margin: 10px 0;
+          color: var(--primary-text-color);
+
+          span {
+            color: var(--secondary-text-color);
+          }
+        }
+      }
+    }
+
+    .profile-info {
+
+      .form-grid {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 30px;
+
+        .form-item {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+
+          label {
+            color: var(--primary-text-color);
+            height: 36px;
+            align-content: center;
+            font-weight: 600;
+            font-size: var(--label-text);
+
+          }
+
+          p {
+            margin: 0;
+            color: var(--secondary-text-color);
+            height: 36px;
+            align-content: center;
+          }
         }
       }
     }
 
     @media (min-width: 768px) {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      gap: 0;
-
-      .setting-container {
-        flex-direction: row;
-
-        .setting-link {
-          width: 160px;
-        }
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
       }
-    }
-  }
 
-}
-
-.profile-member-container {
-  min-height: 100vh;
-  width: calc(100% - 40px);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-
-  @media (min-width: 768px) {
-    max-width: 1280px;
-    grid-template-columns:  1fr 3fr;
-    gap: 20px;
-  }
-
-  @media (min-width: 1024px) {
-    max-width: 1280px;
-    grid-template-columns:  1fr 3fr;
-  }
-
-  .profile-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem;
-    background: var(--card-bg);
-    padding: 1rem;
-    max-height: 300px;
-    margin-bottom: 20px;
-
-    .avatar-wrapper {
-      width: 150px;
-      height: 150px;
-      margin: 1rem auto;
-
-      .avatar-img {
+      .avatar-wrapper {
         width: 150px;
         height: 150px;
-        border-radius: 50%;
       }
     }
 
-    .user-info {
-      flex: 1;
-      width: calc(100% - 40px);
-      margin: 0 auto;
-
-      p {
-        margin: 10px 0;
-        color: var(--primary-text-color);
-
-        span {
-          color: var(--secondary-text-color);
-        }
+    @media (min-width: 1024px) {
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   }
 
-  .profile-info {
-
-    .form-grid {
-      display: grid;
-      gap: 0 10px;
-
-      .form-item {
-
-        label {
-          display: block;
-          color: var(--primary-text-color);
-          height: 48px;
-          align-content: center;
-        }
-
-        p {
-          margin: 0;
-          color: var(--secondary-text-color);
-          height: 48px;
-          align-content: center;
-          background-color: var(--card-bg);
-          padding: 0 10px;
-        }
-      }
-    }
-  }
-
-  @media (min-width: 768px) {
-    .form-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-
-    .avatar-wrapper {
-      width: 150px;
-      height: 150px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .form-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
 }
 </style>
