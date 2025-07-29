@@ -6,7 +6,7 @@ import Dashboard from "~/components/administrators/Dashboard.vue";
 <template>
   <AdministratorsHeader/>
   <Dashboard/>
-  <AdministratorsTransactionsTable/>
+  <AdministratorsTransactionsTableLatest/>
   <Footer/>
 </template>
 
