@@ -1,8 +1,27 @@
 <script setup>
 
-import {reactive, watch} from 'vue';
 import {z} from 'zod';
+import {ref, reactive, watch} from 'vue';
 import {useRoute} from 'vue-router'
+
+const route = useRoute()
+const settingLinks = ref([
+  {
+    link: "/member/profile",
+    title: "Profile",
+    icon: "mdi-account",
+  },
+  {
+    link: "/member/profile/edit",
+    title: "Edit Profile",
+    icon: "mdi-account",
+  },
+  {
+    link: "/member/auth/change-password",
+    title: "Change Password",
+    icon: "mdi-lock",
+  }
+])
 
 const AdminPasswordQuestions = [
   {
@@ -25,15 +44,16 @@ const AdminPasswordQuestions = [
   },
 ];
 
-const formSchema = z.object({
-  "old_password": z
-      .string(),
-  "new_password": z
-      .string(),
-  "confirm_password": z
-      .string()
-      .refine(value => value === form["new_password"], "Passwords must match"),
-});
+const formSchema = z
+    .object({
+      old_password: z.string().min(1, "Current password is required"),
+      new_password: z.string().min(6, "New password must be at least 6 characters"),
+      confirm_password: z.string().min(1, "Please confirm your new password"),
+    })
+    .refine((data) => data.new_password === data.confirm_password, {
+      message: "Passwords must match",
+      path: ["confirm_password"], // specify error path
+    });
 
 const form = reactive({});
 const errors = reactive({});
@@ -62,6 +82,14 @@ AdminPasswordQuestions.forEach((question) => {
 let {$axios} = useNuxtApp()
 const api = $axios
 
+const resetForm = () => {
+  AdminPasswordQuestions.forEach(({ id }) => {
+    form[id] = "";
+    errors[id] = "";
+  });
+};
+
+
 const handleSubmit = async () => {
   try {
     const response = await api.post(`/`, form);
@@ -79,27 +107,12 @@ const handleSubmit = async () => {
   }
 };
 
-const route = useRoute()
-
-const settingLinks = ref([
-  {
-    link: "/member/edit-profile",
-    title: "Edit Profile",
-    icon: "mdi-account",
-  },
-  {
-    link: "/member/change-password",
-    title: "Change Password",
-    icon: "mdi-lock",
-  }
-])
 
 </script>
 
 <template>
 
   <section>
-    <h2>Account Settings</h2>
 
     <div class="setting-tabs">
       <div class="setting-container" v-for="settingLink in settingLinks" :key="settingLink.link">
@@ -114,326 +127,223 @@ const settingLinks = ref([
       </div>
     </div>
 
-
-  </section>
-
-  <section class="profile-member-container">
-
-    <div class="profile-header">
-      <div class="avatar-wrapper">
-        <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
+    <div class="security-question-form">
+      <div class="form-header">
+        <h2>Change Security Questions</h2>
       </div>
-      <div class="user-info">
-        <p>User ID : <span>KM2025</span></p>
-        <p>Email: <span>mohammed@gmail.com</span></p>
-      </div>
-    </div>
 
-    <div class="profile-info">
-
-      <div class="change-password-from-container">
-        <form @submit.prevent="handleSubmit">
+      <form @submit.prevent="onSubmit" novalidate>
+        <div class="form-grid">
           <div
-              v-for="(question, index) in AdminPasswordQuestions"
-              :key="index"
               class="form-group"
+              v-for="(field, index) in AdminPasswordQuestions"
+              :key="index"
           >
-            <div class="form-control">
-              <label class="question-title" :for="question.id">
-                {{ question.label }}:
-              </label>
-              <input
-                  v-if="question.type === 'text' || question.type === 'password'"
-                  :type="question.type"
-                  v-model="form[question.id]"
-                  :placeholder="question.placeholder"
-                  :id="question.id"
-              />
-              <span v-if="errors[question.id]" class="error">
-                {{ errors[question.id] }}
-              </span>
-            </div>
+            <label :for="field.name">{{ field.label }}</label>
+            <input
+                :id="field.id"
+                :name="field.id"
+                v-model="form[field.id]"
+                :placeholder="field.placeholder"
+                :type="field.type"
+                :class="{ 'input-error': errors[field.id] }"
+            />
+            <span v-if="errors[field.id]" class="error-message">{{ errors[field.id] }}</span>
+
+            <span v-if="errors[field.name]" class="error-message">
+            {{ errors[field.name] }}
+          </span>
           </div>
+        </div>
 
-          <div class="btn-wrapper">
-            <button type="" class="cancel-btn">Cancel</button>
-            <button type="submit" class="submit-btn">Save Changes</button>
-          </div>
-
-        </form>
-
-      </div>
-
+        <div class="form-actions">
+          <button type="submit" class="btn btn-submit">Submit</button>
+          <button type="button" class="btn btn-cancel" @click="resetForm">
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
+
   </section>
+
 </template>
 
 <style scoped lang="scss">
 
 section {
-  margin: 0 auto;
-
-  h2 {
-    font-size: var(--heading-3);
-    color: var(--secondary-text-color);
-    height: 50px;
-    font-weight: normal;
-    align-content: center;
-    margin: 0 20px;
-  }
+  width: calc(100% - 40px);
+  margin: 20px auto;
+  border-radius: 12px;
+  height: 100vh;
 
   .setting-tabs {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
     padding: 20px;
-    margin: 0 auto;
+    gap: 10px;
+    background: var(--card-bg);
+    border-radius: 12px 12px 0 0;
 
-    .setting-container {
+    @media (min-width: 1024px) {
       display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      gap: 20px;
+      margin: 0 auto;
+    }
 
-      .setting-link {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+    .setting-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      color: var(--secondary-text-color);
+      text-decoration: none;
+      transition: var(--transition);
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
         width: 100%;
-        height: 48px;
-        box-sizing: border-box;
-        border: 1px solid var(--accent-color);
-        color: var(--primary-text-color);
-        text-align: center;
-        justify-content: center;
-        cursor: pointer;
+        height: 3px;
+        background-color: transparent;
         transition: var(--transition);
-        text-decoration: none;
 
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 3px;
-          width: 100%;
-          background-color: transparent;
-          transition: var(--transition);
-        }
+      }
 
-        &:hover::before,
-        &.active::before {
+      &:hover {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+
+        &::after {
           background-color: var(--accent-color);
         }
+      }
 
-        &.active {
-          background-color: var(--accent-color-light);
+      &.active {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+
+        &::after {
+          background-color: var(--accent-color);
+        }
+      }
+    }
+  }
+
+  .security-question-form {
+    padding: 20px;
+    background: var(--card-bg);
+
+    .form-header {
+      margin-bottom: 20px;
+
+      h2 {
+        font-size: var(--heading-3);
+        font-weight: 600;
+        color: var(--primary-text-color);
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .form-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-weight: 500;
+        height: 36px;
+        align-content: center;
+      }
+
+      input {
+        padding: 0.6rem 0.8rem;
+        border: 2px solid var(--secondary-text-color);
+        border-radius: 6px;
+        font-size: var(--placeholder-text);
+        transition: border-color 0.2s;
+        height: 36px;
+        align-content: center;
+
+        &:focus {
+          border-color: var(--accent-color);
+          outline: none;
+        }
+
+        &.input-error {
+          border-color: var(--danger-color);
+        }
+      }
+
+      .error-message {
+        color: var(--danger-color);
+        font-size: var(--small-text);
+        margin-top: 0.25rem;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.2s;
+      }
+
+      .btn-submit {
+        background-color: var(--button-bg);
+
+        &:hover {
+          background-color: var(--hover-button-bg);
+        }
+      }
+
+      .btn-cancel {
+        background-color: var(--cancel-button-bg);
+
+        &:hover {
+          background-color: var(--cancel-hover-button-bg);
         }
       }
     }
 
     @media (min-width: 768px) {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      gap: 0;
-
-      .setting-container {
+      .form-grid {
         flex-direction: row;
-
-        .setting-link {
-          width: 160px;
-        }
-      }
-    }
-  }
-
-}
-
-.profile-member-container {
-  min-height: 100vh;
-  width: calc(100% - 40px);
-  margin: 0 20px;
-  display: grid;
-
-
-  @media (min-width: 768px) {
-    grid-template-columns:  1fr 3fr;
-    gap: 20px;
-  }
-
-  @media (min-width: 1024px) {
-    max-width: 1280px;
-    grid-template-columns:  1fr 3fr;
-    gap: 20px;
-  }
-
-  .profile-header {
-    background: var(--card-bg);
-    padding: 1rem;
-    max-height: 300px;
-
-    .avatar-wrapper {
-      width: 150px;
-      height: 150px;
-      margin: 10px auto;
-
-      .avatar-img {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-      }
-    }
-
-    .user-info {
-      flex: 1;
-      width: 100%;
-      margin: 0 auto;
-
-      p {
-        margin: 10px 0;
-        color: var(--primary-text-color);
-
-        span {
-          color: var(--secondary-text-color);
-        }
-      }
-    }
-  }
-
-  .profile-info {
-
-    .change-password-from-container {
-      margin: 20px auto;
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      border-radius: 10px;
-
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
-
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-
-        label {
-          font-size: var(--label-font-size);
-          color: var(--primary-text-color);
-          font-weight: 500;
-          height: 48px;
-          align-content: center;
-        }
-
-        .form-control {
-          display: flex;
-          flex-direction: column;
-
-          @media (min-width: 768px) {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-          }
-
-          input {
-            height: 48px;
-            padding: 0 14px;
-            border: none;
-            border-radius: 6px;
-            background-color: var(--input-field-bg);
-            color: var(--primary-text-color);
-            font-size: 1rem;
-            transition: border-color 0.2s;
-
-            &:focus {
-              border-color: var(--primary-color);
-              outline: none;
-            }
-          }
-
-          .error {
-            color: red;
-            font-size: 0.85rem;
-            margin-top: 4px;
-          }
-        }
-      }
-
-      .btn-wrapper {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
         flex-wrap: wrap;
+        gap: 1.5rem;
 
-        button {
-          width: 100%;
-          max-width: 140px;
-          height: 48px;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-weight: 500;
-          transition: var(--transition);
-        }
-
-        .cancel-btn {
-          background-color: var(--cancel-button-bg);
-          color: var(--primary-text-color);
-        }
-
-        .cancel-btn:hover {
-          background-color: var(--button-disabled-bg);
-          color: var(--secondary-text-color);
-        }
-
-        .submit-btn {
-          background-color: var(--button-bg);
-          color: var(--primary-text-color);
-        }
-
-        .submit-btn:hover {
-          background-color: var(--button-disabled-bg);
-          color: var(--secondary-text-color);
-        }
-      }
-
-      // Tablet and desktop
-      @media (min-width: 768px) {
         .form-group {
-
-          label {
-            width: 100%;
-            height: 48px;
-            text-align: start;
-          }
-
-          .form-control {
-            width: 100%;
-          }
+          flex: 1 1 45%;
         }
+      }
+
+      .form-actions {
+        justify-content: flex-start;
       }
     }
   }
 
-  @media (min-width: 768px) {
-    .form-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-
-    .avatar-wrapper {
-      width: 150px;
-      height: 150px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .form-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
 }
 </style>

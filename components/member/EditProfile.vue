@@ -16,7 +16,7 @@ const settingLinks = ref([
     icon: "mdi-account",
   },
   {
-    link: "/member/change-password",
+    link: "/member/auth/change-password",
     title: "Change Password",
     icon: "mdi-lock",
   }
