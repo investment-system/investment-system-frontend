@@ -223,7 +223,7 @@ section {
       .form-grid {
         display: grid;
         gap: 10px;
-        margin-bottom: 30px;
+        margin: 20px 0;
 
         .form-item {
           display: grid;
