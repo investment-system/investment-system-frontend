@@ -2,7 +2,7 @@
 import {ref} from 'vue'
 
 const profileData = ref([
-  {label: 'Email Address', value: 'Mohammed Adnan'},
+  {label: 'Email Address', value: 'mohammed.adnan@gmail.com'},
   {label: 'IC Number', value: '123456-78-9012'},
   {label: 'Gender', value: 'Male'},
   {label: 'Date of Birth', value: '1995-05-20'},
@@ -107,46 +107,38 @@ const toggleUserStatus = () => {
 
 section {
   width: calc(100% - 40px);
-  margin: 20px auto 50px auto;
+  margin: 20px auto 50px;
 
   .profile-member-container {
-    margin: 30px auto;
     display: grid;
     grid-template-columns: 1fr;
     padding: 24px 0;
+    margin: 30px auto;
 
     @media (min-width: 768px) {
-      max-width: 1280px;
-      grid-template-columns:  1fr 3fr;
-      gap: 20px;
+      grid-template-columns: 2fr 3fr;
     }
 
     @media (min-width: 1024px) {
-      max-width: 1280px;
-      grid-template-columns:  1fr 3fr;
+      grid-template-columns: 1fr 3fr;
     }
 
     .profile-header {
-      display: block;
-      align-items: center;
-      gap: 0;
-      padding: 0 20px;
-      max-height: 300px;
       text-align: center;
+      padding: 0 20px;
 
       .avatar-wrapper {
+        position: relative;
         width: 150px;
         height: 150px;
         margin: 10px auto;
-        position: relative; // Added for positioning the status badge
 
         .avatar-img {
-          width: 150px;
-          height: 150px;
+          width: 100%;
+          height: 100%;
           border-radius: 50%;
         }
 
-        // Status badge styles
         .status-badge {
           position: absolute;
           bottom: 10px;
@@ -173,7 +165,6 @@ section {
       }
 
       .user-info {
-        flex: 1;
         width: calc(100% - 40px);
         margin: 0 auto;
 
@@ -184,7 +175,6 @@ section {
           span {
             color: var(--secondary-text-color);
 
-            // Status text styling
             &.status-text {
               font-weight: 600;
 
@@ -219,20 +209,17 @@ section {
         width: 100%;
         transition: var(--transition);
 
-        @media (min-width: 640px) {
-          width: auto;
-        }
-
         &:hover {
           background-color: var(--hover-button-bg);
         }
+
+        @media (min-width: 640px) {
+          width: auto;
+        }
       }
-
-
     }
 
     .profile-info {
-
       .form-grid {
         display: grid;
         gap: 10px;
@@ -242,115 +229,102 @@ section {
           display: grid;
           grid-template-columns: 1fr 1fr;
 
+          @media (min-width: 768px) {
+            grid-template-columns: 1fr;
+          }
+
+          @media (min-width: 1024px) {
+            grid-template-columns: 1fr 1fr;
+          }
+
           label {
             color: var(--primary-text-color);
+            font-size: var(--label-text);
+            font-weight: 600;
             height: 36px;
             align-content: center;
-            font-weight: 600;
-            font-size: var(--label-text);
-
           }
 
           p {
-            margin: 0;
             color: var(--secondary-text-color);
+            margin: 0;
             height: 36px;
             align-content: center;
           }
         }
-      }
-    }
 
-    @media (min-width: 768px) {
-      .form-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-      }
-
-      .avatar-wrapper {
-        width: 150px;
-        height: 150px;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .form-grid {
-        grid-template-columns: repeat(2, 1fr);
+        @media (min-width: 768px) {
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+        }
       }
     }
   }
 
   .member-analytics-container-cards {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1rem;
-    margin: 1rem 0;
-    align-items: center;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 20px 0;
     text-align: center;
     border-top: 2px solid var(--card-bg);
     border-bottom: 2px solid var(--card-bg);
 
-    .member-analytics-container-cards {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      margin: 20px 0;
-      text-align: center;
-
-      @media (min-width: 640px) {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      @media (min-width: 1024px) {
-        grid-template-columns: repeat(3, 1fr);
-      }
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
     }
 
-    .member-analytics-card {
-      padding: 20px;
-      display: block;
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .member-analytics-card {
+    padding: 20px;
+    border-bottom: 2px solid var(--card-bg);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    @media (min-width: 640px) {
+      border-bottom: none;
       border-right: 2px solid var(--card-bg);
 
       &:last-child {
         border-right: none;
       }
+    }
 
-      .member-analytics-card-header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        width: 100%;
-        height: auto;
+    .member-analytics-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
 
-        .analytics-icon {
-          font-size: var(--heading-3);
-          color: var(--primary-color);
-        }
-
-        .analytics-value {
-          font-size: var(--heading-4);
-          font-weight: bold;
-          color: var(--primary-text-color);
-        }
-
-        .analytics-value-icon {
-          font-size: var(--heading-4);
-          color: var(--accent-color);
-        }
+      .analytics-icon {
+        font-size: var(--heading-3);
+        color: var(--primary-color);
       }
 
-    }
+      .analytics-value {
+        font-size: var(--heading-4);
+        font-weight: bold;
+        color: var(--primary-text-color);
+      }
 
-    .analytics-title {
-      display: block;
-      font-size: var(--body-text);
-      color: var(--secondary-text-color);
-      padding: 10px 0 !important;
-      text-align: center;
+      .analytics-value-icon {
+        font-size: var(--heading-4);
+        color: var(--accent-color);
+      }
     }
-
   }
 
+  .analytics-title {
+    font-size: var(--body-text);
+    color: var(--secondary-text-color);
+    padding: 10px 0;
+    text-align: center;
+  }
 }
 </style>
