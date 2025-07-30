@@ -230,7 +230,7 @@ section {
     margin: 0 auto;
     padding:25px;
     border-radius: 12px;
-    border: 2px solid var(--card-border);
+    border: 1px solid var(--card-border);
 
     h4{
       font-weight: 500;
