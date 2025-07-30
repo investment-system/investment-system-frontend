@@ -98,7 +98,7 @@ const handleLogin = () => {
           </div>
 
           <button type="submit" class="signup-btn" :disabled="loading">
-            {{ loading ? 'Logging in...' : 'Signup' }}
+            {{ loading ? 'Logging in...' : 'Sign Up' }}
           </button>
         </form>
 
@@ -217,7 +217,6 @@ const handleLogin = () => {
         border: none;
         border-radius: 6px;
         font-size: var(--text-button-Text);
-        font-weight: 600;
         cursor: pointer;
         width: 100%;
         max-width: 350px;
@@ -241,7 +240,7 @@ const handleLogin = () => {
 
   .image-container {
     display: block;
-    background: var(--input-field-bg);
+    background: var(--card-bg);
     width: 100%;
     max-width: 480px;
     height: 460px;

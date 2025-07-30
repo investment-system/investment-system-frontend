@@ -112,7 +112,7 @@ const setNewPassword = () => {
     max-width: 400px;
 
     input {
-      height: 48px;
+      height: 36px;
       background: var(--primary-bg);
       border: none;
       border-radius: 6px;
@@ -124,7 +124,7 @@ const setNewPassword = () => {
       font-size: var(--body-text);
       background: var(--button-bg);
       color: var(--primary-text-color);
-      height: 48px;
+      height: 36px;
       border: none;
       cursor: pointer;
       border-radius: 6px;

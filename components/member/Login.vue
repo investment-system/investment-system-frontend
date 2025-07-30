@@ -129,7 +129,7 @@ const handleLogin = () => {
     max-width: 1020px;
     margin: 0 auto;
     height: 500px;
-    border-radius: 50px;
+    border-radius: 24px;
     gap: 20px;
     padding: 0;
   }
@@ -215,7 +215,6 @@ const handleLogin = () => {
         border: none;
         border-radius: 6px;
         font-size: var(--text-button-Text);
-        font-weight: 600;
         cursor: pointer;
         width: 100%;
         max-width: 350px;
@@ -239,7 +238,7 @@ const handleLogin = () => {
 
   .image-container {
     display: block;
-    background: var(--input-field-bg);
+    background: var(--card-bg);
     width: 100%;
     max-width: 480px;
     height: 460px;

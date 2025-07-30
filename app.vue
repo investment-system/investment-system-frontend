@@ -36,7 +36,7 @@
   --primary-bg: #FDFCF9;
   --secondary-bg: #F5F5F5;
   --card-bg: #F1F1F1;
-  --card-hover: #FDFCF9;
+  --card-hover: #FFFFFF;
 
   --border-color: #E0C281;
 
@@ -52,7 +52,7 @@
 
 
   --hover-text-color: #2C2C2C;
-  --input-field-bg: #ffffff;
+  --input-field-bg: #DDDDDD;
   --card-border: rgba(102, 102, 102, 0.5);
 
   --primary-text-color: #2C2C2C;
