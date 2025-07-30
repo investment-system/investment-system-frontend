@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {ref, computed} from 'vue'
+import MemberTransactionFormPopup from "~/components/administrators/MemberTransactionFormPopup.vue";
 
 const search = ref('')
-const selectedTransactions = ref<number[]>([])
 const selectedType = ref('All')
 
 const transactions = ref([
@@ -65,6 +65,9 @@ const filteredTransactions = computed(() => {
   })
 })
 
+
+const showPopup = ref(false)
+
 </script>
 
 <template>
@@ -81,9 +84,13 @@ const filteredTransactions = computed(() => {
             class="transaction-search"
             placeholder="Search Transactions ... "
         />
-        <nuxt-link to="" class="transaction-create-btn">
+
+        <nuxt-link to="#" class="transaction-create-btn" @click.prevent="showPopup = true">
           Create transaction
         </nuxt-link>
+
+        <MemberTransactionFormPopup v-model:show="showPopup" />
+
 
       </div>
     </div>
@@ -106,12 +113,6 @@ const filteredTransactions = computed(() => {
             :key="transaction.transaction_id"
             class="transaction-row"
         >
-          <!--          <input-->
-          <!--              type="checkbox"-->
-          <!--              v-model="selectedTransactions"-->
-          <!--              :value="transaction.transaction_id"-->
-          <!--              class="transaction-checkbox"-->
-          <!--          />-->
           <span></span>
           <span>{{ transaction.transaction_code }}</span>
           <span>{{ transaction.source_type }}</span>
