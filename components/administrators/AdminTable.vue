@@ -284,6 +284,8 @@ const deleteSelected = () => {
   }
 
   &--danger {
+    display: block;
+    justify-self: end;
     background: var(--cancel-button-bg);
     color: var(--danger-color);
     margin-top: 20px;
