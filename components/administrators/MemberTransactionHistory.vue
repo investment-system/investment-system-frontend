@@ -65,12 +65,6 @@ const filteredTransactions = computed(() => {
   })
 })
 
-const deleteSelected = () => {
-  transactions.value = transactions.value.filter(
-      (transaction) => !selectedTransactions.value.includes(transaction.transaction_id)
-  )
-  selectedTransactions.value = []
-}
 </script>
 
 <template>
