@@ -1,22 +1,6 @@
 <script setup>
 import {ref} from 'vue'
 
-const profileData = ref([
-  {label: 'Email Address', value: 'mohammed.adnan@gmail.com'},
-  {label: 'IC Number', value: '123456-78-9012'},
-  {label: 'Gender', value: 'Male'},
-  {label: 'Date of Birth', value: '1995-05-20'},
-  {label: 'Phone Number', value: '+60123456789'},
-  {label: 'Country', value: 'Malaysia'},
-  {label: 'City', value: 'Kuala Lumpur'},
-  {label: 'State', value: 'Selangor'},
-  {label: 'Bank Name', value: 'Maybank'},
-  {label: 'Account Holder Name', value: 'Mohammed Adnan'},
-  {label: 'Bank Account Number', value: '1234567890'},
-])
-
-const userStatus = ref("Active")
-
 const memberAnalytics = ref([
   {
     title: 'Total Account Balance',
@@ -37,11 +21,6 @@ const memberAnalytics = ref([
     valueIcon: 'i-heroicons-arrow-trending-up',
   },
 ])
-
-const toggleUserStatus = () => {
-  userStatus.value = userStatus.value === 'Active' ? 'Inactive' : 'Active'
-}
-
 
 </script>
 
