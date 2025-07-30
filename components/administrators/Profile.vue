@@ -1,278 +1,251 @@
-<script setup lang="ts">
-const links = [
-  {
-    id: '1',
-    link: '/administrators/profile',
-    label: 'Profile',
-  },
-  {
-    id: '2',
-    link: '/administrators/profile/edit',
-    label: 'Update Profile',
-  },
-  {
-    id: '3',
-    link: '',
-    label: 'Change Password',
-  },
-]
+<script setup>
 
-const profileInfo = {
-  full_name: {
-    label: 'Full Name',
-    value: 'Adnan Madi',
+import { ref } from 'vue'
+import {useRoute} from 'vue-router'
+
+const route = useRoute()
+
+const settingLinks = ref([
+  {
+    link: "/administrators/profile",
+    title: "Profile",
+    icon: "mdi-account",
   },
-  email: {
-    label: 'Email Address',
-    value: 'adnan.madi@example.com',
+  {
+    link: "/administrators/profile/edit",
+    title: "Edit Profile",
+    icon: "mdi-account",
   },
-  ic_number: {
-    label: 'IC Number',
-    value: '900101-14-5678',
+  {
+    link: "/administrators/auth/change-password",
+    title: "Change Password",
+    icon: "mdi-lock",
   },
-  gender: {
-    label: 'Gender',
-    value: 'Male',
-  },
-  date_of_birth: {
-    label: 'Date of Birth',
-    value: '1990-01-01',
-  },
-  phone_number: {
-    label: 'Phone Number',
-    value: '+60 12-345 6789',
-  },
-  role: {
-    label: 'Role',
-    value: 'admin',
-  },
-  position: {
-    label: 'Position',
-    value: 'Project Coordinator',
-  },
-}
+])
+
+const profileData = ref([
+  { label: 'Email Address', value: 'Mohammed Adnan' },
+  { label: 'IC Number', value: '123456-78-9012' },
+  { label: 'Gender', value: 'Male' },
+  { label: 'Date of Birth', value: '1995-05-20' },
+  { label: 'Phone Number', value: '+60123456789' },
+  { label: 'Country', value: 'Malaysia' },
+  { label: 'City', value: 'Kuala Lumpur' },
+  { label: 'State', value: 'Selangor' },
+  { label: 'Bank Name', value: 'Maybank' },
+  { label: 'Account Holder Name', value: 'Mohammed Adnan' },
+  { label: 'Bank Account Number', value: '1234567890' },
+])
+
 
 </script>
 
 <template>
-  <section class="profile-page">
 
-    <div class="header">
-      <div class="header-bg">
-        <img src="/images/profile-bg.jpg" alt="Profile Header Background"/>
+  <section>
+
+    <div class="setting-tabs">
+      <div
+          class="setting-container"
+          v-for="settingLink in settingLinks"
+          :key="settingLink.link"
+      >
+        <nuxt-link
+            :to="settingLink.link"
+            class="setting-link"
+            :class="{ active: route.path.startsWith(settingLink.link) }"
+        >
+          <UIcon :name="settingLink.icon" />
+          {{ settingLink.title }}
+        </nuxt-link>
+      </div>
+    </div>
+
+    <div class="profile-member-container">
+
+      <div class="profile-header">
+        <div class="avatar-wrapper">
+          <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
+        </div>
+        <div class="user-info">
+          <p>ID: <span>MKM-20250623-0001</span></p>
+          <p>Name: <span>mohammed Jamal</span></p>
+        </div>
       </div>
 
       <div class="profile-info">
-        <div class="avatar">
-          <img src="/images/profile-user-pic.jpg" alt="Profile Image"/>
-        </div>
-        <div class="info-text">
-          <span class="user-id">ID: AKM-20250726-0001</span>
-          <span class="user-name">Aminah Rosli</span>
+        <div class="form-grid">
+          <div class="form-item" v-for="(item, index) in profileData" :key="index">
+            <label>{{ item.label }}</label>
+            <p>{{ item.value }}</p>
+          </div>
         </div>
       </div>
 
-      <nav class="profile-nav">
-        <NuxtLink
-            v-for="link in links"
-            :key="link.id"
-            :to="link.link"
-            class="nav-link"
-            :class="{ active: $route.path === link.link }"
-        >
-          {{ link.label }}
-        </NuxtLink>
-      </nav>
+
     </div>
-
-    <div class="profile-details">
-
-      <div class="profile-header-container">
-
-        <h4>My Profile</h4>
-        <hr class="profile-divider"/>
-
-      </div>
-
-      <div class="details-grid">
-        <div class="detail-item" v-for="(item, key) in profileInfo" :key="key">
-          <label class="item-label">{{ item.label }}</label>
-          <p class="item-value">{{ item.value }}</p>
-        </div>
-      </div>
-    </div>
-
-
   </section>
+
 </template>
 
-<style scoped>
-.profile-page {
-  width: 100%;
-  margin: 0 auto;
-  min-height: 100vh;
-}
+<style scoped lang="scss">
 
-.header {
-  background-color: var(--card-bg);
-  overflow: hidden;
+section {
+  width: calc(100% - 40px);
+  margin: 20px auto;
+  height: 80vh;
   border-radius: 12px;
-}
 
-.header-bg img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  display: block;
-  border-radius: 12px 12px 0 0;
-}
+  .setting-tabs {
+    display: grid;
+    grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
+    padding: 10px;
+    gap: 10px;
+    background: var(--card-bg);
+    justify-content: start;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    width: auto;
 
-.profile-info {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 0 10px;
-  margin-top: -25px;
-}
+    @media (min-width: 768px) {
+      width: fit-content;
+    }
 
-.avatar img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 3px solid var(--card-bg);
-  background-color: var(--card-bg);
-  object-fit: cover;
-}
+    @media (min-width: 1024px) {
+      display: flex;
+      gap: 20px;
+      width: fit-content;
+    }
 
-.info-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.user-id {
-  font-size: var(--small-text);
-  color: var(--secondary-text-color);
-  height: 20px;
-  align-items: center;
-}
-
-.user-name {
-  font-size: var(--body-text);
-  color: var(--primary-text-color);
-  height: 20px;
-  align-items: center;
-}
-
-.profile-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin: 20px 0 0 20px;
-}
-
-.nav-link {
-  padding: 10px 15px;
-  border-radius: 6px 6px 0 0;
-  text-decoration: none;
-  height: 36px;
-  align-content: center;
-  color: var(--primary-text-color);
-  transition: var(--transition);
-}
-
-.nav-link:hover,
-.nav-link.active {
-  background-color: var(--primary-bg);
-}
-
-@media (min-width: 768px) {
-  .profile-page {
-    width: calc(100% - 40px);
-    max-width: 1240px;
-    margin: 20px auto;
-  }
-
-  .profile-info {
-    gap: 20px;
-    margin-left: 20px;
-  }
-
-  .avatar img {
-    width: 120px;
-    height: 120px;
-  }
-
-  .user-name {
-    font-size: var(--body-text);
-  }
-}
-
-@media (min-width: 1024px) {
-  .profile-page {
-    width: calc(100% - 40px);
-    max-width: 1240px;
-  }
-}
-
-.profile-details {
-  flex: 1;
-  background-color: var(--card-bg);
-  border-radius: 12px;
-  padding: 30px;
-  margin: 20px 0;
-
-  .profile-header-container {
-
-    h4 {
-      font-size: var(--heading-4);
+    .setting-link {
+      display: flex;
+      align-items: center;
+      text-align: start;
+      gap: 0.5rem;
+      padding: 10px 15px;
+      font-size: var(--body-text);
       color: var(--primary-text-color);
-      font-weight: normal;
+      text-decoration: none;
+      transition: var(--transition);
+      border-radius: 6px;
+
+      &:hover {
+        background-color: var(--card-hover);
+        color: var(--primary-text-color);
+        z-index: 1000;
+      }
+
+      &.active {
+        background-color: var(--card-hover);
+        color: var(--primary-text-color);
+      }
     }
 
-    .profile-divider {
-      width: 100%;
-      height: 3px;
-      margin: 20px 0;
-      background-color: var(--secondary-text-color);
-    }
   }
 
-  .details-grid {
+  .profile-member-container {
+    width: calc(100% - 40px);
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
 
-    @media (min-width: 640px) {
-      grid-template-columns: 1fr 1fr ;
+    @media (min-width: 768px) {
+      max-width: 1280px;
+      grid-template-columns:  1fr 3fr;
+      gap: 20px;
     }
 
     @media (min-width: 1024px) {
-      grid-template-columns: 1fr 1fr;
+      max-width: 1280px;
+      grid-template-columns:  1fr 3fr;
     }
 
-    .detail-item {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .profile-header {
+      display: block;
+      align-items: center;
+      gap: 0;
+      padding: 20px;
+      max-height: 300px;
+      margin-bottom: 20px;
+      text-align: center;
 
-      .item-label {
-        font-size: var(--body-text);
-        color: var(--primary-text-color);
-        font-weight: 600;
-        height: 36px;
-        align-items: center;
+      .avatar-wrapper {
+        width: 150px;
+        height: 150px;
+        margin: 10px auto;
+
+        .avatar-img {
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+        }
       }
 
-      .item-value {
-        font-size: var(--body-text);
-        color: var(--secondary-text-color);
-        height: 36px;
-        align-items: center;
+      .user-info {
+        flex: 1;
+        width: calc(100% - 40px);
+        margin: 0 auto;
+
+        p {
+          margin: 10px 0;
+          color: var(--primary-text-color);
+
+          span {
+            color: var(--secondary-text-color);
+          }
+        }
+      }
+    }
+
+    .profile-info {
+
+      .form-grid {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 30px;
+
+        .form-item {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+
+          label {
+            color: var(--primary-text-color);
+            height: 36px;
+            align-content: center;
+            font-weight: 600;
+            font-size: var(--label-text);
+
+          }
+
+          p {
+            margin: 0;
+            color: var(--secondary-text-color);
+            height: 36px;
+            align-content: center;
+          }
+        }
+      }
+    }
+
+    @media (min-width: 768px) {
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .avatar-wrapper {
+        width: 150px;
+        height: 150px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   }
+
 }
-
-
 </style>
