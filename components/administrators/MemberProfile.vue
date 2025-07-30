@@ -38,6 +38,11 @@ const memberAnalytics = ref([
   },
 ])
 
+const toggleUserStatus = () => {
+  userStatus.value = userStatus.value === 'Active' ? 'Inactive' : 'Active'
+}
+
+
 </script>
 
 <template>
@@ -47,16 +52,23 @@ const memberAnalytics = ref([
     <div class="profile-member-container">
 
       <div class="profile-header">
+
         <div class="avatar-wrapper">
           <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
           <div class="status-badge" :class="userStatus.toLowerCase()">
             <UIcon name="i-heroicons-check-circle" class="status-icon"/>
           </div>
         </div>
+
         <div class="user-info">
           <p>ID: <span>MKM-20250623-0001</span></p>
           <p>Name: <span>mohammed Jamal</span></p>
         </div>
+
+        <button class="status-toggle-btn" @click="toggleUserStatus">
+          {{ userStatus === 'Active' ? 'Deactivate Account' : 'Activate Account' }}
+        </button>
+
       </div>
 
       <div class="profile-info">
@@ -119,9 +131,8 @@ section {
       display: block;
       align-items: center;
       gap: 0;
-      padding: 20px;
+      padding: 0 20px ;
       max-height: 300px;
-      margin-bottom: 20px;
       text-align: center;
 
       .avatar-wrapper {
@@ -197,6 +208,28 @@ section {
           }
         }
       }
+
+      .status-toggle-btn {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        font-size: var(--button-text-size);
+        background-color: var(--button-bg);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+        transition: var(--transition);
+
+        @media (min-width: 640px) {
+          width: auto;
+        }
+
+        &:hover {
+          background-color: var(--hover-button-bg);
+        }
+      }
+
+
     }
 
     .profile-info {

@@ -38,15 +38,15 @@
   --card-bg: #F1F1F1;
   --card-hover: #FFFFFF;
 
-  --border-color: #E0C281;
+  --border-color: #d9a200;
 
-  --accent-color: #FFC107;
+  --accent-color: #d9a200;
   --profit-color: #2E7D32;
   --danger-color: #D32F2F;
 
-  --button-bg: #F5B301;
-  --hover-button-bg: #FFE599;
-  --button-disabled-bg: #FFE599;
+  --button-bg: #d9a200;
+  --hover-button-bg: #F5B301;
+  --button-disabled-bg: #F5B301;
   --cancel-button-bg: #DDDDDD;
   --cancel-hover-button-bg: #c6c6c6;
 
