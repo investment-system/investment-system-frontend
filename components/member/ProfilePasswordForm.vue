@@ -23,7 +23,7 @@ const settingLinks = ref([
   }
 ])
 
-const AdminPasswordQuestions = [
+const MemberPasswordQuestions = [
   {
     label: "Current Password",
     type: "password",
@@ -58,7 +58,7 @@ const formSchema = z
 const form = reactive({});
 const errors = reactive({});
 
-AdminPasswordQuestions.forEach((question) => {
+MemberPasswordQuestions.forEach((question) => {
   form[question.id] = "";
   errors[question.id] = "";
 });
@@ -72,7 +72,7 @@ function validateField(field) {
   }
 }
 
-AdminPasswordQuestions.forEach((question) => {
+MemberPasswordQuestions.forEach((question) => {
   watch(
       () => form[question.id],
       () => validateField(question.id)
@@ -83,7 +83,7 @@ let {$axios} = useNuxtApp()
 const api = $axios
 
 const resetForm = () => {
-  AdminPasswordQuestions.forEach(({id}) => {
+  MemberPasswordQuestions.forEach(({id}) => {
     form[id] = "";
     errors[id] = "";
   });
@@ -126,16 +126,19 @@ const handleSubmit = async () => {
       </div>
     </div>
 
+    <header>
+    </header>
+
     <div class="security-question-form">
-      <div class="form-header">
-        <h2>Change Security Questions</h2>
-      </div>
+
+      <h4>Password</h4>
+      <p>Change your password here. After saving, you'll be logged out.</p>
 
       <form @submit.prevent="onSubmit" novalidate>
         <div class="form-grid">
           <div
               class="form-group"
-              v-for="(field, index) in AdminPasswordQuestions"
+              v-for="(field, index) in MemberPasswordQuestions"
               :key="index"
           >
             <label :for="field.name">{{ field.label }}</label>
@@ -156,10 +159,10 @@ const handleSubmit = async () => {
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn btn-submit">Submit</button>
           <button type="button" class="btn btn-cancel" @click="resetForm">
             Cancel
           </button>
+          <button type="submit" class="btn btn-submit">Submit</button>
         </div>
       </form>
     </div>
@@ -173,90 +176,92 @@ const handleSubmit = async () => {
 section {
   width: calc(100% - 40px);
   margin: 20px auto;
-  border-radius: 12px;
   height: 100vh;
 
   .setting-tabs {
     display: grid;
     grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
-    padding: 20px;
+    padding: 10px;
     gap: 10px;
     background: var(--card-bg);
-    border-radius: 12px 12px 0 0;
+    justify-content: start;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    width: auto;
+
+    @media (min-width: 768px) {
+      width: fit-content;
+    }
 
     @media (min-width: 1024px) {
       display: flex;
       gap: 20px;
-      margin: 0 auto;
+      width: fit-content;
     }
 
     .setting-link {
-      position: relative;
       display: flex;
       align-items: center;
+      text-align: start;
       gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      color: var(--secondary-text-color);
+      padding: 10px 15px;
+      font-size: var(--body-text);
+      color: var(--primary-text-color);
       text-decoration: none;
       transition: var(--transition);
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background-color: transparent;
-        transition: var(--transition);
-
-      }
+      border-radius: 6px;
 
       &:hover {
-        color: var(--accent-color);
-        border-color: var(--accent-color);
-
-        &::after {
-          background-color: var(--accent-color);
-        }
+        background-color: var(--card-hover);
+        color: var(--primary-text-color);
+        z-index: 1000;
       }
 
       &.active {
-        color: var(--accent-color);
-        border-color: var(--accent-color);
-
-        &::after {
-          background-color: var(--accent-color);
-        }
-      }
-    }
-  }
-
-  .security-question-form {
-    padding: 20px;
-    background: var(--card-bg);
-
-    .form-header {
-      margin-bottom: 20px;
-
-      h2 {
-        font-size: var(--heading-3);
-        font-weight: 600;
+        background-color: var(--card-hover);
         color: var(--primary-text-color);
       }
     }
 
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
+  }
+
+  .security-question-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding:25px;
+    border-radius: 12px;
+    border: 2px solid var(--card-border);
+
+    h4{
+      font-weight: 500;
+      color: var(--primary-text-color);
+      font-size: var(--body-text);
+      margin: 10px 0;
     }
 
+    p {
+      font-size: var(--small-text);
+      color: var(--secondary-text-color);
+      margin-bottom: 30px;
+    }
+
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+
     .form-grid {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr;
       flex-direction: column;
-      gap: 1rem;
+      gap: 20px 0;
+
+      @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     .form-group {
@@ -267,16 +272,19 @@ section {
         font-weight: 500;
         height: 36px;
         align-content: center;
+        font-size: var(--large-text);
       }
 
       input {
         padding: 0.6rem 0.8rem;
-        border: 2px solid var(--secondary-text-color);
         border-radius: 6px;
         font-size: var(--placeholder-text);
         transition: border-color 0.2s;
         height: 36px;
         align-content: center;
+        border: none;
+        outline: none;
+        background-color: var(--card-bg);
 
         &:focus {
           border-color: var(--accent-color);
@@ -329,9 +337,7 @@ section {
 
     @media (min-width: 768px) {
       .form-grid {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1.5rem;
+        gap: 10px 20px;
 
         .form-group {
           flex: 1 1 45%;
@@ -339,7 +345,7 @@ section {
       }
 
       .form-actions {
-        justify-content: flex-start;
+        justify-content: flex-end;
       }
     }
   }

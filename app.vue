@@ -36,6 +36,7 @@
   --primary-bg: #FDFCF9;
   --secondary-bg: #F5F5F5;
   --card-bg: #F1F1F1;
+  --card-hover: #FDFCF9;
 
   --border-color: #E0C281;
 
@@ -52,6 +53,7 @@
 
   --hover-text-color: #2C2C2C;
   --input-field-bg: #ffffff;
+  --card-border: rgba(102, 102, 102, 0.5);
 
   --primary-text-color: #2C2C2C;
   --secondary-text-color: #666666;
@@ -60,7 +62,6 @@
   --error-text: #D32F2F;
 
   --table-header-bg: rgba(255, 229, 153, 0.5);
-
 
   --linear-gradient-bg: linear-gradient(135deg, #F5B301 0%, #FFC107 40%, #E0C281 70%, #FFE599 100%);
 

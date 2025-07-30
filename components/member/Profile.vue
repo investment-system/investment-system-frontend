@@ -24,7 +24,7 @@ const settingLinks = ref([
 ])
 
 const profileData = ref([
-  { label: 'Full Name', value: 'Mohammed Adnan' },
+  { label: 'Email Address', value: 'Mohammed Adnan' },
   { label: 'IC Number', value: '123456-78-9012' },
   { label: 'Gender', value: 'Male' },
   { label: 'Date of Birth', value: '1995-05-20' },
@@ -45,23 +45,20 @@ const profileData = ref([
   <section>
 
     <div class="setting-tabs">
-      <div class="setting-container" v-for="settingLink in settingLinks" :key="settingLink.link">
+      <div
+          class="setting-container"
+          v-for="settingLink in settingLinks"
+          :key="settingLink.link"
+      >
         <nuxt-link
             :to="settingLink.link"
             class="setting-link"
-            :class="{ active: route.path.includes(settingLink.link.toLowerCase()) }"
+            :class="{ active: route.path.startsWith(settingLink.link) }"
         >
-          <UIcon :name="settingLink.icon"/>
+          <UIcon :name="settingLink.icon" />
           {{ settingLink.title }}
         </nuxt-link>
       </div>
-    </div>
-
-    <div class="profile-header-container">
-
-      <h4>My Profile</h4>
-      <hr class="profile-divider"/>
-
     </div>
 
     <div class="profile-member-container">
@@ -71,8 +68,8 @@ const profileData = ref([
           <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
         </div>
         <div class="user-info">
-          <p>ID: <span>KM2025</span></p>
-          <p><span>mohammed@gmail.com</span></p>
+          <p>ID: <span>MKM-20250623-0001</span></p>
+          <p>Name: <span>mohammed Jamal</span></p>
         </div>
       </div>
 
@@ -96,80 +93,54 @@ const profileData = ref([
 section {
   width: calc(100% - 40px);
   margin: 20px auto;
-  background: var(--card-bg);
-  height: auto;
+  height: 80vh;
   border-radius: 12px;
-
-  .profile-header-container {
-
-    h4 {
-      font-size: var(--heading-4);
-      color: var(--primary-text-color);
-      margin: 20px;
-      font-weight: normal;
-    }
-
-    .profile-divider{
-      width: calc(100% - 40px);
-      height: 3px;
-      margin: 20px ;
-      background-color: var(--secondary-text-color);
-    }
-  }
 
   .setting-tabs {
     display: grid;
     grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
-    padding: 20px;
+    padding: 10px;
     gap: 10px;
+    background: var(--card-bg);
+    justify-content: start;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    width: auto;
+
+    @media (min-width: 768px) {
+      width: fit-content;
+    }
 
     @media (min-width: 1024px) {
       display: flex;
       gap: 20px;
-      margin: 0 auto;
+      width: fit-content;
     }
 
     .setting-link {
-      position: relative;
       display: flex;
       align-items: center;
+      text-align: start;
       gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      color: var(--secondary-text-color);
+      padding: 10px 15px;
+      font-size: var(--body-text);
+      color: var(--primary-text-color);
       text-decoration: none;
       transition: var(--transition);
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background-color: transparent;
-        transition: var(--transition);
-
-      }
+      border-radius: 6px;
 
       &:hover {
-        color: var(--accent-color);
-        border-color: var(--accent-color);
-
-        &::after {
-          background-color: var(--accent-color);
-        }
+        background-color: var(--card-hover);
+        color: var(--primary-text-color);
+        z-index: 1000;
       }
 
       &.active {
-        color: var(--accent-color);
-        border-color: var(--accent-color);
-
-        &::after {
-          background-color: var(--accent-color);
-        }
+        background-color: var(--card-hover);
+        color: var(--primary-text-color);
       }
     }
+
   }
 
   .profile-member-container {
@@ -191,11 +162,9 @@ section {
     }
 
     .profile-header {
-      display: flex;
-      flex-wrap: wrap;
+      display: block;
       align-items: center;
-      gap: 1rem;
-      background: var(--card-bg);
+      gap: 0;
       padding: 20px;
       max-height: 300px;
       margin-bottom: 20px;

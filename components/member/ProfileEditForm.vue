@@ -4,6 +4,7 @@ import {ref, reactive, onMounted, computed, onUnmounted} from 'vue'
 import {useRoute} from 'vue-router'
 
 const route = useRoute()
+
 const settingLinks = ref([
   {
     link: "/member/profile",
@@ -19,7 +20,7 @@ const settingLinks = ref([
     link: "/member/auth/change-password",
     title: "Change Password",
     icon: "mdi-lock",
-  }
+  },
 ])
 
 const nonEditableFields = ['email', 'full_name', 'gender']
@@ -180,23 +181,20 @@ const handleAvatarUpload = (e) => {
   <section>
 
     <div class="setting-tabs">
-      <div class="setting-container" v-for="settingLink in settingLinks" :key="settingLink.link">
+      <div
+          class="setting-container"
+          v-for="settingLink in settingLinks"
+          :key="settingLink.link"
+      >
         <nuxt-link
             :to="settingLink.link"
             class="setting-link"
-            :class="{ active: route.path.includes(settingLink.link.toLowerCase()) }"
+            :class="{ active: route.path.startsWith(settingLink.link) }"
         >
-          <UIcon :name="settingLink.icon"/>
+          <UIcon :name="settingLink.icon" />
           {{ settingLink.title }}
         </nuxt-link>
       </div>
-    </div>
-
-    <div class="profile-header-container">
-
-      <h4>Edit Profile</h4>
-      <hr class="profile-divider"/>
-
     </div>
 
     <div class="profile-member-container">
@@ -209,8 +207,8 @@ const handleAvatarUpload = (e) => {
           <input id="avatar-upload" type="file" @change="handleAvatarUpload" accept="image/*"/>
         </div>
         <div class="user-info">
-          <p>ID: <span>KM2025</span></p>
-          <p><span>mohammed@gmail.com</span></p>
+          <p>ID: <span>MKM-20250623-0001</span></p>
+          <p>Name: <span>mohammed Jamal</span></p>
         </div>
       </div>
 
@@ -280,9 +278,7 @@ const handleAvatarUpload = (e) => {
 section {
   width: calc(100% - 40px);
   margin: 20px auto;
-  background: var(--card-bg);
   height: auto;
-  border-radius: 12px;
 
   .profile-header-container {
 
@@ -304,56 +300,48 @@ section {
   .setting-tabs {
     display: grid;
     grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
-    padding: 20px;
+    padding: 10px;
     gap: 10px;
+    background: var(--card-bg);
+    justify-content: start;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    width: auto;
+
+    @media (min-width: 768px) {
+      width: fit-content;
+    }
 
     @media (min-width: 1024px) {
       display: flex;
       gap: 20px;
-      margin: 0 auto;
+      width: fit-content;
     }
 
     .setting-link {
-      position: relative;
       display: flex;
       align-items: center;
+      text-align: start;
       gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      color: var(--secondary-text-color);
+      padding: 10px 15px;
+      font-size: var(--body-text);
+      color: var(--primary-text-color);
       text-decoration: none;
       transition: var(--transition);
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background-color: transparent;
-        transition: var(--transition);
-
-      }
+      border-radius: 6px;
 
       &:hover {
-        color: var(--accent-color);
-        border-color: var(--accent-color);
-
-        &::after {
-          background-color: var(--accent-color);
-        }
+        background-color: var(--card-hover);
+        color: var(--primary-text-color);
+        z-index: 1000;
       }
 
       &.active {
-        color: var(--accent-color);
-        border-color: var(--accent-color);
-
-        &::after {
-          background-color: var(--accent-color);
-        }
+        background-color: var(--card-hover);
+        color: var(--primary-text-color);
       }
     }
+
   }
 
   .profile-member-container {
@@ -375,11 +363,9 @@ section {
     }
 
     .profile-header {
-      display: flex;
-      flex-wrap: wrap;
+      display: block;
       align-items: center;
-      gap: 1rem;
-      background: var(--card-bg);
+      gap: 0;
       padding: 20px;
       max-height: 300px;
       margin-bottom: 20px;
@@ -473,20 +459,24 @@ section {
             padding: 0.75rem;
             border: none;
             outline: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: var(--placeholder-text);
             transition: var(--transition);
             height: 36px;
             align-content: center;
+            background: var(--cancel-button-bg);
 
             &:focus {
               outline: none;
               border-color: var(--accent-color);
+              background: var(--cancel-button-bg);
             }
           }
           input:disabled,
           select:disabled {
             cursor: not-allowed;
+            background: var(--cancel-button-bg);
+
           }
         }
       }
