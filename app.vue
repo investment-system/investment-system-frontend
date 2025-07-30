@@ -61,9 +61,9 @@
 
   --error-text: #D32F2F;
 
-  --table-header-bg: rgba(255, 229, 153, 0.5);
+  --table-header-bg: rgba(245, 179, 1, 0.3);
 
-  --linear-gradient-bg: linear-gradient(135deg, #F5B301 0%, #FFC107 40%, #E0C281 70%, #FFE599 100%);
+  --linear-gradient-bg: linear-gradient(135deg, #d9a200 0%, #F5B301 40%, #f7ce4d 70%, #fff7da 100%);
 
   --heading-1: 40px;
   --heading-2: 32px;
