@@ -107,8 +107,7 @@ const toggleUserStatus = () => {
 
 section {
   width: calc(100% - 40px);
-  margin: 20px auto;
-  min-height: 100vh;
+  margin: 20px auto 50px auto;
 
   .profile-member-container {
     margin: 30px auto;
@@ -131,7 +130,7 @@ section {
       display: block;
       align-items: center;
       gap: 0;
-      padding: 0 20px ;
+      padding: 0 20px;
       max-height: 300px;
       text-align: center;
 
