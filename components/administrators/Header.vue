@@ -2,6 +2,21 @@
 import {ref} from 'vue'
 import {useRouter} from 'vue-router'
 
+import { onMounted, onUnmounted } from 'vue'
+
+function handleResize() {
+  if (window.innerWidth > 1024 && isOpen.value) {
+    isOpen.value = false
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
 const isOpen = ref(false)
 const router = useRouter()
 
@@ -121,9 +136,12 @@ const handleLogout = () => {
 
     .nav-links {
       list-style: none;
-      display: flex;
       gap: 1.5rem;
       margin: 0;
+
+      // Default (desktop)
+      display: flex;
+      flex-direction: row;
 
       li a {
         color: var(--primary-text-color) !important;
@@ -144,7 +162,8 @@ const handleLogout = () => {
         }
       }
 
-      @media (max-width: 768px) {
+      // Tap & Mobile view
+      @media (max-width: 1024px) {  // increased from 768px to cover tablets
         position: absolute;
         top: 80px;
         left: 0;
@@ -152,8 +171,9 @@ const handleLogout = () => {
         flex-direction: column;
         background-color: var(--card-bg);
         padding: 1rem;
-        display: none;
         z-index: 9999;
+
+        display: none; // default hidden
 
         &.open {
           display: flex;
@@ -172,6 +192,16 @@ const handleLogout = () => {
 
       .nav-links {
         display: none; // initial state
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        display: none;
       }
     }
   }
