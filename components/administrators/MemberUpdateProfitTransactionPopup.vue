@@ -219,7 +219,7 @@ const submitForm = () => {
             margin: 0 auto;
             gap: 0.4rem;
             cursor: pointer;
-            background-color: var(--secondary-bg);
+            background-color: var(--input-field-bg);
             padding: 6px 10px;
             border-radius: 6px;
             color: var(--primary-text-color);

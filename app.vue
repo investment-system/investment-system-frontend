@@ -52,7 +52,7 @@
 
 
   --hover-text-color: #2C2C2C;
-  --input-field-bg: #DDDDDD;
+  --input-field-bg: rgba(223, 223, 223, 0.5);
   --card-border: rgba(102, 102, 102, 0.5);
 
   --primary-text-color: #2C2C2C;
