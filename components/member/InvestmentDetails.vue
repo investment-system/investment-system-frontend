@@ -1,11 +1,14 @@
 <script setup>
 
+const printInvoice = () => {
+  window.print();
+}
 
 </script>
 
 
 <template>
-  <section class="invoice">
+  <section class="invoice" id="invoice">
     <div class="section">
       <h3>Invoice Info</h3>
       <hr class="divider"/>
@@ -85,7 +88,7 @@
 
     </div>
 
-    <button class="print-btn">Print</button>
+    <button class="print-btn" @click="printInvoice">Print</button>
 
   </section>
 </template>
