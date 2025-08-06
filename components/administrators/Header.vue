@@ -1,8 +1,8 @@
 <script setup>
 import {ref} from 'vue'
-import {useRouter} from 'vue-router'
-
 import { onMounted, onUnmounted } from 'vue'
+import { useCookie } from '#app'
+import { useRouter } from 'vue-router'
 
 function handleResize() {
   if (window.innerWidth > 1024 && isOpen.value) {
@@ -19,7 +19,6 @@ onUnmounted(() => {
 
 const isOpen = ref(false)
 const router = useRouter()
-
 const links = [
   {id: 1, link: '/administrators', label: 'Dashboard', icon: 'i-lucide-layout-dashboard'},
   {id: 2, link: '/administrators/transactions', label: 'Transactions', icon: 'i-lucide-credit-card'},
@@ -30,9 +29,14 @@ const links = [
 ];
 
 const handleLogout = () => {
-  console.log('Logging out...')
-  router.push('/member/auth/log-in')
+
+  useCookie('token').value = null
+  useCookie('refreshToken').value = null
+  useCookie('role').value = null
+
+  router.push('/administrators/auth/login')
 }
+
 
 
 </script>
