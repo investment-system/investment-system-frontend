@@ -1,10 +1,16 @@
 export default defineNuxtConfig({
-  modules: ['@nuxt/ui'],
+    modules: ['@nuxt/ui'],
 
-  app: {
-    baseURL: process.env.NODE_ENV === 'production' ? '/investment-system-frontend/' : '/',
-  },
+    runtimeConfig: {
+        public: {
+            apiBase: process.env.API_BASE_URL || 'http://localhost:8000/api' // Adjust to your backend URL
+        }
+    },
 
-  compatibilityDate: '2025-05-15',
-  devtools: { enabled: true },
+    app: {
+        baseURL: process.env.NODE_ENV === 'production' ? '/investment-system-frontend/' : '/',
+    },
+
+    compatibilityDate: '2025-05-15',
+    devtools: {enabled: true},
 })
