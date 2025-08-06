@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { z } from 'zod'
+import { useNuxtApp } from '#app'
+const { $axios } = useNuxtApp()  // ✅ Injected via plugin
 
 const signupQuestions = [
   {
@@ -11,19 +13,19 @@ const signupQuestions = [
     validation: z.string().email({ message: 'Please enter a valid email address' })
   },
   {
+    id: 'full_name',
+    label: 'Full name',
+    type: 'text',
+    placeholder: 'Enter your Full name',
+    validation: z.string().min(5,{ message: 'Please enter a full name' })
+  },
+  {
     id: 'password',
     label: 'Password',
     type: 'password',
     placeholder: 'Enter your password',
     validation: z.string().min(6, { message: 'Password must be at least 6 characters' })
   },
-  {
-    id: 'confirmPassword',
-    label: 'Confirm Password',
-    type: 'password',
-    placeholder: 'Re-enter your password',
-    validation: z.string().min(6, { message: 'Confirm Password must be at least 6 characters' }) // base validation
-  }
 ]
 
 const signupSchema = z.object(
@@ -35,16 +37,13 @@ const fieldErrors = ref<Record<string, string>>({})
 const generalError = ref('')
 const loading = ref(false)
 
-const handleLogin = () => {
+const handleSignup = async () => {
   fieldErrors.value = {}
   generalError.value = ''
-
-  console.log('Form values before validation:', JSON.stringify(form, null, 2)) // 👈
 
   const result = signupSchema.safeParse(form)
 
   if (!result.success) {
-    console.log('Validation errors:', result.error.format())
     const formatted = result.error.format()
     for (const question of signupQuestions) {
       const error = formatted[question.id]?._errors?.[0]
@@ -53,20 +52,20 @@ const handleLogin = () => {
     return
   }
 
-  console.log('Validation passed! Proceeding with signup...') // 👈
-
-  loading.value = true
-  setTimeout(() => {
+  try {
+    loading.value = true
+    const res = await $axios.post('member/signup/', form)
+    console.log('Signup success:', res.data)
+    alert('Signup successful!')
+  } catch (error: any) {
+    console.error('Signup error:', error)
+    generalError.value = error?.response?.data?.detail || 'Signup failed'
+  } finally {
     loading.value = false
-    if (form.email === 'administrators@example.com' && form.password === 'password') {
-      alert('Signup successful!')
-    } else {
-      alert('Signup not successful!')
-      generalError.value = 'Invalid email or password.'
-    }
-  }, 1000)
+  }
 }
 </script>
+
 
 <template>
   <section class="signup-container">
@@ -75,7 +74,7 @@ const handleLogin = () => {
 
         <h2>Welcome to Koperasi Masjid Members system</h2>
 
-        <form @submit.prevent="handleLogin">
+        <form @submit.prevent="handleSignup">
           <div v-for="question in signupQuestions" :key="question.id">
             <label :for="question.id">{{ question.label }}</label>
             <input
@@ -93,7 +92,7 @@ const handleLogin = () => {
           <div class="links">
 
             Already have an account
-            <NuxtLink to="/member/auth/log-in">Login ?</NuxtLink>
+            <NuxtLink to="/member/auth/login">Login ?</NuxtLink>
 
           </div>
 
