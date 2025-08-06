@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import {reactive, ref} from 'vue'
 import {z} from 'zod'
+import { useApi } from '~/composables/useApi'
+import { useCookie } from '#app'
+
+const api = useApi()
 
 const loginQuestions = [
   {
@@ -15,7 +19,7 @@ const loginQuestions = [
     label: 'Password',
     type: 'password',
     placeholder: 'Enter your password',
-    validation: z.string().min(6, {message: 'Password must be at least 6 characters'})
+    validation: z.string().min(2, {message: 'Password must be at least 6 characters'})
   }
 ]
 
@@ -28,16 +32,12 @@ const fieldErrors = ref<Record<string, string>>({})
 const generalError = ref('')
 const loading = ref(false)
 
-const handleLogin = () => {
+const handleLogin = async () => {
   fieldErrors.value = {}
   generalError.value = ''
 
-  console.log('Form values before validation:', JSON.stringify(form, null, 2))
-
   const result = loginSchema.safeParse(form)
-
   if (!result.success) {
-    console.log('Validation errors:', result.error.format())
     const formatted = result.error.format()
     for (const question of loginQuestions) {
       const error = formatted[question.id]?._errors?.[0]
@@ -46,20 +46,48 @@ const handleLogin = () => {
     return
   }
 
-  console.log('Validation passed! Proceeding with login...') // 👈
-
   loading.value = true
-  setTimeout(() => {
-    loading.value = false
-    if (form.email === 'administrators@example.com' && form.password === 'password') {
-      alert('Login successful!')
-    } else {
-      alert('Login not successful!')
-      generalError.value = 'Invalid email or password.'
-    }
-  }, 1000)
-}
+  try {
+    console.log('[Login] Sending request to API...', form)
 
+    const response = await api.post('/administrator/login/', {
+      email: form.email,
+      password: form.password,
+    })
+
+    console.log('[Login] Success', response.data)
+
+    // ✅ Save in cookies (SSR + client)
+    const token = useCookie('token')
+    const refreshToken = useCookie('refreshToken')
+    const role = useCookie('role')
+
+    token.value = response.data.tokens.access
+    refreshToken.value = response.data.tokens.refresh
+    role.value = response.data.user.role
+
+    // ✅ Redirect based on role
+    if (role.value === 'admin') {
+      console.log('Redirecting to /administrators...')
+      await navigateTo('/administrators/', { replace: true })
+    } else if (role.value === 'member') {
+      console.log('Redirecting to /member...')
+      await navigateTo('/member/', { replace: true })
+    } else {
+      generalError.value = 'Unrecognized user role.'
+    }
+
+  } catch (error: any) {
+    console.error('[Login] Error:', error)
+    if (error.response?.status === 401 || error.response?.status === 400) {
+      generalError.value = 'Invalid email or password.'
+    } else {
+      generalError.value = 'Something went wrong. Please try again later.'
+    }
+  } finally {
+    loading.value = false
+  }
+}
 
 </script>
 
