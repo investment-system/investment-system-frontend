@@ -56,22 +56,23 @@ const handleLogin = async () => {
     const accessToken = data.tokens?.access || data.token
     const refreshTokenValue = data.tokens?.refresh || null
 
-    if (!accessToken) {
-      throw new Error('Login response missing token information')
-    }
+    if (!accessToken) throw new Error('Login response missing token')
 
     useCookie('token').value = accessToken
     useCookie('refreshToken').value = refreshTokenValue
     useCookie('role').value = 'admin'
 
+    // Store profile as JSON string
+    if (data.admin) {
+      useCookie('adminProfile').value = JSON.stringify(data.admin)
+    }
+
     await navigateTo('/administrators/', { replace: true })
 
   } catch (error) {
-    if (error.response?.status === 401 || error.response?.status === 400) {
-      generalError.value = 'Invalid email or password.'
-    } else {
-      generalError.value = 'Something went wrong. Please try again later.'
-    }
+    generalError.value = (error.response?.status === 401 || error.response?.status === 400)
+        ? 'Invalid email or password.'
+        : 'Something went wrong. Please try again later.'
   } finally {
     loading.value = false
   }
