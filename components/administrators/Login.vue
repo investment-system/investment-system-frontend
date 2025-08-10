@@ -50,34 +50,47 @@ const handleLogin = async () => {
   try {
     console.log('[Login] Sending request to API...', form)
 
-    const response = await api.post('/administrator/login/', {
+    const response = await api.post('/auth/admin/login/', {
       email: form.email,
       password: form.password,
     })
 
-    console.log('[Login] Success', response.data)
+    console.log('[Login] API Raw Response:', response.data)
 
-    // ✅ Save in cookies (SSR + client)
+    // ✅ Handle both DRF TokenAuthentication and JWT format
+    let accessToken, refreshTokenValue
+
+    if (response.data.tokens) {
+      // JWT style
+      accessToken = response.data.tokens.access
+      refreshTokenValue = response.data.tokens.refresh
+    } else if (response.data.token) {
+      // DRF TokenAuthentication style
+      accessToken = response.data.token
+      refreshTokenValue = null
+    } else {
+      throw new Error('Login response missing token information')
+    }
+
+    // Save in cookies
     const token = useCookie('token')
     const refreshToken = useCookie('refreshToken')
     const role = useCookie('role')
 
-    token.value = response.data.tokens.access
-    refreshToken.value = response.data.tokens.refresh
-    role.value = response.data.user.role
+    token.value = accessToken
+    refreshToken.value = refreshTokenValue
+    role.value = response.data.user?.role || 'member' // fallback
 
-    // ✅ Redirect based on role
+    // Redirect
     if (role.value === 'admin') {
-      console.log('Redirecting to /administrators...')
       await navigateTo('/administrators/', { replace: true })
     } else if (role.value === 'member') {
-      console.log('Redirecting to /member...')
       await navigateTo('/member/', { replace: true })
     } else {
       generalError.value = 'Unrecognized user role.'
     }
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Login] Error:', error)
     if (error.response?.status === 401 || error.response?.status === 400) {
       generalError.value = 'Invalid email or password.'
