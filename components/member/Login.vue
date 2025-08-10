@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import {reactive, ref} from 'vue'
 import {z} from 'zod'
+import { useApi } from '~/composables/useApi'
+import { useCookie } from '#app'
+
+const api = useApi()
 
 const loginQuestions = [
   {
@@ -28,16 +32,12 @@ const fieldErrors = ref<Record<string, string>>({})
 const generalError = ref('')
 const loading = ref(false)
 
-const handleLogin = () => {
+const handleLogin = async () => {
   fieldErrors.value = {}
   generalError.value = ''
 
-  console.log('Form values before validation:', JSON.stringify(form, null, 2)) // 👈
-
   const result = loginSchema.safeParse(form)
-
   if (!result.success) {
-    console.log('Validation errors:', result.error.format())
     const formatted = result.error.format()
     for (const question of loginQuestions) {
       const error = formatted[question.id]?._errors?.[0]
@@ -46,20 +46,38 @@ const handleLogin = () => {
     return
   }
 
-  console.log('Validation passed! Proceeding with login...') // 👈
-
   loading.value = true
-  setTimeout(() => {
-    loading.value = false
-    if (form.email === 'administrators@example.com' && form.password === 'password') {
-      alert('Login successful!')
-    } else {
-      alert('Login not successful!')
-      generalError.value = 'Invalid email or password.'
-    }
-  }, 1000)
-}
+  try {
 
+    const { data } = await api.post('/auth/member/login/', {
+      email: form.email,
+      password: form.password,
+    })
+
+
+    const accessToken = data.tokens?.access || data.token
+    const refreshTokenValue = data.tokens?.refresh || null
+
+    if (!accessToken) {
+      throw new Error('Login response missing token information')
+    }
+
+    useCookie('token').value = accessToken
+    useCookie('refreshToken').value = refreshTokenValue
+    useCookie('role').value = 'member'
+
+    await navigateTo('/member/', { replace: true })
+
+  } catch (error) {
+    if (error.response?.status === 401 || error.response?.status === 400) {
+      generalError.value = 'Invalid email or password.'
+    } else {
+      generalError.value = 'Something went wrong. Please try again later.'
+    }
+  } finally {
+    loading.value = false
+  }
+}
 
 </script>
 
