@@ -3,7 +3,9 @@ export default defineNuxtConfig({
 
     runtimeConfig: {
         public: {
-            apiBase: process.env.API_BASE_URL || 'http://localhost:8000/api' // Adjust to your backend URL
+            apiBase: process.env.API_BASE_URL || 'http://localhost:8000/api',
+            mediaBase: process.env.MEDIA_BASE_URL || 'http://localhost:8000' // no /api here
+
         }
     },
 

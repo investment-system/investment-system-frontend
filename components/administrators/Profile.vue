@@ -1,43 +1,39 @@
 <script setup>
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useProfile } from '~/composables/useProfile.ts'
 
-import { ref } from 'vue'
-import {useRoute} from 'vue-router'
-
+const { profileData } = useProfile()
 const route = useRoute()
 
 const settingLinks = ref([
-  {
-    link: "/administrators/profile",
-    title: "Profile",
-    icon: "mdi-account",
-  },
-  {
-    link: "/administrators/profile/edit",
-    title: "Edit Profile",
-    icon: "mdi-account",
-  },
-  {
-    link: "/administrators/auth/change-password",
-    title: "Change Password",
-    icon: "mdi-lock",
-  },
+  { link: "/administrators/profile", title: "Profile", icon: "mdi-account" },
+  { link: "/administrators/profile/edit", title: "Edit Profile", icon: "mdi-account" },
+  { link: "/administrators/auth/change-password", title: "Change Password", icon: "mdi-lock" },
 ])
 
-const profileData = ref([
-  { label: 'Email Address', value: 'Mohammed Adnan' },
-  { label: 'IC Number', value: '123456-78-9012' },
-  { label: 'Gender', value: 'Male' },
-  { label: 'Date of Birth', value: '1995-05-20' },
-  { label: 'Phone Number', value: '+60123456789' },
-  { label: 'Country', value: 'Malaysia' },
-  { label: 'City', value: 'Kuala Lumpur' },
-  { label: 'State', value: 'Selangor' },
-  { label: 'Bank Name', value: 'Maybank' },
-  { label: 'Account Holder Name', value: 'Mohammed Adnan' },
-  { label: 'Bank Account Number', value: '1234567890' },
-])
+const displayData = computed(() => {
+  if (!profileData.value) return []
 
+  return [
+    { label: 'Full Name', value: profileData.value.full_name || '-' },
+    { label: 'Email Address', value: profileData.value.email|| '-' },
+    { label: 'IC Number', value: profileData.value.ic_number || '-' },
+    { label: 'Gender', value: profileData.value.gender || '-' },
+    { label: 'Date of Birth', value: profileData.value.date_of_birth || '-' },
+    { label: 'Phone Number', value: profileData.value.phone_number || '-' },
 
+    { label: 'Address Line 1', value: profileData.value.address_line1 || '-' },
+    { label: 'Address Line 2', value: profileData.value.address_line2 || '-' },
+    { label: 'City', value: profileData.value.city || '-' },
+    { label: 'State', value: profileData.value.state || '-' },
+    { label: 'Postal Code', value: profileData.value.postal_code || '-' },
+    { label: 'Country', value: profileData.value.country || '-' },
+
+    { label: 'Position', value: profileData.value.position || '-' },
+    { label: 'Role', value: profileData.value.role || '-' },
+  ]
+})
 </script>
 
 <template>
@@ -65,23 +61,31 @@ const profileData = ref([
 
       <div class="profile-header">
         <div class="avatar-wrapper">
-          <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
+
+          <img
+              :src="profileData?.profile_picture ? `http://localhost:8000${profileData.profile_picture}` : '/images/user-icon.png'"
+              alt="Profile Picture"
+              class="avatar-img"
+          />
+
         </div>
         <div class="user-info">
-          <p>ID: <span>MKM-20250623-0001</span></p>
-          <p>Name: <span>mohammed Jamal</span></p>
+          <p>ID: <span>{{ profileData?.admin_code || 'N/A' }}</span></p>
+          <p>Created at:
+            <span>{{ profileData?.created_at ? profileData.created_at.split('T')[0] : 'N/A' }}</span>
+          </p>
+
         </div>
       </div>
 
       <div class="profile-info">
         <div class="form-grid">
-          <div class="form-item" v-for="(item, index) in profileData" :key="index">
+          <div class="form-item" v-for="(item, index) in displayData" :key="index">
             <label>{{ item.label }}</label>
             <p>{{ item.value }}</p>
           </div>
         </div>
       </div>
-
 
     </div>
   </section>
@@ -176,8 +180,8 @@ section {
         margin: 10px auto;
 
         .avatar-img {
-          width: 150px;
-          height: 150px;
+          width: 130px;
+          height: 130px;
           border-radius: 50%;
         }
       }
@@ -190,9 +194,11 @@ section {
         p {
           margin: 10px 0;
           color: var(--primary-text-color);
+          font-size: var(--body-text);
 
           span {
             color: var(--secondary-text-color);
+            font-size: var(--small-text);
           }
         }
       }
