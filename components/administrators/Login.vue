@@ -48,50 +48,25 @@ const handleLogin = async () => {
 
   loading.value = true
   try {
-    console.log('[Login] Sending request to API...', form)
-
-    const response = await api.post('/auth/admin/login/', {
+    const { data } = await api.post('/auth/admin/login/', {
       email: form.email,
       password: form.password,
     })
 
-    console.log('[Login] API Raw Response:', response.data)
+    const accessToken = data.tokens?.access || data.token
+    const refreshTokenValue = data.tokens?.refresh || null
 
-    // ✅ Handle both DRF TokenAuthentication and JWT format
-    let accessToken, refreshTokenValue
-
-    if (response.data.tokens) {
-      // JWT style
-      accessToken = response.data.tokens.access
-      refreshTokenValue = response.data.tokens.refresh
-    } else if (response.data.token) {
-      // DRF TokenAuthentication style
-      accessToken = response.data.token
-      refreshTokenValue = null
-    } else {
+    if (!accessToken) {
       throw new Error('Login response missing token information')
     }
 
-    // Save in cookies
-    const token = useCookie('token')
-    const refreshToken = useCookie('refreshToken')
-    const role = useCookie('role')
+    useCookie('token').value = accessToken
+    useCookie('refreshToken').value = refreshTokenValue
+    useCookie('role').value = 'admin'
 
-    token.value = accessToken
-    refreshToken.value = refreshTokenValue
-    role.value = response.data.user?.role || 'member' // fallback
-
-    // Redirect
-    if (role.value === 'admin') {
-      await navigateTo('/administrators/', { replace: true })
-    } else if (role.value === 'member') {
-      await navigateTo('/member/', { replace: true })
-    } else {
-      generalError.value = 'Unrecognized user role.'
-    }
+    await navigateTo('/administrators/', { replace: true })
 
   } catch (error) {
-    console.error('[Login] Error:', error)
     if (error.response?.status === 401 || error.response?.status === 400) {
       generalError.value = 'Invalid email or password.'
     } else {
