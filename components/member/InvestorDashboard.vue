@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useApi } from '~/composables/useApi'  // adjust path accordingly
+import { useApi } from '~/composables/useApi'
 
 const dashboardStats = ref([
   {
@@ -12,13 +12,13 @@ const dashboardStats = ref([
   {
     title: 'Share Amount',
     icon: 'mdi-chart-donut',
-    value: 1200,
+    value: 0,
     trendIcon: 'mdi-trending-up',
   },
   {
     title: 'Share Completed',
     icon: 'mdi-check-circle-outline',
-    value: 800,
+    value: 0,
     trendIcon: 'mdi-check',
   },
 ])
@@ -27,11 +27,20 @@ const api = useApi()
 
 const fetchStats = async () => {
   try {
-    const response = await api.get('/stats/')
-    const data = response.data
+    const membersResponse = await api.get('/stats/')
+    const memberData = membersResponse.data
+
+    const transactionsResponse = await api.get('/transactions/stats/')
+    const transactionData = transactionsResponse.data
 
     dashboardStats.value = dashboardStats.value.map(stat => {
-      if (stat.title === 'Total Members') stat.value = data.total_members ?? stat.value
+      if (stat.title === 'Total Members') {
+        stat.value = memberData.total_members ?? stat.value
+      } else if (stat.title === 'Share Amount') {
+        stat.value = parseFloat(transactionData.share_amount) ?? stat.value
+      } else if (stat.title === 'Share Completed') {
+        stat.value = transactionData.share_completed ?? stat.value
+      }
       return stat
     })
   } catch (error) {
