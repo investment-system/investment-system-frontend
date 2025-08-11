@@ -1,38 +1,22 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { z } from 'zod'
-import { useNuxtApp } from '#app'
-const { $axios } = useNuxtApp()  // ✅ Injected via plugin
+import { useApi } from '~/composables/useApi'
+import SuccessPopup from '~/components/member/SuccessPopup.vue'
+import FailedPopup from '~/components/member/FailedPopup.vue'
+
+const api = useApi()
+const showPopup = ref(false)
+const popupType = ref<'success' | 'failed'>('success') // default
 
 const signupQuestions = [
-  {
-    id: 'email',
-    label: 'Email',
-    type: 'email',
-    placeholder: 'Enter your email',
-    validation: z.string().email({ message: 'Please enter a valid email address' })
-  },
-  {
-    id: 'full_name',
-    label: 'Full name',
-    type: 'text',
-    placeholder: 'Enter your Full name',
-    validation: z.string().min(5,{ message: 'Please enter a full name' })
-  },
-  {
-    id: 'password',
-    label: 'Password',
-    type: 'password',
-    placeholder: 'Enter your password',
-    validation: z.string().min(6, { message: 'Password must be at least 6 characters' })
-  },
+  { id: 'email', label: 'Email', type: 'email', placeholder: 'Enter your email', validation: z.string().email({ message: 'Please enter a valid email address' }) },
+  { id: 'full_name', label: 'Full name', type: 'text', placeholder: 'Enter your full name', validation: z.string().min(5, { message: 'Please enter a full name' }) },
+  { id: 'password', label: 'Password', type: 'password', placeholder: 'Enter your password', validation: z.string().min(8, { message: 'Password must be at least 8 characters' }) }
 ]
 
-const signupSchema = z.object(
-    Object.fromEntries(signupQuestions.map(question => [question.id, question.validation]))
-)
-
-const form = reactive(Object.fromEntries(signupQuestions.map(question => [question.id, ''])))
+const signupSchema = z.object(Object.fromEntries(signupQuestions.map(q => [q.id, q.validation])))
+const form = reactive(Object.fromEntries(signupQuestions.map(q => [q.id, ''])))
 const fieldErrors = ref<Record<string, string>>({})
 const generalError = ref('')
 const loading = ref(false)
@@ -42,7 +26,6 @@ const handleSignup = async () => {
   generalError.value = ''
 
   const result = signupSchema.safeParse(form)
-
   if (!result.success) {
     const formatted = result.error.format()
     for (const question of signupQuestions) {
@@ -54,24 +37,30 @@ const handleSignup = async () => {
 
   try {
     loading.value = true
-    const res = await $axios.post('member/signup/', form)
-    console.log('Signup success:', res.data)
-    alert('Signup successful!')
+    const payload = {
+      email: form.email,
+      full_name: form.full_name,
+      password: form.password,
+      user_type: 'member'
+    }
+
+    await api.post('/auth/member/register/', payload)
+    popupType.value = 'success'
+    showPopup.value = true
   } catch (error: any) {
-    console.error('Signup error:', error)
     generalError.value = error?.response?.data?.detail || 'Signup failed'
+    popupType.value = 'failed'
+    showPopup.value = true
   } finally {
     loading.value = false
   }
 }
 </script>
 
-
 <template>
   <section class="signup-container">
     <div class="container">
       <div class="signup-form">
-
         <h2>Welcome to Koperasi Masjid Members system</h2>
 
         <form @submit.prevent="handleSignup">
@@ -90,16 +79,18 @@ const handleSignup = async () => {
           <p class="error" v-if="generalError">{{ generalError }}</p>
 
           <div class="links">
-
-            Already have an account
-            <NuxtLink to="/member/auth/login">Login ?</NuxtLink>
-
+            Already have an account?
+            <NuxtLink to="/member/auth/login">Login</NuxtLink>
           </div>
 
           <button type="submit" class="signup-btn" :disabled="loading">
             {{ loading ? 'Logging in...' : 'Sign Up' }}
           </button>
         </form>
+
+        <SuccessPopup v-model:show="showPopup" v-if="popupType === 'success'" />
+        <FailedPopup v-model:show="showPopup" v-if="popupType === 'failed'" />
+
 
       </div>
 
@@ -110,7 +101,6 @@ const handleSignup = async () => {
         </h3>
       </div>
     </div>
-
   </section>
 </template>
 
@@ -182,7 +172,7 @@ const handleSignup = async () => {
       .error {
         color: var(--error-text);
         font-size: var(--label-text);
-        margin-bottom: 15px;
+        margin: 10px auto;
         text-align: center;
       }
 
