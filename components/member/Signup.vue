@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'       // <-- import router
-import { z } from 'zod'
-import { useApi } from '~/composables/useApi'
+import {reactive, ref} from 'vue'
+import {useRouter} from 'vue-router'       // <-- import router
+import {z} from 'zod'
+import {useApi} from '~/composables/useApi'
 import SuccessPopup from '~/components/member/SuccessPopup.vue'
 import FailedPopup from '~/components/member/FailedPopup.vue'
 
@@ -12,9 +12,27 @@ const showPopup = ref(false)
 const popupType = ref<'success' | 'failed'>('success')
 
 const signupQuestions = [
-  { id: 'email', label: 'Email', type: 'email', placeholder: 'Enter your email', validation: z.string().email({ message: 'Please enter a valid email address' }) },
-  { id: 'full_name', label: 'Full name', type: 'text', placeholder: 'Enter your full name', validation: z.string().min(5, { message: 'Please enter a full name' }) },
-  { id: 'password', label: 'Password', type: 'password', placeholder: 'Enter your password', validation: z.string().min(8, { message: 'Password must be at least 8 characters' }) }
+  {
+    id: 'email',
+    label: 'Email',
+    type: 'email',
+    placeholder: 'Enter your email',
+    validation: z.string().email({message: 'Please enter a valid email address'})
+  },
+  {
+    id: 'full_name',
+    label: 'Full name',
+    type: 'text',
+    placeholder: 'Enter your full name',
+    validation: z.string().min(5, {message: 'Please enter a full name'})
+  },
+  {
+    id: 'password',
+    label: 'Password',
+    type: 'password',
+    placeholder: 'Enter your password',
+    validation: z.string().min(8, {message: 'Password must be at least 8 characters'})
+  }
 ]
 
 const signupSchema = z.object(Object.fromEntries(signupQuestions.map(q => [q.id, q.validation])))
@@ -49,9 +67,6 @@ const handleSignup = async () => {
     await api.post('/auth/member/register/', payload)
     popupType.value = 'success'
     showPopup.value = true
-
-    // Redirect to activation page with email query param
-    router.push({ path: '/member/auth/activate', query: { email: form.email } })
   } catch (error: any) {
     generalError.value = error?.response?.data?.detail || 'Signup failed'
     popupType.value = 'failed'
@@ -93,8 +108,8 @@ const handleSignup = async () => {
           </button>
         </form>
 
-        <SuccessPopup v-model:show="showPopup" v-if="popupType === 'success'" />
-        <FailedPopup v-model:show="showPopup" v-if="popupType === 'failed'" />
+        <SuccessPopup v-model:show="showPopup" v-if="popupType === 'success'"/>
+        <FailedPopup v-model:show="showPopup" v-if="popupType === 'failed'"/>
 
 
       </div>
