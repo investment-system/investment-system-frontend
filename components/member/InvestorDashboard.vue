@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useApi } from '~/composables/useApi'  // adjust path accordingly
 
-const dashboardStats = [
+const dashboardStats = ref([
   {
     title: 'Total Members',
     icon: 'mdi-account-group',
-    value: 500,
+    value: 0,
     trendIcon: 'mdi-trending-up',
   },
   {
@@ -19,8 +21,27 @@ const dashboardStats = [
     value: 800,
     trendIcon: 'mdi-check',
   },
-]
+])
 
+const api = useApi()
+
+const fetchStats = async () => {
+  try {
+    const response = await api.get('/stats/')
+    const data = response.data
+
+    dashboardStats.value = dashboardStats.value.map(stat => {
+      if (stat.title === 'Total Members') stat.value = data.total_members ?? stat.value
+      return stat
+    })
+  } catch (error) {
+    console.error('Failed to fetch dashboard stats:', error)
+  }
+}
+
+onMounted(() => {
+  fetchStats()
+})
 </script>
 
 <template>
