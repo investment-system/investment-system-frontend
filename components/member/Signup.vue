@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'       // <-- import router
 import { z } from 'zod'
 import { useApi } from '~/composables/useApi'
 import SuccessPopup from '~/components/member/SuccessPopup.vue'
 import FailedPopup from '~/components/member/FailedPopup.vue'
 
 const api = useApi()
+const router = useRouter()                   // <-- initialize router
 const showPopup = ref(false)
-const popupType = ref<'success' | 'failed'>('success') // default
+const popupType = ref<'success' | 'failed'>('success')
 
 const signupQuestions = [
   { id: 'email', label: 'Email', type: 'email', placeholder: 'Enter your email', validation: z.string().email({ message: 'Please enter a valid email address' }) },
@@ -47,6 +49,9 @@ const handleSignup = async () => {
     await api.post('/auth/member/register/', payload)
     popupType.value = 'success'
     showPopup.value = true
+
+    // Redirect to activation page with email query param
+    router.push({ path: '/member/auth/activate', query: { email: form.email } })
   } catch (error: any) {
     generalError.value = error?.response?.data?.detail || 'Signup failed'
     popupType.value = 'failed'
