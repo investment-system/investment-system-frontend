@@ -97,8 +97,8 @@ const displayData = computed(() => {
 section {
   width: calc(100% - 40px);
   margin: 20px auto;
-  height: 80vh;
   border-radius: 12px;
+  min-height: 100vh;
 
   .setting-tabs {
     display: grid;
