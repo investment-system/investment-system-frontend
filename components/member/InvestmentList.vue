@@ -1,54 +1,57 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useApi } from '~/composables/useApi'
+
+interface Transaction {
+  transaction_id: number
+  transaction_code: string
+  member_id: number
+  source_type: string
+  reference_id: string
+  direction: string
+  amount: number
+  payment_method: string
+  created_at: string
+}
+
+const api = useApi()
 
 const search = ref('')
 const selectedType = ref('All')
-const transactions = ref([
-  {
-    transaction_id: 1,
-    transaction_code: 'DTKM-20250728-0001',
-    member_id: 101,
-    source_type: 'deposit',
-    reference_id: 'REF-001',
-    direction: 'in',
-    amount: 500.00,
-    payment_method: 'bank_transfer',
-    created_at: '2025-07-28T10:00:00',
-  },
-  {
-    transaction_id: 2,
-    transaction_code: 'WTKM-20250728-0002',
-    member_id: 102,
-    source_type: 'withdrawal',
-    reference_id: 'REF-002',
-    direction: 'out',
-    amount: 200.00,
-    payment_method: 'cash',
-    created_at: '2025-07-28T11:30:00',
-  },
-  {
-    transaction_id: 3,
-    transaction_code: 'STKM-20250728-0003',
-    member_id: 103,
-    source_type: 'share',
-    reference_id: 'REF-003',
-    direction: 'in',
-    amount: 750.50,
-    payment_method: 'card',
-    created_at: '2025-07-28T13:45:00',
-  },
-  {
-    transaction_id: 4,
-    transaction_code: 'RTKM-20250728-0004',
-    member_id: 104,
-    source_type: 'registration_payments',
-    reference_id: 'REF-004',
-    direction: 'in',
-    amount: 120.00,
-    payment_method: 'ewallet',
-    created_at: '2025-07-28T14:15:00',
+const transactions = ref<Transaction[]>([])
+const loading = ref(false)
+const error = ref('')
+
+const fetchTransactions = async () => {
+  loading.value = true
+  error.value = ''
+
+  try {
+    const response = await api.get('/transactions/user/')
+    transactions.value = response.data
+
+
+    if (response.data.transactions && typeof response.data.transactions === 'string') {
+      const secondResponse = await api.get(response.data.transactions)
+      transactions.value = secondResponse.data
+    } else if (Array.isArray(response.data)) {
+      transactions.value = response.data
+    } else {
+      console.error('Unexpected API response structure:', response.data)
+      error.value = 'Unexpected API response format'
+    }
+
+  } catch (err) {
+    console.error('Failed to fetch transactions:', err)
+    error.value = 'Unable to load transactions. Please try again later.'
+  } finally {
+    loading.value = false
   }
-])
+}
+
+onMounted(() => {
+  fetchTransactions()
+})
 
 const filteredTransactions = computed(() => {
   return transactions.value.filter((transaction) => {
@@ -62,7 +65,6 @@ const filteredTransactions = computed(() => {
     return matchesSearch && matchesType
   })
 })
-
 </script>
 
 <template>

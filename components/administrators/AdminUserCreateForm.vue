@@ -1,17 +1,28 @@
 <script setup>
-import {ref, computed} from 'vue'
-import {z} from 'zod'
+import { ref, computed } from 'vue'
+import { z } from 'zod'
+import { useApi } from '~/composables/useApi'
 
+const api = useApi()
+
+// Updated form fields to match Django models
 const form = ref({
   full_name: '',
   email: '',
+  password: '',
   ic_number: '',
   gender: '',
   date_of_birth: '',
   phone_number: '',
   profile_picture: null,
-  role: 'admin',
+  role: 'admin', // default to admin
   position: '',
+  address_line1: '',
+  address_line2: '',
+  city: '',
+  state: '',
+  postal_code: '',
+  country: ''
 })
 
 const avatarUrl = ref('/default-avatar.png')
@@ -25,76 +36,41 @@ function handleAvatarUpload(event) {
 }
 
 const profileQuestions = computed(() => [
-  {
-    id: 'full_name',
-    label: 'Full Name',
-    type: 'text',
-    placeholder: 'Enter your full name',
-    validation: z.string().min(1, {message: 'Full Name is required'}),
-  },
-  {
-    id: 'email',
-    label: 'Email Address',
-    type: 'email',
-    placeholder: 'Enter your email address',
-    validation: z.string().email({message: 'Enter a valid email address'}),
-  },
-  {
-    id: 'ic_number',
-    label: 'IC Number',
-    type: 'text',
-    placeholder: '900101-14-1234',
-    validation: z.string().min(1, {message: 'IC Number is required'}),
-  },
-  {
-    id: 'gender',
-    label: 'Gender',
-    type: 'select',
-    options: [
-      {label: 'Male', value: 'male'},
-      {label: 'Female', value: 'female'},
-    ],
-    validation: z.enum(['male', 'female'], {message: 'Please select a gender'}),
-  },
-  {
-    id: 'date_of_birth',
-    label: 'Date of Birth',
-    type: 'date',
-    validation: z.string().min(1, {message: 'Date of Birth is required'}),
-  },
-  {
-    id: 'phone_number',
-    label: 'Phone Number',
-    type: 'text',
-    placeholder: '+60 12-345 6789',
-    validation: z.string().min(1, {message: 'Phone number is required'}),
-  },
-  {
-    id: 'role',
-    label: 'Role',
-    type: 'select',
-    options: [
-      {label: 'Admin', value: 'admin'},
-      {label: 'Moderator', value: 'moderator'},
-      {label: 'Viewer', value: 'viewer'},
-    ],
-    validation: z.enum(['admin', 'moderator', 'viewer'], {message: 'Please select a role'}),
-  },
-  {
-    id: 'position',
-    label: 'Position',
-    type: 'select',
-    options: [
-      {label: 'Manager', value: 'manager'},
-      {label: 'Staff', value: 'staff'},
-      {label: 'Executive', value: 'executive'},
-    ],
-    validation: z.enum(['manager', 'staff', 'executive'], {message: 'Please select a position'}),
-  },
+  { id: 'full_name', label: 'Full Name', type: 'text', placeholder: 'Enter full name', validation: z.string().min(1) },
+  { id: 'email', label: 'Email Address', type: 'email', placeholder: 'Enter email address', validation: z.string().email() },
+  { id: 'password', label: 'Password', type: 'password', placeholder: 'Enter password', validation: z.string().min(6) },
+  { id: 'ic_number', label: 'IC Number', type: 'text', placeholder: '900101-14-1234', validation: z.string().min(1) },
+  { id: 'gender', label: 'Gender', type: 'select', options: [{ label: 'Male', value: 'male' }, { label: 'Female', value: 'female' }], validation: z.enum(['male', 'female']) },
+  { id: 'date_of_birth', label: 'Date of Birth', type: 'date', validation: z.string().min(1) },
+  { id: 'phone_number', label: 'Phone Number', type: 'text', placeholder: '+60 12-345 6789', validation: z.string().min(1) },
+  { id: 'role', label: 'Role', type: 'select', options: [{ label: 'Super Admin', value: 'super_admin' }, { label: 'Admin', value: 'admin' }, { label: 'Moderator', value: 'moderator' }], validation: z.enum(['super_admin', 'admin', 'moderator']) },
+  { id: 'position', label: 'Position', type: 'select', options: [{ label: 'Manager', value: 'manager' }, { label: 'Staff', value: 'staff' }, { label: 'Executive', value: 'executive' }], validation: z.enum(['manager', 'staff', 'executive']) },
+  { id: 'address_line1', label: 'Address Line 1', type: 'text', placeholder: 'Enter address line 1', validation: z.string().optional() },
+  { id: 'address_line2', label: 'Address Line 2', type: 'text', placeholder: 'Enter address line 2', validation: z.string().optional() },
+  { id: 'city', label: 'City', type: 'text', placeholder: 'Enter city', validation: z.string().optional() },
+  { id: 'state', label: 'State', type: 'text', placeholder: 'Enter state', validation: z.string().optional() },
+  { id: 'postal_code', label: 'Postal Code', type: 'text', placeholder: 'Enter postal code', validation: z.string().optional() },
+  { id: 'country', label: 'Country', type: 'text', placeholder: 'Enter country', validation: z.string().optional() }
 ])
 
-function saveChanges() {
-  console.log('Saving changes:', form.value)
+async function saveChanges() {
+  try {
+    const fd = new FormData()
+    Object.entries(form.value).forEach(([key, value]) => {
+      if (value !== null && value !== '') {
+        fd.append(key, value)
+      }
+    })
+
+    const res = await api.post('/auth/admin/register/', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+
+    alert(`Admin registered! Code: ${res.data.admin_code}`)
+  } catch (err) {
+    console.error(err.response?.data || err.message)
+    alert('Registration failed')
+  }
 }
 </script>
 
