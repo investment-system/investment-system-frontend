@@ -19,7 +19,7 @@ const loginQuestions = [
     label: 'Password',
     type: 'password',
     placeholder: 'Enter your password',
-    validation: z.string().min(6, {message: 'Password must be at least 6 characters'})
+    validation: z.string().min(2, {message: 'Password must be at least 6 characters'})
   }
 ]
 
@@ -48,15 +48,15 @@ const handleLogin = async () => {
 
   loading.value = true
   try {
-
-    const { data } = await api.post('/auth/member/login/', {
+    const { data } = await api.post('/auth/token/', {
       email: form.email,
       password: form.password,
     })
 
-
-    const accessToken = data.tokens?.access || data.token
-    const refreshTokenValue = data.tokens?.refresh || null
+    // Support both simple token and JWT response structures
+    const accessToken = data.access || data.token
+    const refreshTokenValue = data.refresh || null
+    const userType = data.user?.user_type || 'member'  // fallback to 'member'
 
     if (!accessToken) {
       throw new Error('Login response missing token information')
@@ -64,11 +64,15 @@ const handleLogin = async () => {
 
     useCookie('token').value = accessToken
     useCookie('refreshToken').value = refreshTokenValue
-    useCookie('role').value = 'member'
+    useCookie('role').value = userType
 
-    await navigateTo('/member/', { replace: true })
+    if (userType === 'admin') {
+      await navigateTo('/administrators/', { replace: true })
+    } else {
+      await navigateTo('/member/', { replace: true })
+    }
 
-  } catch (error) {
+  } catch (error: any) {
     if (error.response?.status === 401 || error.response?.status === 400) {
       generalError.value = 'Invalid email or password.'
     } else {

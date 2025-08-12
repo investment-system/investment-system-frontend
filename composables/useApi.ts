@@ -1,11 +1,36 @@
-// ~/composables/useApi.ts
 import axios from 'axios'
+import { useCookie } from '#app'
 
 export const useApi = () => {
+    const tokenCookie = useCookie('token')
+
     const api = axios.create({
-        baseURL: 'http://localhost:8000/api', // ✅ Your Django backend base URL
-        withCredentials: true, // If using cookies for auth
+        baseURL: 'http://localhost:8000/api',
     })
+
+    api.interceptors.request.use(config => {
+        let accessToken = null;
+
+        try {
+            const tokenValue = tokenCookie.value;
+            if (tokenValue) {
+                // Try parsing JSON (in case cookie stores both tokens)
+                const tokenObj = typeof tokenValue === 'string' ? JSON.parse(tokenValue) : tokenValue;
+                accessToken = tokenObj.access || tokenValue; // fallback to tokenValue if no access field
+            }
+        } catch (e) {
+            // tokenCookie.value is probably just a raw string token
+            accessToken = tokenCookie.value;
+        }
+
+        console.log('Interceptor access token:', accessToken);
+
+        if (accessToken && config.headers) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+        return config;
+    });
+
 
     return api
 }

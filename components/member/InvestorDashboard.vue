@@ -27,7 +27,7 @@ const api = useApi()
 
 const fetchStats = async () => {
   try {
-    const membersResponse = await api.get('/stats/')
+    const membersResponse = await api.get('/members/stats/')
     const memberData = membersResponse.data
 
     const transactionsResponse = await api.get('/transactions/stats/')
@@ -48,6 +48,23 @@ const fetchStats = async () => {
   }
 }
 
+const balance = ref('0.00')  // default value before fetch
+
+// const fetchBalance = async () => {
+//   try {
+//     const response = await api.get('/transactions/balance/')
+//     const data = response.data
+//
+//     balance.value = data.balance ?? balance.value
+//   } catch (error) {
+//     console.error('Failed to fetch balance:', error)
+//   }
+// }
+//
+// onMounted(() => {
+//   fetchBalance()
+// })
+
 onMounted(() => {
   fetchStats()
 })
@@ -65,8 +82,8 @@ onMounted(() => {
       <div class="bank-card__balance">
         <span class="title">Your Balance</span>
         <span class="amount">
-          RM <span class="total-amount">1000.00</span>
-        </span>
+      RM <span class="total-amount"> balance </span>
+    </span>
       </div>
 
       <div class="bank-card__info">
