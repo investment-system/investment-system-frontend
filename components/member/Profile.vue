@@ -1,6 +1,6 @@
 <script setup>
-
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useApi } from '@/composables/useApi'
 import {useRoute} from 'vue-router'
 
 const route = useRoute()
@@ -20,23 +20,41 @@ const settingLinks = ref([
     link: "/member/auth/change-password",
     title: "Change Password",
     icon: "mdi-lock",
+  },
+])
+
+const api = useApi()
+const profile = ref({})
+const profileData = ref([])
+
+const getUserInfo = async () => {
+  try {
+    const { data } = await api.get('/members/profile/')
+    profile.value = data // save the whole object
+
+    profileData.value = [
+      { label: 'Email Address', value: data.email },
+      { label: 'Full Name', value: data.full_name },
+      { label: 'IC Number', value: data.ic_number },
+      { label: 'Gender', value: data.gender },
+      { label: 'Date of Birth', value: data.date_of_birth },
+      { label: 'Phone Number', value: data.phone_number },
+      { label: 'Country', value: data.country },
+      { label: 'Address Line', value: data.address_line },
+      { label: 'City', value: data.city },
+      { label: 'State', value: data.state },
+      { label: 'Bank Name', value: data.bank_name },
+      { label: 'Account Holder Name', value: data.account_holder_name },
+      { label: 'Bank Account Number', value: data.bank_account_number },
+    ]
+  } catch (error) {
+    console.error('Error fetching user info:', error)
   }
-])
+}
 
-const profileData = ref([
-  { label: 'Email Address', value: 'Mohammed Adnan' },
-  { label: 'IC Number', value: '123456-78-9012' },
-  { label: 'Gender', value: 'Male' },
-  { label: 'Date of Birth', value: '1995-05-20' },
-  { label: 'Phone Number', value: '+60123456789' },
-  { label: 'Country', value: 'Malaysia' },
-  { label: 'City', value: 'Kuala Lumpur' },
-  { label: 'State', value: 'Selangor' },
-  { label: 'Bank Name', value: 'Maybank' },
-  { label: 'Account Holder Name', value: 'Mohammed Adnan' },
-  { label: 'Bank Account Number', value: '1234567890' },
-])
-
+onMounted(() => {
+  getUserInfo()
+})
 
 </script>
 
@@ -68,8 +86,11 @@ const profileData = ref([
           <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
         </div>
         <div class="user-info">
-          <p>ID: <span>MKM-20250623-0001</span></p>
-          <p>Name: <span>mohammed Jamal</span></p>
+          <div class="user-info">
+            <p>ID: <span>{{ profile.member_code }}</span></p>
+            <p>Name: <span>{{ profile.full_name }}</span></p>
+          </div>
+
         </div>
       </div>
 
@@ -93,7 +114,7 @@ const profileData = ref([
 section {
   width: calc(100% - 40px);
   margin: 20px auto;
-  height: 80vh;
+  min-height: 100vh;
   border-radius: 12px;
 
   .setting-tabs {
@@ -144,7 +165,7 @@ section {
   }
 
   .profile-member-container {
-    width: calc(100% - 40px);
+    width: calc(100% - 0px);
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr;
@@ -165,7 +186,7 @@ section {
       display: block;
       align-items: center;
       gap: 0;
-      padding: 20px;
+      padding: 20px 0;
       max-height: 300px;
       margin-bottom: 20px;
       text-align: center;
@@ -202,7 +223,7 @@ section {
 
       .form-grid {
         display: grid;
-        gap: 10px;
+        gap: 0 10px;
         margin-bottom: 30px;
 
         .form-item {

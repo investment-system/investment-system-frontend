@@ -6,7 +6,6 @@ import { useRoute } from 'vue-router'
 const api = useApi()
 const route = useRoute()
 
-// Label mappings
 const SOURCE_TYPE_LABELS = {
   deposit: 'Deposit',
   withdrawal: 'Withdrawal',
@@ -15,7 +14,6 @@ const SOURCE_TYPE_LABELS = {
   cancellation: 'Cancellation',
   registration_payments: 'Registration Payment',
 }
-
 const DIRECTION_LABELS = {
   in: 'In',
   out: 'Out',
@@ -29,15 +27,6 @@ const PAYMENT_METHOD_LABELS = {
 }
 
 const invoiceSection = ref(null)
-
-const printInvoice = () => {
-  const originalTitle = document.title
-  document.title = 'Invoice_INV'
-  window.print()
-  setTimeout(() => {
-    document.title = originalTitle
-  }, 1000)
-}
 
 const transaction = ref(null)
 const loading = ref(true)
@@ -58,6 +47,16 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+const printInvoice = () => {
+  const originalTitle = document.title
+  document.title = 'Invoice_INV'
+  window.print()
+  setTimeout(() => {
+    document.title = originalTitle
+  }, 1000)
+}
+
 </script>
 
 <template>
