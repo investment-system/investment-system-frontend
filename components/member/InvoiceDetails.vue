@@ -6,6 +6,36 @@ import {useRoute} from 'vue-router'
 const api = useApi()
 const route = useRoute()
 
+const profile = ref({})
+const profileData = ref([])
+const getUserInfo = async () => {
+  try {
+    const {data} = await api.get('/members/profile/')
+    profile.value = data
+
+    profileData.value = [
+      {label: 'Email Address', value: data.email},
+      {label: 'Full Name', value: data.full_name},
+      {label: 'Gender', value: data.gender},
+      {label: 'Phone Number', value: data.phone_number},
+      {label: 'Country', value: data.country},
+      {label: 'Address Line', value: data.address_line},
+      {label: 'City', value: data.city},
+      {label: 'State', value: data.state},
+      {label: 'Bank Name', value: data.bank_name},
+      {label: 'Account Holder Name', value: data.account_holder_name},
+      {label: 'Bank Account Number', value: data.bank_account_number},
+    ]
+    console.log(profile.value)
+  } catch (error) {
+    console.error('Error fetching user info:', error)
+  }
+}
+
+onMounted(() => {
+  getUserInfo()
+})
+
 const SOURCE_TYPE_LABELS = {
   deposit: 'Deposit',
   withdrawal: 'Withdrawal',
@@ -48,37 +78,6 @@ onMounted(async () => {
   }
 })
 
-const profile = ref({})
-const profileData = ref([])
-
-const getUserInfo = async () => {
-  try {
-    const {data} = await api.get('/members/profile/')
-    profile.value = data
-
-    profileData.value = [
-      {label: 'Email Address', value: data.email},
-      {label: 'Full Name', value: data.full_name},
-      {label: 'Gender', value: data.gender},
-      {label: 'Phone Number', value: data.phone_number},
-      {label: 'Country', value: data.country},
-      {label: 'Address Line', value: data.address_line},
-      {label: 'City', value: data.city},
-      {label: 'State', value: data.state},
-      {label: 'Bank Name', value: data.bank_name},
-      {label: 'Account Holder Name', value: data.account_holder_name},
-      {label: 'Bank Account Number', value: data.bank_account_number},
-    ]
-    console.log(profile.value)
-  } catch (error) {
-    console.error('Error fetching user info:', error)
-  }
-}
-
-onMounted(() => {
-  getUserInfo()
-})
-
 const printInvoice = () => {
   const originalTitle = document.title
   document.title = 'Invoice_INV'
@@ -104,7 +103,7 @@ const printInvoice = () => {
       <h1>INVOICE</h1>
     </div>
 
-    <div class="section">
+    <div class="section profile">
       <h3>Member Information</h3>
       <hr class="divider"/>
 
@@ -117,7 +116,7 @@ const printInvoice = () => {
 
     </div>
 
-    <div class="section">
+    <div class="section invoice">
       <h3>Invoice Info</h3>
       <hr class="divider"/>
       <div class="grid">
@@ -175,29 +174,18 @@ const printInvoice = () => {
       </div>
     </div>
 
-    <div class="section">
+    <div class="section investment"
+        v-if="transaction?.source_type === 'Share' && transaction?.share_record"
+    >
       <h3>Investment Details</h3>
       <hr class="divider"/>
 
-      <div class="grid">
-        <div class="item"><span class="label">Activity</span><span class="data">Real Estate ActivityA</span></div>
-        <div class="item"><span class="label">Investment Date</span><span class="data">2025-06-01</span></div>
-        <div class="item"><span class="label">Amount</span><span class="data">RM 10,000.00</span></div>
-        <div class="item"><span class="label">Profit Rate</span><span class="data">10%</span></div>
-        <div class="item"><span class="label">Expected Return</span><span class="data">2026-06-01</span></div>
-        <div class="item"><span class="label">Final Return</span><span class="data">RM 11,000.00</span></div>
-        <div class="item"><span class="label">Status</span><span class="data">Active</span></div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>Payment Methods</h3>
-
-      <hr class="divider"/>
-
-      <div class="grid">
-        <div class="item"><span class="label">Received via</span><span class="data">Bank Transfer</span></div>
-        <div class="item"><span class="label">Returned via</span><span class="data">Online</span></div>
+      <div class="grid" v-if="transaction?.share_record">
+        <div class="item"><span class="label">Activity</span><span class="data">{{ transaction.share_record.project_name }}</span></div>
+        <div class="item"><span class="label">Investment Date</span><span class="data">{{ transaction.share_record.share_date }}</span></div>
+        <div class="item"><span class="label">Profit Rate</span><span class="data">{{ transaction.share_record.share_return_rate }}%</span></div>
+        <div class="item"><span class="label">Duration (Days)</span><span class="data">{{ transaction.share_record.share_duration_days }}</span></div>
+        <div class="item"><span class="label">Status</span><span class="data">{{ transaction.share_record.status }}</span></div>
       </div>
     </div>
 
@@ -259,7 +247,7 @@ const printInvoice = () => {
 }
 
 .invoice {
-  padding: 0;
+  padding: 50px 0 ;
   background: var(--primary-bg);
   color: var(--primary-text-color);
 
@@ -271,7 +259,6 @@ const printInvoice = () => {
       width: calc(100% - 40px);
       max-width: 1200px;
       margin: 0 auto;
-      border-radius: 12px;
 
       &.btn-container {
         background: transparent;
@@ -293,10 +280,11 @@ const printInvoice = () => {
       width: 100%;
     }
 
-    .grid {
+    .grid,
+    .profile-info{
       display: grid;
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: 0 20px ;
 
       @media (min-width: 600px) {
         grid-template-columns: repeat(3, 1fr);
@@ -337,49 +325,6 @@ const printInvoice = () => {
       }
     }
 
-    .profile-info {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-
-      @media (min-width: 600px) {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      @media (min-width: 1024px) {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .item {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        font-size: var(--body-text);
-
-        .label {
-          height: 36px;
-          font-weight: 600;
-          align-content: center;
-        }
-
-        .data {
-          color: var(--secondary-text-color);
-          height: 36px;
-          align-content: center;
-          padding: 10px;
-          border-radius: 10px;
-
-          @media (min-width: 600px) {
-            padding: 0;
-            border-radius: 0;
-          }
-
-          @media (min-width: 1024px) {
-            padding: 0;
-            border-radius: 0;
-          }
-        }
-      }
-    }
   }
 
   .print-btn {
@@ -423,7 +368,7 @@ const printInvoice = () => {
 
     html,
     body {
-      font-size: var(--body-text);
+      font-size: var(--small-text) !important;
       margin: 0;
       padding: 0;
       color: var(--primary-text-color);
@@ -464,7 +409,8 @@ const printInvoice = () => {
         color: var(--secondary-text-color);
       }
 
-      .grid {
+      .grid,
+      .profile-info{
         display: grid;
         grid-template-columns: 1fr;
         gap: 12px;
@@ -477,7 +423,7 @@ const printInvoice = () => {
         .item {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          font-size: var(--body-text);
+          font-size: var(--small-text);
 
           .label {
             height: 36px;
@@ -534,7 +480,7 @@ const printInvoice = () => {
       align-items: center;
       margin-top: 40px;
       padding-top: 10px;
-      font-size: 12px;
+      font-size: var(--small-text);
       color: var(--primary-text-color);
 
       .contact-info {
