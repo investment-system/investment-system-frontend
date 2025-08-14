@@ -1,35 +1,87 @@
 <script setup lang="ts">
 
+import {onMounted, ref} from "vue";
+import {useApi} from "~/composables/useApi";
 
-const dashboardStats = [
+const api = useApi()
+
+const totalBalance = ref(0)
+const dashboardStats = ref([
+  {
+    title: 'Balance',
+    icon: 'mdi-account-group',
+    value: 0,
+    trendIcon: 'mdi-trending-up',
+  },
   {
     title: 'Share Amount',
     icon: 'mdi-chart-donut',
-    value: 1200,
+    value: 0,
   },
   {
     title: 'Share Completed',
     icon: 'mdi-check-circle-outline',
-    value: 800,
+    value: 0,
   },
   {
     title: 'Share Canceled',
     icon: 'mdi-cancel',
-    value: 100,
+    value: 0,
   },
   {
     title: 'Transactions',
     icon: 'mdi-bank-transfer',
-    value: '1000.00',
+    value: '0.00',
     unit: 'RM',
   },
   {
     title: 'Expected Profit',
     icon: 'mdi-currency-usd',
-    value: '850.00',
+    value: '0.00',
     unit: 'RM',
   },
-]
+])
+
+const fetchStats = async () => {
+  try {
+    const { data: transactionData } = await api.get('/transactions/stats/')
+
+
+    dashboardStats.value = dashboardStats.value.map(stat => {
+      switch (stat.title) {
+        case 'Balance':
+          stat.value = parseFloat(transactionData.total_balance) ?? stat.value
+          break
+        case 'Share Amount':
+          stat.value = parseFloat(transactionData.share_amount) ?? stat.value
+          break
+        case 'Share Completed':
+          stat.value = transactionData.share_completed ?? stat.value
+          break
+        case 'Share Canceled':
+          stat.value = parseFloat(transactionData.share_canceled) ?? stat.value
+          break
+        case 'Transactions':
+          stat.value = parseFloat(transactionData.total_transactions) ?? stat.value
+          break
+        case 'Expected Profit':
+          stat.value = parseFloat(transactionData.expected_profit) ?? stat.value
+          break
+      }
+      return stat
+    })
+
+    totalBalance.value = parseFloat(transactionData.total_balance) ?? 0
+
+  } catch (error) {
+    console.error('Failed to fetch dashboard stats:', error)
+  }
+}
+
+onMounted(() => {
+  fetchStats()
+})
+
 
 </script>
 

@@ -1,25 +1,79 @@
 <script setup lang="ts">
 
-const dashboardStats = [
+import {onMounted, ref} from "vue";
+import {useApi} from "~/composables/useApi";
+
+const api = useApi()
+
+const totalBalance = ref(0)
+const dashboardStats = ref([
   {
     title: 'Total Members',
     icon: 'mdi-account-group',
-    value: 500,
+    value: 0,
     trendIcon: 'mdi-trending-up',
   },
   {
-    title: 'Total Active Members',
+    title: 'Active Members',
     icon: 'mdi-account-check-outline',
-    value: 350,
+    value: 0,
     trendIcon: 'mdi-trending-up',
   },
   {
-    title: 'Total Inactive Members',
+    title: 'Inactive Members',
     icon: 'mdi-account-off-outline',
-    value: 150,
+    value: 0,
     trendIcon: 'mdi-trending-down',
   },
-]
+])
+
+const fetchStats = async () => {
+  try {
+    const { data: memberData } = await api.get('/members/stats/')
+
+    const { data: transactionData } = await api.get('/transactions/stats/')
+
+
+    dashboardStats.value = dashboardStats.value.map(stat => {
+      switch (stat.title) {
+        case 'Total Members':
+          stat.value = memberData.total_members ?? stat.value
+          break
+        case 'Active Members':
+          stat.value = memberData.total_active_members ?? stat.value
+          break
+        case 'Inactive Members':
+          stat.value = memberData.total_inactive_members ?? stat.value
+          break
+        case 'Share Amount':
+          stat.value = parseFloat(transactionData.share_amount) ?? stat.value
+          break
+        case 'Share Completed':
+          stat.value = transactionData.share_completed ?? stat.value
+          break
+        case 'Share Canceled':
+          stat.value = parseFloat(transactionData.share_canceled) ?? stat.value
+          break
+        case 'Transactions':
+          stat.value = parseFloat(transactionData.total_transactions) ?? stat.value
+          break
+        case 'Expected Profit':
+          stat.value = parseFloat(transactionData.expected_profit) ?? stat.value
+          break
+      }
+      return stat
+    })
+
+    totalBalance.value = parseFloat(transactionData.total_balance) ?? 0
+
+  } catch (error) {
+    console.error('Failed to fetch dashboard stats:', error)
+  }
+}
+
+onMounted(() => {
+  fetchStats()
+})
 
 </script>
 
