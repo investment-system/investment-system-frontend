@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useApi } from '@/composables/useApi'
-import { useRoute } from 'vue-router'
+import {ref, onMounted} from 'vue'
+import {useApi} from '@/composables/useApi'
+import {useRoute} from 'vue-router'
 
 const api = useApi()
 const route = useRoute()
@@ -33,7 +33,7 @@ const loading = ref(true)
 
 onMounted(async () => {
   try {
-    const { data } = await api.get(`/transactions/user/${route.params.id}/`)
+    const {data} = await api.get(`/transactions/user/${route.params.id}/`)
 
     transaction.value = {
       ...data,
@@ -46,6 +46,37 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+})
+
+const profile = ref({})
+const profileData = ref([])
+
+const getUserInfo = async () => {
+  try {
+    const {data} = await api.get('/members/profile/')
+    profile.value = data
+
+    profileData.value = [
+      {label: 'Email Address', value: data.email},
+      {label: 'Full Name', value: data.full_name},
+      {label: 'Gender', value: data.gender},
+      {label: 'Phone Number', value: data.phone_number},
+      {label: 'Country', value: data.country},
+      {label: 'Address Line', value: data.address_line},
+      {label: 'City', value: data.city},
+      {label: 'State', value: data.state},
+      {label: 'Bank Name', value: data.bank_name},
+      {label: 'Account Holder Name', value: data.account_holder_name},
+      {label: 'Bank Account Number', value: data.bank_account_number},
+    ]
+    console.log(profile.value)
+  } catch (error) {
+    console.error('Error fetching user info:', error)
+  }
+}
+
+onMounted(() => {
+  getUserInfo()
 })
 
 const printInvoice = () => {
@@ -74,8 +105,21 @@ const printInvoice = () => {
     </div>
 
     <div class="section">
+      <h3>Member Information</h3>
+      <hr class="divider"/>
+
+      <div class="profile-info">
+        <div class="item" v-for="(item, index) in profileData" :key="index">
+          <label class="label">{{ item.label }}</label>
+          <p class="data">{{ item.value }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section">
       <h3>Invoice Info</h3>
-      <hr class="divider" />
+      <hr class="divider"/>
       <div class="grid">
 
         <div class="item">
@@ -128,25 +172,6 @@ const printInvoice = () => {
       </span>
         </div>
 
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>Member Information</h3>
-      <hr class="divider"/>
-
-      <div class="grid">
-        <div class="item"><span class="label">Member ID</span><span class="data">INV-001</span></div>
-        <div class="item"><span class="label">Full Name</span><span class="data">Ahmad bin Salleh</span></div>
-        <div class="item"><span class="label">IC Number</span><span class="data">900101-14-1234</span></div>
-        <div class="item"><span class="label">Email</span><span class="data">ahmad@example.com</span></div>
-        <div class="item"><span class="label">Phone</span><span class="data">+60 13-456 7890</span></div>
-        <div class="item"><span class="label">Country</span><span class="data">Malaysia</span></div>
-        <div class="item "><span class="label">Address</span><span class="data">No. 123, Jalan Damai, Kuala Lumpur, Selangor</span>
-        </div>
-        <div class="item"><span class="label">Bank Name</span><span class="data">Maybank</span></div>
-        <div class="item"><span class="label">Account Holder</span><span class="data">Ahmad bin Salleh</span></div>
-        <div class="item"><span class="label">Account No</span><span class="data">1234567890</span></div>
       </div>
     </div>
 
@@ -212,7 +237,6 @@ const printInvoice = () => {
 
     </div>
 
-
     <div class="section btn-container">
 
       <button class="print-btn" @click="printInvoice">Save PDF</button>
@@ -270,6 +294,50 @@ const printInvoice = () => {
     }
 
     .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+
+      @media (min-width: 600px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      @media (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .item {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        font-size: var(--body-text);
+
+        .label {
+          height: 36px;
+          font-weight: 600;
+          align-content: center;
+        }
+
+        .data {
+          color: var(--secondary-text-color);
+          height: 36px;
+          align-content: center;
+          padding: 10px;
+          border-radius: 10px;
+
+          @media (min-width: 600px) {
+            padding: 0;
+            border-radius: 0;
+          }
+
+          @media (min-width: 1024px) {
+            padding: 0;
+            border-radius: 0;
+          }
+        }
+      }
+    }
+
+    .profile-info {
       display: grid;
       grid-template-columns: 1fr;
       gap: 12px;
