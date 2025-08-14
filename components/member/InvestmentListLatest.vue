@@ -36,8 +36,6 @@ const PAYMENT_METHOD_LABELS = {
   ewallet: 'E-Wallet',
 }
 
-const search = ref('')
-const selectedType = ref('All')
 const transactions = ref<Transaction[]>([])
 const loading = ref(false)
 const error = ref('')
@@ -47,18 +45,27 @@ const fetchTransactions = async () => {
   error.value = ''
 
   try {
-
     const response = await api.get('/transactions/user/')
+    let allTransactions: any[] = []
 
     if (Array.isArray(response.data)) {
-      transactions.value = response.data
+      allTransactions = response.data
     } else if (response.data.transactions && typeof response.data.transactions === 'string') {
       const secondResponse = await api.get(response.data.transactions)
-      transactions.value = secondResponse.data
+      allTransactions = secondResponse.data
     } else {
       console.error('Unexpected API response structure:', response.data)
       error.value = 'Unexpected API response format'
+      return
     }
+
+    // Sort by created_at descending (latest first)
+    allTransactions.sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    )
+
+    // Keep only the latest 5 transactions
+    transactions.value = allTransactions.slice(0, 5)
 
   } catch (err) {
     console.error('Failed to fetch transactions:', err)
@@ -70,19 +77,6 @@ const fetchTransactions = async () => {
 
 onMounted(() => {
   fetchTransactions()
-})
-
-const filteredTransactions = computed(() => {
-  return transactions.value.filter((transaction) => {
-    const matchesSearch = `${transaction.member_id} ${transaction.source_type} ${transaction.transaction_code} ${transaction.direction}`
-        .toLowerCase()
-        .includes(search.value.toLowerCase())
-
-    const matchesType =
-        selectedType.value === 'All' || transaction.source_type === selectedType.value
-
-    return matchesSearch && matchesType
-  })
 })
 
 </script>
@@ -107,7 +101,7 @@ const filteredTransactions = computed(() => {
         </div>
 
         <div
-            v-for="transaction in filteredTransactions"
+            v-for="transaction in transactions"
             :key="transaction.transaction_id"
             class="transaction-row"
         >

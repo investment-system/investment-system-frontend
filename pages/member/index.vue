@@ -5,7 +5,7 @@
 <template>
   <MemberHeader/>
   <MemberInvestorDashboard/>
-  <MemberInvestmentList/>
+  <MemberInvestmentListLatest/>
   <Footer/>
 </template>
 
