@@ -2,28 +2,39 @@
 import { ref, computed } from 'vue'
 import { z } from 'zod'
 import { useApi } from '~/composables/useApi'
+import AdminCreationSuccess from './popup/AdminCreationSuccess.vue'
+import AdminCreationFailed from './popup/AdminCreationFailed.vue'
 
 const api = useApi()
 
-// Updated form fields to match Django models
 const form = ref({
+  // Personal Info
   full_name: '',
-  email: '',
-  password: '',
   ic_number: '',
-  gender: '',
   date_of_birth: '',
+  gender: '',
+
+  // Contact Info
+  email: '',
   phone_number: '',
-  profile_picture: null,
-  role: 'admin', // default to admin
-  position: '',
   address_line1: '',
   address_line2: '',
   city: '',
   state: '',
   postal_code: '',
-  country: ''
+  country: 'Malaysia',  // default country
+
+  // Account Info
+  role: 'admin',        // default role
+  position: '',
+  password: '',
+
+  // Profile Picture
+  profile_picture: null
 })
+
+const showAdminCreationSuccess = ref(false)
+const showAdminCreationFailed = ref(false)
 
 const avatarUrl = ref('/default-avatar.png')
 
@@ -36,42 +47,63 @@ function handleAvatarUpload(event) {
 }
 
 const profileQuestions = computed(() => [
+  // Personal Info
   { id: 'full_name', label: 'Full Name', type: 'text', placeholder: 'Enter full name', validation: z.string().min(1) },
-  { id: 'email', label: 'Email Address', type: 'email', placeholder: 'Enter email address', validation: z.string().email() },
-  { id: 'password', label: 'Password', type: 'password', placeholder: 'Enter password', validation: z.string().min(6) },
   { id: 'ic_number', label: 'IC Number', type: 'text', placeholder: '900101-14-1234', validation: z.string().min(1) },
-  { id: 'gender', label: 'Gender', type: 'select', options: [{ label: 'Male', value: 'male' }, { label: 'Female', value: 'female' }], validation: z.enum(['male', 'female']) },
   { id: 'date_of_birth', label: 'Date of Birth', type: 'date', validation: z.string().min(1) },
+  { id: 'gender', label: 'Gender', type: 'select', options: [{ label: 'Male', value: 'male' }, { label: 'Female', value: 'female' }], validation: z.enum(['male', 'female']) },
+  // Contact Info
+  { id: 'email', label: 'Email', type: 'email', placeholder: 'Enter email', validation: z.string().email() },
   { id: 'phone_number', label: 'Phone Number', type: 'text', placeholder: '+60 12-345 6789', validation: z.string().min(1) },
-  { id: 'role', label: 'Role', type: 'select', options: [{ label: 'Super Admin', value: 'super_admin' }, { label: 'Admin', value: 'admin' }, { label: 'Moderator', value: 'moderator' }], validation: z.enum(['super_admin', 'admin', 'moderator']) },
-  { id: 'position', label: 'Position', type: 'select', options: [{ label: 'Manager', value: 'manager' }, { label: 'Staff', value: 'staff' }, { label: 'Executive', value: 'executive' }], validation: z.enum(['manager', 'staff', 'executive']) },
   { id: 'address_line1', label: 'Address Line 1', type: 'text', placeholder: 'Enter address line 1', validation: z.string().optional() },
   { id: 'address_line2', label: 'Address Line 2', type: 'text', placeholder: 'Enter address line 2', validation: z.string().optional() },
   { id: 'city', label: 'City', type: 'text', placeholder: 'Enter city', validation: z.string().optional() },
   { id: 'state', label: 'State', type: 'text', placeholder: 'Enter state', validation: z.string().optional() },
   { id: 'postal_code', label: 'Postal Code', type: 'text', placeholder: 'Enter postal code', validation: z.string().optional() },
-  { id: 'country', label: 'Country', type: 'text', placeholder: 'Enter country', validation: z.string().optional() }
+  { id: 'country', label: 'Country', type: 'text', placeholder: 'Enter country', validation: z.string().optional() },
+  // Account Info
+  { id: 'role', label: 'Role', type: 'select', options: [{ label: 'Super Admin', value: 'super_admin' }, { label: 'Admin', value: 'admin' }, { label: 'Moderator', value: 'moderator' }], validation: z.enum(['super_admin', 'admin', 'moderator']) },
+  { id: 'position', label: 'Position', type: 'select', options: [{ label: 'Manager', value: 'manager' }, { label: 'Staff', value: 'staff' }, { label: 'Executive', value: 'executive' }], validation: z.enum(['manager', 'staff', 'executive']) },
+  { id: 'password', label: 'Password', type: 'password', placeholder: 'Enter password', validation: z.string().min(6) }
 ])
 
-async function saveChanges() {
+function validateForm() {
+  try {
+    profileQuestions.value.forEach(q => {
+      if (form.value[q.id] !== '' && form.value[q.id] !== null) {
+        q.validation.parse(form.value[q.id])
+      }
+    })
+    return true
+  } catch (err) {
+    alert(err.errors ? err.errors[0].message : err.message)
+    return false
+  }
+}
+
+const saveChanges = async () => {
+  if (!validateForm()) return
+
   try {
     const fd = new FormData()
     Object.entries(form.value).forEach(([key, value]) => {
-      if (value !== null && value !== '') {
-        fd.append(key, value)
-      }
+      if (value !== null && value !== '') fd.append(key, value)
     })
 
     const res = await api.post('/auth/admin/register/', fd, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    alert(`Admin registered! Code: ${res.data.admin_code}`)
+    showAdminCreationSuccess.value = true
+
   } catch (err) {
     console.error(err.response?.data || err.message)
-    alert('Registration failed')
+    showAdminCreationFailed.value = true
+
   }
 }
+
+
 </script>
 
 <template>
@@ -152,15 +184,24 @@ async function saveChanges() {
         </div>
 
         <div class="form-actions">
+
           <button type="button" class="btn-secondary">Cancel</button>
           <button type="button" @click="saveChanges" class="btn-primary">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-              <polyline points="17,21 17,13 7,13 7,21"/>
-              <polyline points="7,3 7,8 15,8"/>
             </svg>
             Save Changes
           </button>
+
+          <AdminCreationSuccess
+              :show="showAdminCreationSuccess"
+              @update:show="showAdminCreationSuccess = $event"
+          />
+          <AdminCreationFailed
+              :show="showAdminCreationFailed"
+              @update:show="showAdminCreationFailed = $event"
+          />
+
+
         </div>
       </div>
     </div>
