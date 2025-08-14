@@ -43,6 +43,7 @@
   --accent-color: #d9a200;
   --profit-color: #2E7D32;
   --danger-color: #D32F2F;
+  --danger-color-hover: rgba(211, 47, 47, 0.8);
 
   --button-bg: #d9a200;
   --hover-button-bg: #F5B301;
