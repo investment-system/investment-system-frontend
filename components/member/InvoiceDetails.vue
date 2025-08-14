@@ -71,6 +71,14 @@ onMounted(async () => {
       direction: DIRECTION_LABELS[data.direction] || data.direction,
       payment_method: PAYMENT_METHOD_LABELS[data.payment_method] || data.payment_method,
     }
+
+    // ✅ Log profit object
+    if (transaction.value.share_record?.profit) {
+      console.log('Profit Info:', transaction.value.share_record.profit)
+    } else {
+      console.log('No profit record found')
+    }
+
   } catch (error) {
     console.error('Error fetching transaction:', error)
   } finally {
@@ -104,7 +112,7 @@ const printInvoice = () => {
     </div>
 
     <div class="section profile">
-      <h3>Member Information</h3>
+      <h3>Member Profile</h3>
       <hr class="divider"/>
 
       <div class="profile-info">
@@ -117,50 +125,27 @@ const printInvoice = () => {
     </div>
 
     <div class="section invoice">
-      <h3>Invoice Info</h3>
+      <h3>Transaction & Invoice</h3>
       <hr class="divider"/>
       <div class="grid">
-
-        <div class="item">
-          <span class="label">Transaction ID</span>
-          <span class="data">{{ transaction?.transaction_id }}</span>
+        <div class="item"><span class="label">Transaction ID</span><span class="data">{{
+            transaction?.transaction_id
+          }}</span></div>
+        <div class="item"><span class="label">Invoice ID</span><span class="data">{{ transaction?.reference_id }}</span>
         </div>
-
-        <div class="item">
-          <span class="label">Invoice ID</span>
-          <span class="data">{{ transaction?.reference_id }}</span>
+        <div class="item"><span class="label">Transaction Code</span><span class="data">{{
+            transaction?.transaction_code
+          }}</span></div>
+        <div class="item"><span class="label">Invoice Date</span><span
+            class="data">{{ transaction?.created_at?.split('T')[0] }}</span></div>
+        <div class="item"><span class="label">Source Type</span><span class="data">{{ transaction?.source_type }}</span>
         </div>
-
-        <div class="item">
-          <span class="label">Transaction Code</span>
-          <span class="data">{{ transaction?.transaction_code }}</span>
+        <div class="item"><span class="label">Amount</span><span class="data">{{ transaction?.amount }}</span></div>
+        <div class="item"><span class="label">Direction</span><span class="data">{{ transaction?.direction }}</span>
         </div>
-
-        <div class="item">
-          <span class="label">Invoice Date</span>
-          <span class="data">{{ transaction?.created_at?.split('T')[0] }}</span>
-        </div>
-
-        <div class="item">
-          <span class="label">Source Type</span>
-          <span class="data">{{ transaction?.source_type }}</span>
-        </div>
-
-        <div class="item">
-          <span class="label">Amount</span>
-          <span class="data">{{ transaction?.amount }}</span>
-        </div>
-
-        <div class="item">
-          <span class="label">Direction</span>
-          <span class="data">{{ transaction?.direction }}</span>
-        </div>
-
-        <div class="item">
-          <span class="label">Payment Method</span>
-          <span class="data">{{ transaction?.payment_method }}</span>
-        </div>
-
+        <div class="item"><span class="label">Payment Method</span><span class="data">{{
+            transaction?.payment_method
+          }}</span></div>
         <div class="item">
           <span class="label">Invoice Document</span>
           <span class="data">
@@ -170,48 +155,51 @@ const printInvoice = () => {
         <span v-else>No document</span>
       </span>
         </div>
-
       </div>
     </div>
 
     <div class="section investment"
-        v-if="transaction?.source_type === 'Share' && transaction?.share_record"
-    >
-      <h3>Investment Details</h3>
+         v-if="transaction?.source_type === 'Share' && transaction?.share_record">
+      <h3>Share Investment Overview</h3>
       <hr class="divider"/>
-
-      <div class="grid" v-if="transaction?.share_record">
-        <div class="item"><span class="label">Activity</span><span class="data">{{ transaction.share_record.project_name }}</span></div>
-        <div class="item"><span class="label">Investment Date</span><span class="data">{{ transaction.share_record.share_date }}</span></div>
-        <div class="item"><span class="label">Profit Rate</span><span class="data">{{ transaction.share_record.share_return_rate }}%</span></div>
-        <div class="item"><span class="label">Duration (Days)</span><span class="data">{{ transaction.share_record.share_duration_days }}</span></div>
-        <div class="item"><span class="label">Status</span><span class="data">{{ transaction.share_record.status }}</span></div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>If Investment is Canceled</h3>
-      <hr class="divider"/>
-
-      <div class="grid">
-        <div class="item"><span class="label">Is Canceled</span><span class="data">Yes</span></div>
-        <div class="item"><span class="label">Cancellation Date</span><span class="data">2025-06-01</span></div>
-        <div class="item"><span class="label">Amount Invested</span><span class="data">RM 10,000.00</span></div>
-        <div class="item"><span class="label">Penalty Rate</span><span class="data">5%</span></div>
-        <div class="item"><span class="label">Adjusted Final Return</span><span class="data">RM 9,360.00</span></div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>Final Return</h3>
-
-      <hr class="divider"/>
-
-      <div class="grid">
-        <div class="item"><span class="label">Final Return</span><span class="data">RM 11,000.00</span></div>
-        <div class="item"><span class="label">Adjusted Return</span><span class="data">RM 9,360.00</span></div>
+      <div class="grid profit-cancel-container">
+        <div class="item"><span class="label">Activity</span><span class="data">{{
+            transaction.share_record.project_name
+          }}</span></div>
+        <div class="item"><span class="label">Investment Date</span><span
+            class="data">{{ transaction.share_record.share_date }}</span></div>
+        <div class="item"><span class="label">Profit Rate</span><span
+            class="data">{{ transaction.share_record.share_return_rate }}%</span></div>
+        <div class="item"><span class="label">Duration (Days)</span><span
+            class="data">{{ transaction.share_record.share_duration_days }}</span></div>
+        <div class="item"><span class="label">Status</span><span class="data">{{
+            transaction.share_record.status
+          }}</span></div>
       </div>
 
+      <div class="profit" v-if="transaction.share_record.profit">
+        <h3>Profit Settlement</h3>
+        <hr class="divider"/>
+        <div class="grid">
+          <div class="item"><span class="label">Payout Type</span><span
+              class="data">{{ transaction.share_record.profit.payout_type }}</span></div>
+          <div class="item"><span class="label">Profit Amount</span><span
+              class="data">{{ transaction.share_record.profit.profit_amount }}</span></div>
+          <div class="item"><span class="label">Refund Amount</span><span
+              class="data">{{ transaction.share_record.profit.refund_amount }}</span></div>
+        </div>
+      </div>
+
+      <div class="cancel" v-else-if="transaction.share_record.cancel">
+        <h3>Cancellation Details</h3>
+        <hr class="divider"/>
+        <div class="grid ">
+          <div class="item"><span class="label">Cancel Penalty Amount</span><span
+              class="data">{{ transaction.share_record.cancel.penalty_amount }}</span></div>
+          <div class="item"><span class="label">Refund Amount</span><span
+              class="data">{{ transaction.share_record.cancel.refund_amount }}</span></div>
+        </div>
+      </div>
     </div>
 
     <div class="print-only print-footer">
@@ -247,12 +235,12 @@ const printInvoice = () => {
 }
 
 .invoice {
-  padding: 50px 0 ;
+  padding: 20px 0;
   background: var(--primary-bg);
   color: var(--primary-text-color);
 
   .section {
-    padding: 1rem;
+    padding: 20px;
     margin-bottom: 0;
 
     @media (min-width: 600px) {
@@ -281,10 +269,10 @@ const printInvoice = () => {
     }
 
     .grid,
-    .profile-info{
+    .profile-info {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 0 20px ;
+      gap: 0 20px;
 
       @media (min-width: 600px) {
         grid-template-columns: repeat(3, 1fr);
@@ -323,6 +311,12 @@ const printInvoice = () => {
           }
         }
       }
+
+      .profit-cancel-container {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
     }
 
   }
@@ -410,7 +404,7 @@ const printInvoice = () => {
       }
 
       .grid,
-      .profile-info{
+      .profile-info {
         display: grid;
         grid-template-columns: 1fr;
         gap: 12px;
