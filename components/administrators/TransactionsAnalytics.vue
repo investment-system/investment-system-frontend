@@ -9,7 +9,7 @@ const totalBalance = ref(0)
 const dashboardStats = ref([
   {
     title: 'Balance',
-    icon: 'mdi-account-group',
+    icon: 'mdi-currency-usd',
     value: 0,
     trendIcon: 'mdi-trending-up',
   },

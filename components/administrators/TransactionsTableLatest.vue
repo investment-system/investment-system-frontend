@@ -16,6 +16,27 @@ interface Transaction {
 
 const api = useApi()
 
+const SOURCE_TYPE_LABELS: Record<string, string> = {
+  deposit: 'Deposit',
+  withdrawal: 'Withdrawal',
+  share: 'Share',
+  payment: 'Payment',
+  cancellation: 'Cancellation',
+  registration_payments: 'Registration Payment',
+}
+const DIRECTION_LABELS: Record<string, string> = {
+  in: 'In',
+  out: 'Out',
+  reinvest: 'Reinvest',
+}
+const PAYMENT_METHOD_LABELS = {
+  cash: 'Cash',
+  bank_transfer: 'Bank Transfer',
+  bank: 'Bank Transfer',
+  card: 'Card',
+  ewallet: 'E-Wallet',
+}
+
 const search = ref('')
 const selectedType = ref('All')
 const transactions = ref<Transaction[]>([])
@@ -28,19 +49,23 @@ const fetchTransactions = async () => {
 
   try {
     const response = await api.get('/transactions/')
-    console.log('First response:', response.data)
 
-    // If the response contains a URL, fetch again
+    let allTransactions = []
+
     if (response.data.transactions && typeof response.data.transactions === 'string') {
       const secondResponse = await api.get(response.data.transactions)
-      console.log('Second response with actual transactions:', secondResponse.data)
-      transactions.value = secondResponse.data
+      allTransactions = secondResponse.data
     } else if (Array.isArray(response.data)) {
-      transactions.value = response.data
+      allTransactions = response.data
     } else {
       console.error('Unexpected API response structure:', response.data)
       error.value = 'Unexpected API response format'
+      return
     }
+
+    allTransactions.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+    transactions.value = allTransactions.slice(0, 5)
 
   } catch (err) {
     console.error('Failed to fetch transactions:', err)
@@ -66,6 +91,7 @@ const filteredTransactions = computed(() => {
     return matchesSearch && matchesType
   })
 })
+
 </script>
 
 <template>
@@ -103,10 +129,10 @@ const filteredTransactions = computed(() => {
         >
           <span></span>
           <span>{{ transaction.transaction_code }}</span>
-          <span>{{ transaction.source_type }}</span>
-          <span>{{ transaction.direction }}</span>
+          <span>{{ SOURCE_TYPE_LABELS[transaction.source_type] || transaction.source_type }}</span>
+          <span>{{ DIRECTION_LABELS[transaction.direction] || transaction.direction }}</span>
           <span>RM {{ parseFloat(transaction.amount).toFixed(2) }}</span>
-          <span>{{ transaction.payment_method }}</span>
+          <span>{{ PAYMENT_METHOD_LABELS[transaction.payment_method] || transaction.payment_method }}</span>
           <span>{{ transaction.created_at.slice(0, 10) }}</span>
           <div class="transaction-actions">
             <NuxtLink to="" class="btn btn--update">
