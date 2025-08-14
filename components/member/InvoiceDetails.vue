@@ -14,17 +14,17 @@ const getUserInfo = async () => {
     profile.value = data
 
     profileData.value = [
-      {label: 'Email Address', value: data.email},
-      {label: 'Full Name', value: data.full_name},
+      {label: 'Name', value: data.full_name},
+      {label: 'Email', value: data.email},
       {label: 'Gender', value: data.gender},
-      {label: 'Phone Number', value: data.phone_number},
+      {label: 'Contact Number', value: data.phone_number},
       {label: 'Country', value: data.country},
-      {label: 'Address Line', value: data.address_line},
+      {label: 'Street Address', value: data.address_line},
       {label: 'City', value: data.city},
       {label: 'State', value: data.state},
       {label: 'Bank Name', value: data.bank_name},
-      {label: 'Account Holder Name', value: data.account_holder_name},
-      {label: 'Bank Account Number', value: data.bank_account_number},
+      {label: 'Account Holder', value: data.account_holder_name},
+      {label: 'Account Number', value: data.bank_account_number},
     ]
     console.log(profile.value)
   } catch (error) {
@@ -112,7 +112,7 @@ const printInvoice = () => {
     </div>
 
     <div class="section profile">
-      <h3>Member Profile</h3>
+      <h3>Investor Profile</h3>
       <hr class="divider"/>
 
       <div class="profile-info">
@@ -128,32 +128,50 @@ const printInvoice = () => {
       <h3>Transaction & Invoice</h3>
       <hr class="divider"/>
       <div class="grid">
-        <div class="item"><span class="label">Transaction ID</span><span class="data">{{
-            transaction?.transaction_id
-          }}</span></div>
-        <div class="item"><span class="label">Invoice ID</span><span class="data">{{ transaction?.reference_id }}</span>
-        </div>
-        <div class="item"><span class="label">Transaction Code</span><span class="data">{{
-            transaction?.transaction_code
-          }}</span></div>
-        <div class="item"><span class="label">Invoice Date</span><span
-            class="data">{{ transaction?.created_at?.split('T')[0] }}</span></div>
-        <div class="item"><span class="label">Source Type</span><span class="data">{{ transaction?.source_type }}</span>
-        </div>
-        <div class="item"><span class="label">Amount</span><span class="data">{{ transaction?.amount }}</span></div>
-        <div class="item"><span class="label">Direction</span><span class="data">{{ transaction?.direction }}</span>
-        </div>
-        <div class="item"><span class="label">Payment Method</span><span class="data">{{
-            transaction?.payment_method
-          }}</span></div>
+
         <div class="item">
-          <span class="label">Invoice Document</span>
-          <span class="data">
-        <a v-if="transaction?.received_invoice_doc"
-           :href="transaction.received_invoice_doc"
-           target="_blank">View Document</a>
-        <span v-else>No document</span>
-      </span>
+          <span class="label">Invoice ID</span>
+          <span class="data">{{ transaction?.reference_id }}</span>
+        </div>
+
+        <div class="item">
+          <span class="label">Reference Code</span>
+          <span class="data">{{ transaction?.transaction_code }}</span>
+        </div>
+
+        <div class="item">
+          <span class="label">Date</span>
+          <span class="data">{{ transaction?.created_at?.split('T')[0] }}</span>
+        </div>
+
+        <div class="item">
+          <span class="label">Transaction Type</span>
+          <span class="data">{{ transaction?.source_type }}</span>
+        </div>
+
+        <div class="item">
+          <span class="label">mount (MYR)</span>
+          <span class="data">{{ transaction?.amount }}</span>
+        </div>
+
+        <div class="item">
+          <span class="label">Direction</span>
+          <span class="data">{{ transaction?.direction }}</span>
+        </div>
+
+        <div class="item">
+          <span class="label">Payment Method</span>
+          <span class="data">{{ transaction?.payment_method }}</span>
+        </div>
+
+        <div class="item">
+          <span class="label file-label">Invoice Document</span>
+          <span class="data file-data">
+            <a v-if="transaction?.received_invoice_doc"
+               :href="transaction.received_invoice_doc"
+               target="_blank">View Document</a>
+            <span v-else>No document</span>
+          </span>
         </div>
       </div>
     </div>
@@ -244,7 +262,7 @@ const printInvoice = () => {
     margin-bottom: 0;
 
     @media (min-width: 600px) {
-      width: calc(100% - 40px);
+      width: calc(100% - 80px);
       max-width: 1200px;
       margin: 0 auto;
 
@@ -309,6 +327,21 @@ const printInvoice = () => {
             padding: 0;
             border-radius: 0;
           }
+        }
+
+        .file-data {
+          background-color: var(--input-field-bg);
+          align-self: center;
+          justify-self: center;
+          text-align: center;
+          width: 100%;
+          border-radius: 6px;
+          transition: var(--transition);
+
+          &:hover {
+            background: var(--hover-input-field-bg);
+          }
+
         }
       }
 
@@ -442,6 +475,12 @@ const printInvoice = () => {
               border-radius: 0;
             }
           }
+
+          .file-data,
+          .file-label {
+            display: none;
+          }
+
         }
       }
 
