@@ -171,16 +171,14 @@ const handleSubmit = async () => {
       useCookie('token').value = null
       useCookie('refreshToken').value = null
       useCookie('role').value = null
-      router.push('/administrators/auth/login')
+      router.push('/member/auth/login')
     }, 2000)
 
   } catch (error) {
     console.error('Password change error:', error)
 
-    // Show failed popup
     showPasswordUpdatedFailed.value = true
 
-    // Optional: auto-hide after 3 seconds
     setTimeout(() => {
       showPasswordUpdatedFailed.value = false
     }, 3000)

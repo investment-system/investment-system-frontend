@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import {reactive, ref} from 'vue'
-import {useRouter} from 'vue-router'       // <-- import router
+import {useRouter} from 'vue-router'
 import {z} from 'zod'
 import {useApi} from '~/composables/useApi'
-import SuccessPopup from '~/components/member/SuccessPopup.vue'
-import FailedPopup from '~/components/member/FailedPopup.vue'
+import AccountCreationSuccess from '~/components/member/popup/AccountCreationSuccess.vue'
+import AccountCreationFailed from '~/components/member/popup/AccountCreationFailed.vue'
 
 const api = useApi()
-const router = useRouter()                   // <-- initialize router
+const router = useRouter()
 const showPopup = ref(false)
 const popupType = ref<'success' | 'failed'>('success')
 
@@ -108,8 +108,8 @@ const handleSignup = async () => {
           </button>
         </form>
 
-        <SuccessPopup v-model:show="showPopup" v-if="popupType === 'success'"/>
-        <FailedPopup v-model:show="showPopup" v-if="popupType === 'failed'"/>
+        <AccountCreationSuccess v-model:show="showPopup" v-if="popupType === 'success'"/>
+        <AccountCreationFailed v-model:show="showPopup" v-if="popupType === 'failed'"/>
 
 
       </div>
