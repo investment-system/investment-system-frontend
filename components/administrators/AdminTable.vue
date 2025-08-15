@@ -1,58 +1,68 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue'
+import {ref, computed, onMounted} from 'vue'
+import DeleteAdminConfirmation from "./popup/DeleteAdminConfirmation.vue";
+
+const api = useApi()
 
 const search = ref('')
 const selectedAdmins = ref<number[]>([])
+const admins = ref([])
+const loading = ref(true)
+const error = ref(null)
 
-const admins = ref([
-  {
-    id: 1,
-    full_name: 'Adnan Madi',
-    email: 'adnan@example.com',
-    position: 'Manager',
-    phone_number: '0123456789',
-    admin_code: 'AKM-20250727-0001',
-  },
-  {
-    id: 2,
-    full_name: 'Sara Lee',
-    email: 'sara@example.com',
-    position: 'HR',
-    phone_number: '0111111111',
-    admin_code: 'AKM-20250727-0002',
-  },
-  {
-    id: 3,
-    full_name: 'Adnan Madi',
-    email: 'adnan@example.com',
-    position: 'Manager',
-    phone_number: '0123456789',
-    admin_code: 'AKM-20250727-0001',
-  },
-  {
-    id: 4,
-    full_name: 'Sara Lee',
-    email: 'sara@example.com',
-    position: 'HR',
-    phone_number: '0111111111',
-    admin_code: 'AKM-20250727-0002',
-  },
-])
+const showDeletePopup = ref(false)
+
+const fetchAdmins = async () => {
+  try {
+    loading.value = true
+    const {data} = await api.get('/administrators/list/')
+    admins.value = data
+  } catch (err) {
+    error.value = 'Failed to load administrators.'
+    console.error(err)
+  } finally {
+    loading.value = false
+  }
+}
 
 const filteredAdmins = computed(() =>
-    admins.value.filter((admin) =>
+    admins.value.filter((admin: any) =>
         `${admin.full_name} ${admin.email} ${admin.admin_code}`
             .toLowerCase()
             .includes(search.value.toLowerCase())
     )
 )
 
-const deleteSelected = () => {
-  admins.value = admins.value.filter(
-      (admin) => !selectedAdmins.value.includes(admin.id)
-  )
-  selectedAdmins.value = []
+const toggleSelected = (id: number) => {
+  if (selectedAdmins.value.includes(id)) {
+    selectedAdmins.value = selectedAdmins.value.filter((i) => i !== id)
+  } else {
+    selectedAdmins.value.push(id)
+  }
 }
+
+const deleteSelected = () => {
+  if (selectedAdmins.value.length === 0) return
+  showDeletePopup.value = true
+}
+
+const confirmDelete = async () => {
+  try {
+    await Promise.all(
+        selectedAdmins.value.map(id => api.delete(`/administrators/${id}/`))
+    )
+
+    admins.value = admins.value.filter(admin => !selectedAdmins.value.includes(admin.id))
+    selectedAdmins.value = []
+    showDeletePopup.value = false
+    location.reload()
+  } catch (err) {
+    console.error('Failed to delete admins:', err)
+    alert('Failed to delete admins.')
+  }
+}
+
+onMounted(fetchAdmins)
 </script>
 
 <template>
@@ -70,7 +80,11 @@ const deleteSelected = () => {
             placeholder="Search Administrative ... "
         />
 
-        <nuxt-link to="/administrators/auth/create" class="administrators-create-btn">Create Administrator</nuxt-link>
+        <nuxt-link
+            to="/administrators/auth/create"
+            class="administrators-create-btn">
+          Create Administrator
+        </nuxt-link>
 
       </div>
     </div>
@@ -94,24 +108,33 @@ const deleteSelected = () => {
         >
           <input
               type="checkbox"
-              v-model="selectedAdmins"
-              :value="admin.id"
+              :value="admin.user.id"
+              :checked="selectedAdmins.includes(admin.user.id)"
+              @change="toggleSelected(admin.user.id)"
               class="admin-checkbox"
           />
-          <span>{{ admin.full_name }}</span>
-          <span>{{ admin.email }}</span>
+
+          <span>{{ admin.user.full_name }}</span>
+          <span>{{ admin.user.email }}</span>
           <span>{{ admin.position }}</span>
           <span>{{ admin.phone_number }}</span>
           <span>{{ admin.admin_code }}</span>
           <div class="admin-actions">
-            <NuxtLink to="" class="btn btn--update">
-              <UIcon name="mdi-file" class="icon"/>
-              Update
+
+            <NuxtLink
+                v-if="admin?.user?.id"
+                :to="`/administrators/manage/${admin.user.id}/`"
+                class="btn btn--update"
+            >
+              <UIcon name="mdi-file" class="icon" /> Update
             </NuxtLink>
+
+
           </div>
         </div>
       </div>
     </div>
+
 
     <button
         class="btn btn--danger"
@@ -120,12 +143,22 @@ const deleteSelected = () => {
     >
       Delete Selected
     </button>
+
+    <DeleteAdminConfirmation
+        v-if="showDeletePopup"
+        :show="showDeletePopup"
+        @close="showDeletePopup = false"
+        @confirm="confirmDelete"
+    />
+
+
   </div>
 </template>
 
 <style scoped lang="scss">
 .admin {
   padding: 15px;
+  min-height: 100vh;
 
   &-header {
     display: flex;
@@ -199,7 +232,7 @@ const deleteSelected = () => {
   &-table {
     display: flex;
     flex-direction: column;
-    min-width: 800px;
+    min-width: 1200px;
   }
 
   &-row {
@@ -207,11 +240,12 @@ const deleteSelected = () => {
     grid-template-columns:
     30px
     minmax(120px, 1fr)
-    minmax(160px, 1fr)
-    minmax(100px, 1fr)
+    minmax(200px, 1fr)
+    minmax(60px, 1fr)
     minmax(150px, 1fr)
     minmax(100px, 1fr)
     100px;
+    gap: 0 10px;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
     font-size: var(--small-text);
@@ -351,8 +385,8 @@ const deleteSelected = () => {
     }
 
     &-row {
-      grid-template-columns: 40px 1fr 1fr 1fr 1fr 1fr 1fr;
-      gap: 0;
+      grid-template-columns: 40px 1fr 1.2fr .8fr 1fr 1fr .8fr;
+      gap: 0 10px;
       padding: 0;
       height: 48px;
       align-content: center;
