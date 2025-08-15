@@ -1,116 +1,197 @@
 <script setup>
+import { z } from 'zod'
+import { ref, reactive, watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useApi } from '~/composables/useApi'
+import { useCookie } from '#app'
+import PasswordUpdatedSuccess from "./popup/PasswordUpdatedSuccess.vue";
+import PasswordUpdatedFailed from "./popup/PasswordUpdatedFailed.vue";
 
-import {z} from 'zod';
-import {ref, reactive, watch} from 'vue';
-import {useRoute} from 'vue-router'
+const showPasswordUpdatedSuccess = ref(false)
+const showPasswordUpdatedFailed = ref(false)
 
 const route = useRoute()
+const router = useRouter()
+const api = useApi()
+
+const loading = ref(false)
+const savedMessage = ref('')
+
 const settingLinks = ref([
-  {
-    link: "/member/profile",
-    title: "Profile",
-    icon: "mdi-account",
-  },
-  {
-    link: "/member/profile/edit",
-    title: "Edit Profile",
-    icon: "mdi-account",
-  },
-  {
-    link: "/member/auth/change-password",
-    title: "Change Password",
-    icon: "mdi-lock",
-  }
+  { link: '/administrators/profile', title: 'Profile', icon: 'mdi-account' },
+  { link: '/administrators/profile/edit', title: 'Edit Profile', icon: 'mdi-account' },
+  { link: '/administrators/auth/change-password', title: 'Change Password', icon: 'mdi-lock' },
 ])
 
 const MemberPasswordQuestions = [
-  {
-    label: "Current Password",
-    type: "password",
-    placeholder: "Enter Current Password",
-    id: "old_password",
-  },
-  {
-    label: "New Password",
-    type: "password",
-    placeholder: "Enter New Password",
-    id: "new_password"
-  },
-  {
-    label: "Confirm New Password",
-    type: "password",
-    placeholder: "Confirm New Password",
-    id: "confirm_password"
-  },
-];
+  { label: 'Current Password', type: 'password', placeholder: 'Enter Current Password', id: 'old_password' },
+  { label: 'New Password', type: 'password', placeholder: 'Enter New Password', id: 'new_password' },
+  { label: 'Confirm New Password', type: 'password', placeholder: 'Confirm New Password', id: 'confirm_password' },
+]
 
-const formSchema = z
-    .object({
-      old_password: z.string().min(1, "Current password is required"),
-      new_password: z.string().min(6, "New password must be at least 6 characters"),
-      confirm_password: z.string().min(1, "Please confirm your new password"),
-    })
-    .refine((data) => data.new_password === data.confirm_password, {
-      message: "Passwords must match",
-      path: ["confirm_password"], // specify error path
-    });
+const formSchema = z.object({
+  old_password: z.string()
+      .min(8, 'Current password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Current password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'Current password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'Current password must contain at least one number')
+      .regex(/[^A-Za-z0-9]/, 'Current password must contain at least one special character'),
 
-const form = reactive({});
-const errors = reactive({});
+  new_password: z.string()
+      .min(8, 'New password must be at least 8 characters')
+      .regex(/[A-Z]/, 'New password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'New password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'New password must contain at least one number')
+      .regex(/[^A-Za-z0-9]/, 'New password must contain at least one special character'),
 
-MemberPasswordQuestions.forEach((question) => {
-  form[question.id] = "";
-  errors[question.id] = "";
-});
+  confirm_password: z.string()
+      .min(8, 'Please confirm your new password')
+}).refine(data => data.new_password === data.confirm_password, {
+  message: 'Passwords must match',
+  path: ['confirm_password'],
+})
+
+const oldPasswordSchema = z.object({
+  old_password: z.string()
+      .min(8, 'Current password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Current password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'Current password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'Current password must contain at least one number')
+      .regex(/[^A-Za-z0-9]/, 'Current password must contain at least one special character')
+})
+
+const newPasswordSchema = z.object({
+  new_password: z.string()
+      .min(8, 'New password must be at least 8 characters')
+      .regex(/[A-Z]/, 'New password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'New password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'New password must contain at least one number')
+      .regex(/[^A-Za-z0-9]/, 'New password must contain at least one special character')
+})
+
+const confirmPasswordSchema = z.object({
+  confirm_password: z.string()
+      .min(8, 'Please confirm your new password')
+})
+
+const form = reactive({
+  old_password: '',
+  new_password: '',
+  confirm_password: '',
+})
+
+const errors = reactive({
+  old_password: '',
+  new_password: '',
+  confirm_password: '',
+})
 
 function validateField(field) {
   try {
-    formSchema.shape[field].parse(form[field]);
-    errors[field] = "";
+    switch (field) {
+      case 'old_password':
+        oldPasswordSchema.parse({ old_password: form.old_password })
+        errors.old_password = ''
+        break
+      case 'new_password':
+        newPasswordSchema.parse({ new_password: form.new_password })
+        errors.new_password = ''
+        break
+      case 'confirm_password':
+        confirmPasswordSchema.parse({ confirm_password: form.confirm_password })
+        errors.confirm_password = ''
+        break
+    }
   } catch (error) {
-    errors[field] = error.errors ? error.errors[0].message : error.message;
+    errors[field] = error.errors ? error.errors[0].message : error.message
   }
 }
 
-MemberPasswordQuestions.forEach((question) => {
-  watch(
-      () => form[question.id],
-      () => validateField(question.id)
-  );
-});
+MemberPasswordQuestions.forEach(q => {
+  watch(() => form[q.id], () => validateField(q.id))
+})
 
-let {$axios} = useNuxtApp()
-const api = $axios
+watch(
+    () => [form.new_password, form.confirm_password],
+    ([newPass, confirmPass]) => {
+      if (confirmPass && newPass !== confirmPass) {
+        errors.confirm_password = 'Passwords must match'
+      } else if (errors.confirm_password === 'Passwords must match') {
+        errors.confirm_password = ''
+      }
+    }
+)
+
+const hasErrors = computed(() => Object.values(errors).some(e => e !== ''))
 
 const resetForm = () => {
-  MemberPasswordQuestions.forEach(({id}) => {
-    form[id] = "";
-    errors[id] = "";
-  });
-};
+  setTimeout(() => {
+    location.reload()
+  }, 2000)
 
+}
+
+const clearError = (field) => {
+  errors[field] = ''
+}
 
 const handleSubmit = async () => {
   try {
-    const response = await api.post(`/`, form);
-
-    console.log('Success:', response.data);
-    alert("Password changed successfully");
-    location.reload();
-  } catch (error) {
-    if (error.response) {
-      console.error('Error response:', error.response.data);
-      alert("Password change failed: " + (error.response.data.detail || "Please check your input."));
-    } else {
-      alert("Password change failed: " + error.message);
+    formSchema.parse(form)
+  } catch (err) {
+    if (err.errors) {
+      err.errors.forEach(e => {
+        errors[e.path[0]] = e.message
+      })
     }
+    return
   }
-};
+
+  loading.value = true
+  savedMessage.value = ''
+
+  try {
+    const payload = {
+      old_password: form.old_password,
+      new_password: form.new_password
+    }
+
+    await api.patch('/auth/change-password/', payload, {
+      headers: {
+        Authorization: `Token ${useCookie('token').value}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    showPasswordUpdatedSuccess.value = true
+
+    setTimeout(() => {
+      showPasswordUpdatedSuccess.value = false
+      resetForm()
+      useCookie('token').value = null
+      useCookie('refreshToken').value = null
+      useCookie('role').value = null
+      router.push('/administrators/auth/login')
+    }, 2000)
+
+  } catch (error) {
+    console.error('Password change error:', error)
+
+    // Show failed popup
+    showPasswordUpdatedFailed.value = true
+
+    // Optional: auto-hide after 3 seconds
+    setTimeout(() => {
+      showPasswordUpdatedFailed.value = false
+    }, 3000)
+  } finally {
+    loading.value = false
+  }
+}
 
 </script>
 
 <template>
-
   <section>
 
     <div class="setting-tabs">
@@ -120,28 +201,20 @@ const handleSubmit = async () => {
             class="setting-link"
             :class="{ active: route.path.includes(settingLink.link.toLowerCase()) }"
         >
-          <UIcon :name="settingLink.icon"/>
+          <UIcon :name="settingLink.icon" />
           {{ settingLink.title }}
         </nuxt-link>
       </div>
     </div>
 
-    <header>
-    </header>
-
     <div class="security-question-form">
-
       <h4>Password</h4>
       <p>Change your password here. After saving, you'll be logged out.</p>
 
-      <form @submit.prevent="onSubmit" novalidate>
+      <form @submit.prevent="handleSubmit" novalidate>
         <div class="form-grid">
-          <div
-              class="form-group"
-              v-for="(field, index) in MemberPasswordQuestions"
-              :key="index"
-          >
-            <label :for="field.name">{{ field.label }}</label>
+          <div class="form-group" v-for="(field, index) in MemberPasswordQuestions" :key="index">
+            <label :for="field.id">{{ field.label }}</label>
             <input
                 :id="field.id"
                 :name="field.id"
@@ -149,34 +222,43 @@ const handleSubmit = async () => {
                 :placeholder="field.placeholder"
                 :type="field.type"
                 :class="{ 'input-error': errors[field.id] }"
+                @focus="clearError(field.id)"
             />
             <span v-if="errors[field.id]" class="error-message">{{ errors[field.id] }}</span>
-
-            <span v-if="errors[field.name]" class="error-message">
-            {{ errors[field.name] }}
-          </span>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="button" class="btn btn-cancel" @click="resetForm">
-            Cancel
+          <button type="button" class="btn btn-cancel" @click="resetForm">Cancel</button>
+          <button type="submit" class="btn btn-submit" :disabled="loading || hasErrors">
+            {{ loading ? 'Saving...' : 'Submit' }}
           </button>
-          <button type="submit" class="btn btn-submit">Submit</button>
+
+          <PasswordUpdatedSuccess
+              :show="showPasswordUpdatedSuccess"
+              @update:show="showPasswordUpdatedSuccess = $event"
+          />
+          <PasswordUpdatedFailed
+              :show="showPasswordUpdatedFailed"
+              @update:show="showPasswordUpdatedFailed = $event"
+          />
+
         </div>
+
+        <p v-if="savedMessage" class="success-message">{{ savedMessage }}</p>
       </form>
     </div>
 
   </section>
-
 </template>
+
 
 <style scoped lang="scss">
 
 section {
   width: calc(100% - 40px);
   margin: 20px auto;
-  height: 100vh;
+  min-height: 100vh;
 
   .setting-tabs {
     display: grid;
