@@ -1,50 +1,35 @@
 <script setup>
+import { ref, reactive, onMounted, computed, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useApi } from '~/composables/useApi'
+import ProfileUpdatedSuccess from "./popup/ProfileUpdatedSuccess.vue";
 
-import {ref, reactive, onMounted, computed, onUnmounted} from 'vue'
-import {useRoute} from 'vue-router'
-
+const api = useApi()
 const route = useRoute()
 
 const settingLinks = ref([
-  {
-    link: "/member/profile",
-    title: "Profile",
-    icon: "mdi-account",
-  },
-  {
-    link: "/member/profile/edit",
-    title: "Edit Profile",
-    icon: "mdi-account",
-  },
-  {
-    link: "/member/auth/change-password",
-    title: "Change Password",
-    icon: "mdi-lock",
-  },
+  { link: "/member/profile", title: "Profile", icon: "mdi-account" },
+  { link: "/member/profile/edit", title: "Edit Profile", icon: "mdi-account" },
+  { link: "/member/auth/change-password", title: "Change Password", icon: "mdi-lock" },
 ])
 
 const nonEditableFields = ['email', 'full_name', 'gender']
 const formFields = ref([
-  {key: 'full_name', label: 'Full Name', type: 'text'},
-  {key: 'ic_number', label: 'IC Number', type: 'text'},
-  {
-    key: 'gender', label: 'Gender', type: 'select',
-    options: [
-      {value: 'male', label: 'Male'},
-      {value: 'female', label: 'Female'}
-    ]
-  },
-  {key: 'date_of_birth', label: 'Date of Birth', type: 'date'},
-  {key: 'phone_number', label: 'Phone Number', type: 'tel'},
-  {key: 'email', label: 'Email', type: 'email'},
-  {key: 'country', label: 'Country', type: 'text'},
-  {key: 'state', label: 'State', type: 'text'},
-  {key: 'city', label: 'City', type: 'text'},
-  {key: 'address_line', label: 'Address', type: 'text'},
-  {key: 'bank_name', label: 'Bank Name', type: 'text'},
-  {key: 'account_holder_name', label: 'Account Holder', type: 'text'},
-  {key: 'bank_account_number', label: 'Account Number', type: 'text'}
+  { key: 'full_name', label: 'Full Name', type: 'text' },
+  { key: 'ic_number', label: 'IC Number', type: 'text' },
+  { key: 'gender', label: 'Gender', type: 'select', options: [{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }] },
+  { key: 'date_of_birth', label: 'Date of Birth', type: 'date' },
+  { key: 'phone_number', label: 'Phone Number', type: 'tel' },
+  { key: 'email', label: 'Email', type: 'email' },
+  { key: 'country', label: 'Country', type: 'text' },
+  { key: 'state', label: 'State', type: 'text' },
+  { key: 'city', label: 'City', type: 'text' },
+  { key: 'address_line', label: 'Address', type: 'text' },
+  { key: 'bank_name', label: 'Bank Name', type: 'text' },
+  { key: 'account_holder_name', label: 'Account Holder', type: 'text' },
+  { key: 'bank_account_number', label: 'Account Number', type: 'text' }
 ])
+
 const form = reactive({
   full_name: '',
   ic_number: '',
@@ -62,57 +47,41 @@ const form = reactive({
 })
 
 const loading = ref(false)
-const savedMessage = ref('')
-const userProfile = ref({
-  userId: '',
-  email: '',
-  avatar: '/images/user-icon.png'
-})
-
+const userProfile = ref({ userId: '', email: '', avatar: '/images/user-icon.png' })
 const originalData = ref({})
-const hasUnsavedChanges = computed(() => {
-  return Object.keys(form).some(key => form[key] !== originalData.value[key])
-})
+
+const showSuccessPopup = ref(false)
+
+const hasUnsavedChanges = computed(() => Object.keys(form).some(key => form[key] !== originalData.value[key]))
+
+const avatarFile = ref(null)
+const handleAvatarUpload = (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+  avatarFile.value = file
+  const reader = new FileReader()
+  reader.onload = () => { userProfile.value.avatar = reader.result }
+  reader.readAsDataURL(file)
+}
 
 const loadUserProfile = async () => {
   loading.value = true
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    const userData = {
-      member_id: 'KM2025',
-      email: 'mohammed@gmail.com',
-      profile_picture: '/images/user-icon.png',
-      full_name: 'Mohammed Adnan',
-      ic_number: '123456-78-9012',
-      gender: 'male',
-      date_of_birth: '1995-05-20',
-      phone_number: '+60123456789',
-      country: 'Malaysia',
-      city: 'Kuala Lumpur',
-      state: 'Selangor',
-      address_line: '123 Jalan Example',
-      bank_name: 'Maybank',
-      account_holder_name: 'Mohammed Adnan',
-      bank_account_number: '1234567890',
-    }
+    const { data } = await api.get('/members/profile/')
 
     userProfile.value = {
-      userId: userData.member_id,
-      email: userData.email,
-      avatar: userData.profile_picture
+      userId: data.member_code,
+      email: data.email,
+      avatar: data.profile_picture || '/images/user-icon.png'
     }
 
     Object.keys(form).forEach(key => {
-      if (userData[key] !== undefined) {
-        form[key] = userData[key]
-      }
+      if (data[key] !== undefined) form[key] = data[key]
     })
 
-    originalData.value = {...form}
-
+    originalData.value = { ...form }
   } catch (error) {
-    showMessage('Failed to load profile data', 'error')
+    console.error('Failed to load profile:', error)
   } finally {
     loading.value = false
   }
@@ -121,26 +90,37 @@ const loadUserProfile = async () => {
 const saveProfile = async () => {
   loading.value = true
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    originalData.value = {...form}
-    showMessage('Profile updated successfully!', 'success')
+
+    const fd = new FormData()
+    Object.entries(form).forEach(([key, value]) => {
+      if (value !== null && value !== '') fd.append(key, value)
+    })
+    if (avatarFile.value instanceof File) fd.append('profile_picture', avatarFile.value)
+
+
+    await api.put('/members/profile/', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+
+    originalData.value = JSON.parse(JSON.stringify(form))
+
+    showSuccessPopup.value = true
+
+    setTimeout(() => {
+      showSuccessPopup.value = false
+    }, 1500)
+
   } catch (error) {
+    console.error('Failed to save profile:', error)
+
+    alert('Failed to save profile')
+
   } finally {
     loading.value = false
   }
 }
-
 const resetForm = () => {
-  setTimeout(() => {
-    location.reload()
-  }, 2000)
-}
-
-const showMessage = (message, type = 'success') => {
-  savedMessage.value = {text: message, type}
-  setTimeout(() => {
-    savedMessage.value = ''
-  }, type === 'error' ? 5000 : 3000)
+  Object.keys(form).forEach(key => form[key] = originalData.value[key])
 }
 
 const handleBeforeUnload = (e) => {
@@ -158,41 +138,16 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
 })
-
-const avatarFile = ref(null)
-
-const handleAvatarUpload = (e) => {
-  const file = e.target.files[0]
-  if (!file) return
-
-  avatarFile.value = file
-  const reader = new FileReader()
-  reader.onload = () => {
-    userProfile.value.avatar = reader.result
-  }
-  reader.readAsDataURL(file)
-}
-
-
 </script>
 
 <template>
-
   <section>
 
     <div class="setting-tabs">
-      <div
-          class="setting-container"
-          v-for="settingLink in settingLinks"
-          :key="settingLink.link"
-      >
-        <nuxt-link
-            :to="settingLink.link"
-            class="setting-link"
-            :class="{ active: route.path.startsWith(settingLink.link) }"
-        >
-          <UIcon :name="settingLink.icon" />
-          {{ settingLink.title }}
+      <div class="setting-container" v-for="link in settingLinks" :key="link.link">
+        <nuxt-link :to="link.link" class="setting-link" :class="{ active: route.path.startsWith(link.link) }">
+          <UIcon :name="link.icon" />
+          {{ link.title }}
         </nuxt-link>
       </div>
     </div>
@@ -204,24 +159,19 @@ const handleAvatarUpload = (e) => {
           <label for="avatar-upload">
             <img class="avatar-img" :src="userProfile.avatar" alt="Profile Picture"/>
           </label>
-          <input id="avatar-upload" type="file" @change="handleAvatarUpload" accept="image/*"/>
+          <input id="avatar-upload" type="file" @change="handleAvatarUpload" accept="image/*" />
         </div>
         <div class="user-info">
-          <p>ID: <span>MKM-20250623-0001</span></p>
-          <p>Name: <span>mohammed Jamal</span></p>
+          <p>ID: <span>{{ userProfile.userId || 'Loading...' }}</span></p>
+          <p>Name: <span>{{ form.full_name || 'Loading...' }}</span></p>
         </div>
       </div>
 
       <div class="profile-form">
         <div class="form-grid">
           <template v-for="field in formFields" :key="field.key">
-            <div
-                class="form-item"
-            >
-              <label :for="field.key" class="form-label">
-                {{ field.label }}
-                <span v-if="field.required" class="required">*</span>
-              </label>
+            <div class="form-item">
+              <label :for="field.key" class="form-label">{{ field.label }}</label>
 
               <input
                   v-if="['text', 'email', 'tel', 'date'].includes(field.type)"
@@ -239,15 +189,8 @@ const handleAvatarUpload = (e) => {
                   :disabled="loading || nonEditableFields.includes(field.key)"
               >
                 <option value="">Select {{ field.label }}</option>
-                <option
-                    v-for="option in field.options"
-                    :key="option.value"
-                    :value="option.value"
-                >
-                  {{ option.label }}
-                </option>
+                <option v-for="option in field.options" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
-
             </div>
           </template>
         </div>
@@ -256,21 +199,22 @@ const handleAvatarUpload = (e) => {
 
           <button class="cancel-btn" @click="resetForm">Cancel</button>
 
-          <button
-              @click="saveProfile"
-              class="save-btn"
-          >
+          <button class="save-btn" @click="saveProfile" :disabled="loading">
             {{ loading ? 'Saving...' : 'Save Changes' }}
-
           </button>
 
+          <ProfileUpdatedSuccess
+              v-if="showSuccessPopup"
+              :show.sync="showSuccessPopup"
+          />
+
         </div>
-
       </div>
-
     </div>
-  </section>
 
+
+
+  </section>
 </template>
 
 <style scoped lang="scss">

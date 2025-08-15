@@ -70,8 +70,13 @@ const handleSignup = async () => {
     }
 
     await api.post('/auth/member/register/', payload)
-    popupType.value = 'success'
-    showPopup.value = true
+
+    setTimeout(() => {
+      popupType.value = 'success'
+      showPopup.value = true
+      router.push('/member/auth/login')
+    }, 2000)
+
   } catch (error: any) {
     generalError.value = error?.response?.data?.detail || 'Signup failed'
     popupType.value = 'failed'
