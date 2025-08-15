@@ -141,6 +141,7 @@ section {
           width: 24px;
           height: 24px;
           border-radius: 50%;
+          background: var(--primary-bg);
           display: flex;
           align-items: center;
           justify-content: center;
