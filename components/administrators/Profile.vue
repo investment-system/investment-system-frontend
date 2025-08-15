@@ -34,7 +34,6 @@ const displayData = computed(() => {
     { label: 'Role', value: profileData.value.role || '-' },
   ]
 })
-
 </script>
 
 <template>

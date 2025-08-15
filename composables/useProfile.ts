@@ -21,7 +21,7 @@ export function useProfile() {
         }
 
         try {
-            const response = await api.get('/admin/profile/', {
+            const response = await api.get('/administrators/profile/', {
                 headers: {
                     Authorization: `Token ${token}`,
                 },
