@@ -49,7 +49,7 @@ const deleteSelected = () => {
 const confirmDelete = async () => {
   try {
     await Promise.all(
-        selectedAdmins.value.map(id => api.delete(`/administrators/${id}/`))
+        selectedAdmins.value.map(id => api.delete(`/administrators/${id}/delete/`))
     )
 
     admins.value = admins.value.filter(admin => !selectedAdmins.value.includes(admin.id))
