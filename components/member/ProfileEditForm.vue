@@ -1,33 +1,38 @@
 <script setup>
-import { ref, reactive, onMounted, computed, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useApi } from '~/composables/useApi'
+import {ref, reactive, onMounted, computed, onUnmounted} from 'vue'
+import {useRoute} from 'vue-router'
+import {useApi} from '~/composables/useApi'
 import ProfileUpdatedSuccess from "./popup/ProfileUpdatedSuccess.vue";
 
 const api = useApi()
 const route = useRoute()
 
 const settingLinks = ref([
-  { link: "/member/profile", title: "Profile", icon: "mdi-account" },
-  { link: "/member/profile/edit", title: "Edit Profile", icon: "mdi-account" },
-  { link: "/member/auth/change-password", title: "Change Password", icon: "mdi-lock" },
+  {link: "/member/profile", title: "Profile", icon: "mdi-account"},
+  {link: "/member/profile/edit", title: "Edit Profile", icon: "mdi-account"},
+  {link: "/member/auth/change-password", title: "Change Password", icon: "mdi-lock"},
 ])
 
 const nonEditableFields = ['email', 'full_name', 'gender']
 const formFields = ref([
-  { key: 'full_name', label: 'Full Name', type: 'text' },
-  { key: 'ic_number', label: 'IC Number', type: 'text' },
-  { key: 'gender', label: 'Gender', type: 'select', options: [{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }] },
-  { key: 'date_of_birth', label: 'Date of Birth', type: 'date' },
-  { key: 'phone_number', label: 'Phone Number', type: 'tel' },
-  { key: 'email', label: 'Email', type: 'email' },
-  { key: 'country', label: 'Country', type: 'text' },
-  { key: 'state', label: 'State', type: 'text' },
-  { key: 'city', label: 'City', type: 'text' },
-  { key: 'address_line', label: 'Address', type: 'text' },
-  { key: 'bank_name', label: 'Bank Name', type: 'text' },
-  { key: 'account_holder_name', label: 'Account Holder', type: 'text' },
-  { key: 'bank_account_number', label: 'Account Number', type: 'text' }
+  {key: 'full_name', label: 'Full Name', type: 'text'},
+  {key: 'ic_number', label: 'IC Number', type: 'text'},
+  {
+    key: 'gender',
+    label: 'Gender',
+    type: 'select',
+    options: [{value: 'male', label: 'Male'}, {value: 'female', label: 'Female'}]
+  },
+  {key: 'date_of_birth', label: 'Date of Birth', type: 'date'},
+  {key: 'phone_number', label: 'Phone Number', type: 'tel'},
+  {key: 'email', label: 'Email', type: 'email'},
+  {key: 'country', label: 'Country', type: 'text'},
+  {key: 'state', label: 'State', type: 'text'},
+  {key: 'city', label: 'City', type: 'text'},
+  {key: 'address_line', label: 'Address', type: 'text'},
+  {key: 'bank_name', label: 'Bank Name', type: 'text'},
+  {key: 'account_holder_name', label: 'Account Holder', type: 'text'},
+  {key: 'bank_account_number', label: 'Account Number', type: 'text'}
 ])
 
 const form = reactive({
@@ -47,7 +52,7 @@ const form = reactive({
 })
 
 const loading = ref(false)
-const userProfile = ref({ userId: '', email: '', avatar: '/images/user-icon.png' })
+const userProfile = ref({userId: '', email: '', avatar: '/images/user-icon.png'})
 const originalData = ref({})
 
 const showSuccessPopup = ref(false)
@@ -60,14 +65,16 @@ const handleAvatarUpload = (e) => {
   if (!file) return
   avatarFile.value = file
   const reader = new FileReader()
-  reader.onload = () => { userProfile.value.avatar = reader.result }
+  reader.onload = () => {
+    userProfile.value.avatar = reader.result
+  }
   reader.readAsDataURL(file)
 }
 
 const loadUserProfile = async () => {
   loading.value = true
   try {
-    const { data } = await api.get('/members/profile/')
+    const {data} = await api.get('/members/profile/')
 
     userProfile.value = {
       userId: data.member_code,
@@ -79,7 +86,7 @@ const loadUserProfile = async () => {
       if (data[key] !== undefined) form[key] = data[key]
     })
 
-    originalData.value = { ...form }
+    originalData.value = {...form}
   } catch (error) {
     console.error('Failed to load profile:', error)
   } finally {
@@ -99,7 +106,7 @@ const saveProfile = async () => {
 
 
     await api.put('/members/profile/', fd, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: {'Content-Type': 'multipart/form-data'}
     })
 
     originalData.value = JSON.parse(JSON.stringify(form))
@@ -146,7 +153,7 @@ onUnmounted(() => {
     <div class="setting-tabs">
       <div class="setting-container" v-for="link in settingLinks" :key="link.link">
         <nuxt-link :to="link.link" class="setting-link" :class="{ active: route.path.startsWith(link.link) }">
-          <UIcon :name="link.icon" />
+          <UIcon :name="link.icon"/>
           {{ link.title }}
         </nuxt-link>
       </div>
@@ -155,12 +162,23 @@ onUnmounted(() => {
     <div class="profile-member-container">
 
       <div class="profile-header">
+
         <div class="avatar-wrapper">
-          <label for="avatar-upload">
+          <label for="avatar-upload" class="avatar-label">
             <img class="avatar-img" :src="userProfile.avatar" alt="Profile Picture"/>
+            <div class="avatar-overlay">
+              <span><UIcon name="mdi-camera"/></span>
+              <span>Change Photo</span>
+            </div>
           </label>
-          <input id="avatar-upload" type="file" @change="handleAvatarUpload" accept="image/*" />
+          <input
+              id="avatar-upload"
+              type="file"
+              @change="handleAvatarUpload"
+              accept="image/*"
+          />
         </div>
+
         <div class="user-info">
           <p>ID: <span>{{ userProfile.userId || 'Loading...' }}</span></p>
           <p>Name: <span>{{ form.full_name || 'Loading...' }}</span></p>
@@ -189,7 +207,10 @@ onUnmounted(() => {
                   :disabled="loading || nonEditableFields.includes(field.key)"
               >
                 <option value="">Select {{ field.label }}</option>
-                <option v-for="option in field.options" :key="option.value" :value="option.value">{{ option.label }}</option>
+                <option v-for="option in field.options" :key="option.value" :value="option.value">{{
+                    option.label
+                  }}
+                </option>
               </select>
             </div>
           </template>
@@ -211,7 +232,6 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-
 
 
   </section>
@@ -315,38 +335,54 @@ section {
       margin-bottom: 20px;
       text-align: center;
 
+
       .avatar-wrapper {
+        position: relative;
         width: 150px;
         height: 150px;
-        margin: 10px auto;
+        margin: 0 auto;
 
-        .avatar-img {
-          width: 150px;
-          height: 150px;
-          border-radius: 50%;
-        }
-
-        label {
-          cursor: pointer;
+        .avatar-label {
           display: block;
           width: 100%;
           height: 100%;
-          border-radius: 12px;
+          border-radius: 50%;
           overflow: hidden;
-          transition: transform 0.3s ease;
+          cursor: pointer;
+          position: relative;
 
           .avatar-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
+            transition: transform 0.3s ease;
+          }
+
+          .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: var(--special-text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+          }
+
+          &:hover .avatar-overlay {
+            opacity: 1;
           }
         }
 
-        input[type='file'] {
+        input[type="file"] {
           display: none;
         }
       }
+
 
       .user-info {
         flex: 1;
@@ -416,6 +452,7 @@ section {
               background: var(--cancel-button-bg);
             }
           }
+
           input:disabled,
           select:disabled {
             cursor: not-allowed;

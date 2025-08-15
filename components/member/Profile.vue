@@ -85,13 +85,13 @@ onMounted(() => {
 
       <div class="profile-header">
         <div class="avatar-wrapper">
+
           <img
-              v-if="profilePicture"
-              :src="profilePicture"
+              :src="profilePicture || '/images/user-pic.png'"
               alt="Profile Picture"
               class="avatar-img"
           />
-          <div v-else class="avatar-placeholder">No photo</div>
+
         </div>
         <div class="user-info">
           <div class="user-info">
