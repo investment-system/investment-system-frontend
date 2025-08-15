@@ -13,6 +13,7 @@ const profileData = ref([])
 const adminCode = ref('')
 const dateJoined = ref('')
 const userStatus = ref('')
+const profilePicture = ref('')
 
 const fetchUserProfile = async () => {
   try {
@@ -25,6 +26,8 @@ const fetchUserProfile = async () => {
       month: 'short',
       year: 'numeric'
     })
+    profilePicture.value = data.profile_picture || ''
+
 
     profileData.value = [
       { label: 'Full Name', value: data.user.full_name },
@@ -62,7 +65,11 @@ onMounted(fetchUserProfile)
       <div class="profile-header">
 
         <div class="avatar-wrapper">
-          <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
+          <img
+              :src="profilePicture || '/images/user-pic.png'"
+              alt="Profile Picture"
+              class="avatar-img"
+          />
           <div class="status-badge" :class="userStatus">
             <UIcon name="i-heroicons-check-circle" class="status-icon"/>
           </div>
@@ -244,7 +251,7 @@ section {
 
         @media (min-width: 768px) {
           grid-template-columns: 1fr 1fr;
-          gap: 20px;
+          gap: 0 10px;
         }
       }
     }
