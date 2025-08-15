@@ -243,7 +243,7 @@ const saveChanges = async () => {
   .title-line {
     flex-grow: 1;
     height: 2px;
-    background-color: var(--secondary-text-color);
+    background: var(--secondary-text-color);
   }
 
   @media (min-width: 768px) {
@@ -264,7 +264,6 @@ const saveChanges = async () => {
 .form-body {
   display: grid;
   grid-template-columns: 1fr;
-  background: var(--card-bg);
   border-radius: 12px;
 
   @media (min-width: 768px) {
@@ -424,7 +423,7 @@ const saveChanges = async () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding-top: 20px;
+  padding: 36px 0;;
 
   @media (min-width: 768px) {
     flex-direction: row;
