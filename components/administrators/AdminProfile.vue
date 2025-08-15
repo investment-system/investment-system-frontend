@@ -26,8 +26,6 @@ const fetchUserProfile = async () => {
       year: 'numeric'
     })
 
-    console.log('this is test ',data.user)
-
     profileData.value = [
       { label: 'Full Name', value: data.user.full_name },
       { label: 'Email Address', value: data.user.email },
