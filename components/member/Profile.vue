@@ -26,11 +26,13 @@ const settingLinks = ref([
 const api = useApi()
 const profile = ref({})
 const profileData = ref([])
+const profilePicture = ref('')
 
 const getUserInfo = async () => {
   try {
     const { data } = await api.get('/members/profile/')
-    profile.value = data // save the whole object
+    profilePicture.value = data.profile_picture || ''
+    profile.value = data
 
     profileData.value = [
       { label: 'Email Address', value: data.email },
@@ -83,7 +85,13 @@ onMounted(() => {
 
       <div class="profile-header">
         <div class="avatar-wrapper">
-          <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
+          <img
+              v-if="profilePicture"
+              :src="profilePicture"
+              alt="Profile Picture"
+              class="avatar-img"
+          />
+          <div v-else class="avatar-placeholder">No photo</div>
         </div>
         <div class="user-info">
           <div class="user-info">
