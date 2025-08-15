@@ -63,7 +63,7 @@ const displayData = computed(() => {
         <div class="avatar-wrapper">
 
           <img
-              :src="profileData?.profile_picture ? `http://localhost:8000${profileData.profile_picture}` : '/images/user-icon.png'"
+              :src="profileData?.profile_picture || '/images/user-icon.png'"
               alt="Profile Picture"
               class="avatar-img"
           />
