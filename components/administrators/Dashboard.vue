@@ -5,50 +5,57 @@ import {useApi} from "~/composables/useApi";
 const api = useApi()
 
 const totalBalance = ref(0)
+
 const dashboardStats = ref([
   {
     title: 'Total Members',
     icon: 'mdi-account-group',
     value: 0,
     trendIcon: 'mdi-trending-up',
+    unit: '',
   },
   {
     title: 'Active Members',
     icon: 'mdi-account-check-outline',
     value: 0,
     trendIcon: 'mdi-trending-up',
+    unit: '',
   },
   {
     title: 'Inactive Members',
     icon: 'mdi-account-off-outline',
     value: 0,
     trendIcon: 'mdi-trending-down',
+    unit: '',
   },
   {
     title: 'Share Amount',
-    icon: 'mdi-chart-donut',
+    icon: 'mdi-cash-multiple',
     value: 0,
+    unit: 'RM',
   },
   {
     title: 'Share Completed',
     icon: 'mdi-check-circle-outline',
     value: 0,
+    unit: '',
   },
   {
     title: 'Share Canceled',
-    icon: 'mdi-cancel',
+    icon: 'mdi-close-circle-outline',
     value: 0,
+    unit: '',
   },
   {
-    title: 'Transactions',
-    icon: 'mdi-bank-transfer',
-    value: '0.00',
-    unit: 'RM',
+    title: 'Total Transactions',
+    icon: 'mdi-swap-horizontal-bold',
+    value: 0,
+    unit: '',
   },
   {
     title: 'Expected Profit',
     icon: 'mdi-currency-usd',
-    value: '0.00',
+    value: 0.00,
     unit: 'RM',
   },
 ])
@@ -80,7 +87,7 @@ const fetchStats = async () => {
         case 'Share Canceled':
           stat.value = parseFloat(transactionData.share_canceled) ?? stat.value
           break
-        case 'Transactions':
+        case 'Total Transactions':
           stat.value = parseFloat(transactionData.total_transactions) ?? stat.value
           break
         case 'Expected Profit':
