@@ -8,6 +8,7 @@ const route = useRoute()
 
 const profile = ref({})
 const profileData = ref([])
+
 const getUserInfo = async () => {
   try {
     const {data} = await api.get('/members/profile/')
@@ -26,7 +27,6 @@ const getUserInfo = async () => {
       {label: 'Account Holder', value: data.account_holder_name},
       {label: 'Account Number', value: data.bank_account_number},
     ]
-    console.log(profile.value)
   } catch (error) {
     console.error('Error fetching user info:', error)
   }
@@ -65,6 +65,9 @@ onMounted(async () => {
   try {
     const {data} = await api.get(`/transactions/user/${route.params.id}/`)
 
+
+    console.log(data)
+
     transaction.value = {
       ...data,
       source_type: SOURCE_TYPE_LABELS[data.source_type] || data.source_type,
@@ -72,11 +75,10 @@ onMounted(async () => {
       payment_method: PAYMENT_METHOD_LABELS[data.payment_method] || data.payment_method,
     }
 
-    // ✅ Log profit object
     if (transaction.value.share_record?.profit) {
-      console.log('Profit Info:', transaction.value.share_record.profit)
+
     } else {
-      console.log('No profit record found')
+
     }
 
   } catch (error) {

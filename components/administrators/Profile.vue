@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProfile } from '~/composables/useProfile.ts'
 
@@ -12,26 +12,26 @@ const settingLinks = ref([
   { link: "/administrators/auth/change-password", title: "Change Password", icon: "mdi-lock" },
 ])
 
+const profilePicture = ref('')
+
 const displayData = computed(() => {
   if (!profileData.value) return []
 
   return [
     { label: 'Full Name', value: profileData.value.full_name || '-' },
-    { label: 'Email Address', value: profileData.value.email|| '-' },
+    { label: 'Email Address', value: profileData.value.email || '-' },
     { label: 'IC Number', value: profileData.value.ic_number || '-' },
     { label: 'Gender', value: profileData.value.gender || '-' },
     { label: 'Date of Birth', value: profileData.value.date_of_birth || '-' },
     { label: 'Phone Number', value: profileData.value.phone_number || '-' },
-
     { label: 'Address Line 1', value: profileData.value.address_line1 || '-' },
     { label: 'Address Line 2', value: profileData.value.address_line2 || '-' },
     { label: 'City', value: profileData.value.city || '-' },
     { label: 'State', value: profileData.value.state || '-' },
     { label: 'Postal Code', value: profileData.value.postal_code || '-' },
     { label: 'Country', value: profileData.value.country || '-' },
-
     { label: 'Position', value: profileData.value.position || '-' },
-    { label: 'Role', value: profileData.value.role || '-' },
+    { label: 'Role', value: profileData.value.role || '-' }
   ]
 })
 </script>
@@ -63,7 +63,7 @@ const displayData = computed(() => {
         <div class="avatar-wrapper">
 
           <img
-              :src="profileData?.profile_picture || '/images/user-icon.png'"
+              :src="profilePicture || '/images/user-pic.png'"
               alt="Profile Picture"
               class="avatar-img"
           />
@@ -208,7 +208,7 @@ section {
 
       .form-grid {
         display: grid;
-        gap: 10px;
+        gap: 0 10px;
         margin-bottom: 30px;
 
         .form-item {

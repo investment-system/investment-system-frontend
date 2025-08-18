@@ -49,6 +49,7 @@ onMounted(async () => {
     console.error("Failed to fetch member detail:", error)
   }
 })
+
 </script>
 
 <template>

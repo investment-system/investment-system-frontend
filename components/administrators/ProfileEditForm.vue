@@ -1,130 +1,171 @@
 <script setup>
-
-import {ref, reactive, onMounted, computed, onUnmounted} from 'vue'
+import {ref, reactive, computed, onMounted, onUnmounted} from 'vue'
 import {useRoute} from 'vue-router'
+import {useApi} from '~/composables/useApi'
+import ProfileUpdatedSuccess from "./popup/ProfileUpdatedSuccess.vue";
 
+
+const api = useApi()
 const route = useRoute()
+const showSuccessPopup = ref(false)
 
 const settingLinks = ref([
-  {
-    link: "/administrators/profile",
-    title: "Profile",
-    icon: "mdi-account",
-  },
-  {
-    link: "/administrators/profile/edit",
-    title: "Edit Profile",
-    icon: "mdi-account",
-  },
-  {
-    link: "/administrators/auth/change-password",
-    title: "Change Password",
-    icon: "mdi-lock",
-  },
+  {link: "/administrators/profile", title: "Profile", icon: "mdi-account"},
+  {link: "/administrators/profile/edit", title: "Edit Profile", icon: "mdi-account"},
+  {link: "/administrators/auth/change-password", title: "Change Password", icon: "mdi-lock"},
 ])
 
-const nonEditableFields = ['email', 'full_name', 'gender']
+const nonEditableFields = ['email', 'full_name', 'gender', 'role', 'position']
+
 const formFields = ref([
   {key: 'full_name', label: 'Full Name', type: 'text'},
+  {key: 'email', label: 'Email Address', type: 'email'},
   {key: 'ic_number', label: 'IC Number', type: 'text'},
-  {
-    key: 'gender', label: 'Gender', type: 'select',
-    options: [
-      {value: 'male', label: 'Male'},
-      {value: 'female', label: 'Female'}
-    ]
-  },
+  {key: 'gender', label: 'Gender', type: 'text'},
   {key: 'date_of_birth', label: 'Date of Birth', type: 'date'},
   {key: 'phone_number', label: 'Phone Number', type: 'tel'},
-  {key: 'email', label: 'Email', type: 'email'},
-  {key: 'country', label: 'Country', type: 'text'},
-  {key: 'state', label: 'State', type: 'text'},
+  {key: 'address_line1', label: 'Address Line 1', type: 'text'},
+  {key: 'address_line2', label: 'Address Line 2', type: 'text'},
   {key: 'city', label: 'City', type: 'text'},
-  {key: 'address_line', label: 'Address', type: 'text'},
-  {key: 'bank_name', label: 'Bank Name', type: 'text'},
-  {key: 'account_holder_name', label: 'Account Holder', type: 'text'},
-  {key: 'bank_account_number', label: 'Account Number', type: 'text'}
+  {key: 'state', label: 'State', type: 'text'},
+  {key: 'postal_code', label: 'Postal Code', type: 'text'},
+  {key: 'country', label: 'Country', type: 'text'},
+  {key: 'position', label: 'Position', type: 'text'},
+  {key: 'role', label: 'Role', type: 'text'},
 ])
+
 const form = reactive({
   full_name: '',
+  email: '',
   ic_number: '',
   gender: '',
   date_of_birth: '',
   phone_number: '',
-  email: '',
-  country: '',
-  state: '',
+  address_line1: '',
+  address_line2: '',
   city: '',
-  address_line: '',
-  bank_name: '',
-  account_holder_name: '',
-  bank_account_number: '',
+  state: '',
+  postal_code: '',
+  country: '',
+  position: '',
+  role: '',
 })
 
 const loading = ref(false)
+const uploadingAvatar = ref(false)
 const savedMessage = ref('')
 const userProfile = ref({
-  userId: '',
+  user_id: '',
   email: '',
   avatar: '/images/user-icon.png'
 })
 
 const originalData = ref({})
+const avatarFile = ref(null)
+const hasAvatarChanged = ref(false)
+
 const hasUnsavedChanges = computed(() => {
-  return Object.keys(form).some(key => form[key] !== originalData.value[key])
+  return Object.keys(form).some(key => form[key] !== originalData.value[key]) || hasAvatarChanged.value
 })
 
 const loadUserProfile = async () => {
   loading.value = true
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    const userData = {
-      member_id: 'KM2025',
-      email: 'mohammed@gmail.com',
-      profile_picture: '/images/user-icon.png',
-      full_name: 'Mohammed Adnan',
-      ic_number: '123456-78-9012',
-      gender: 'male',
-      date_of_birth: '1995-05-20',
-      phone_number: '+60123456789',
-      country: 'Malaysia',
-      city: 'Kuala Lumpur',
-      state: 'Selangor',
-      address_line: '123 Jalan Example',
-      bank_name: 'Maybank',
-      account_holder_name: 'Mohammed Adnan',
-      bank_account_number: '1234567890',
-    }
-
-    userProfile.value = {
-      userId: userData.member_id,
-      email: userData.email,
-      avatar: userData.profile_picture
-    }
-
-    Object.keys(form).forEach(key => {
-      if (userData[key] !== undefined) {
-        form[key] = userData[key]
+    const {data} = await api.get('/administrators/profile/', {
+      headers: {
+        Authorization: `Token ${useCookie('token').value}`
       }
     })
 
-    originalData.value = {...form}
+    // Map data to form fields
+    Object.keys(form).forEach(key => {
+      form[key] = data[key] ?? ''
+    })
 
+    userProfile.value = {
+      user_id: data.admin_code || '',
+      email: data.email || '',
+      created_at: data.created_at || '',
+      avatar: data.profile_picture || '/images/user-icon.png',
+    }
+
+    originalData.value = {...form}
+    hasAvatarChanged.value = false
   } catch (error) {
+    console.error('Profile load error:', error)
     showMessage('Failed to load profile data', 'error')
   } finally {
     loading.value = false
   }
 }
 
+const uploadAvatar = async () => {
+  if (!avatarFile.value) return null
+
+  uploadingAvatar.value = true
+  try {
+    const formData = new FormData()
+    formData.append('profile_picture', avatarFile.value)
+
+    const {data} = await api.post('/administrators/profile/', formData, {
+      headers: {
+        Authorization: `Token ${useCookie('token').value}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+
+    return data.profile_picture || data.avatar_url
+  } catch (error) {
+    console.error('Avatar upload error:', error)
+    throw new Error('Failed to upload avatar')
+  } finally {
+    uploadingAvatar.value = false
+  }
+}
+
 const saveProfile = async () => {
   loading.value = true
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    let avatarUrl = null
+
+    if (hasAvatarChanged.value && avatarFile.value) {
+      try {
+        avatarUrl = await uploadAvatar()
+      } catch (error) {
+      }
+    }
+
+    const updateData = {...form}
+    if (avatarUrl) {
+      updateData.profile_picture = avatarUrl
+    }
+
+    const {data} = await api.patch('/administrators/profile/', updateData, {
+      headers: {
+        Authorization: `Token ${useCookie('token').value}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
     originalData.value = {...form}
-    showMessage('Profile updated successfully!', 'success')
+    hasAvatarChanged.value = false
+
+    if (avatarUrl) {
+      userProfile.value.avatar = avatarUrl
+    }
+
+    originalData.value = JSON.parse(JSON.stringify(form))
+
+    showSuccessPopup.value = true
+
+    setTimeout(() => {
+      showSuccessPopup.value = false
+    }, 1500)
+
   } catch (error) {
+    console.error('Profile save error:', error)
+    const errorMessage = error.response?.data?.message || 'Failed to save profile data'
+    showMessage(errorMessage, 'error')
   } finally {
     loading.value = false
   }
@@ -133,20 +174,41 @@ const saveProfile = async () => {
 const resetForm = () => {
   setTimeout(() => {
     location.reload()
-  }, 2000)
+  }, 500)
 }
 
-const showMessage = (message, type = 'success') => {
-  savedMessage.value = {text: message, type}
-  setTimeout(() => {
-    savedMessage.value = ''
-  }, type === 'error' ? 5000 : 3000)
+const handleAvatarUpload = (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    showMessage('Please select a valid image file', 'error')
+    return
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    showMessage('Image size must be less than 5MB', 'error')
+    return
+  }
+
+  avatarFile.value = file
+  hasAvatarChanged.value = true
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    userProfile.value.avatar = reader.result
+  }
+  reader.onerror = () => {
+    showMessage('Failed to read image file', 'error')
+  }
+  reader.readAsDataURL(file)
 }
 
 const handleBeforeUnload = (e) => {
   if (hasUnsavedChanges.value) {
     e.preventDefault()
-    e.returnValue = ''
+    e.returnValue = 'You have unsaved changes. Are you sure you want to leave?'
   }
 }
 
@@ -158,28 +220,10 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
 })
-
-const avatarFile = ref(null)
-
-const handleAvatarUpload = (e) => {
-  const file = e.target.files[0]
-  if (!file) return
-
-  avatarFile.value = file
-  const reader = new FileReader()
-  reader.onload = () => {
-    userProfile.value.avatar = reader.result
-  }
-  reader.readAsDataURL(file)
-}
-
-
 </script>
 
 <template>
-
   <section>
-
     <div class="setting-tabs">
       <div
           class="setting-container"
@@ -191,33 +235,52 @@ const handleAvatarUpload = (e) => {
             class="setting-link"
             :class="{ active: route.path.startsWith(settingLink.link) }"
         >
-          <UIcon :name="settingLink.icon" />
+          <UIcon :name="settingLink.icon"/>
           {{ settingLink.title }}
         </nuxt-link>
       </div>
     </div>
 
     <div class="profile-member-container">
-
       <div class="profile-header">
         <div class="avatar-wrapper">
-          <label for="avatar-upload">
-            <img class="avatar-img" :src="userProfile.avatar" alt="Profile Picture"/>
+          <label for="avatar-upload" class="avatar-label">
+            <img
+                class="avatar-img"
+                :src="userProfile.avatar"
+                alt="Profile Picture"
+            />
+            <div class="avatar-overlay" v-if="!uploadingAvatar">
+              <UIcon name="mdi-camera"/>
+              <span>Change Photo</span>
+            </div>
+            <div class="avatar-overlay" v-else>
+              <UIcon name="mdi-loading" class="spinning"/>
+              <span>Uploading...</span>
+            </div>
           </label>
-          <input id="avatar-upload" type="file" @change="handleAvatarUpload" accept="image/*"/>
+          <input
+              id="avatar-upload"
+              type="file"
+              @change="handleAvatarUpload"
+              accept="image/*"
+              style="display: none;"
+              :disabled="loading || uploadingAvatar"
+          />
         </div>
+
         <div class="user-info">
-          <p>ID: <span>MKM-20250623-0001</span></p>
-          <p>Name: <span>mohammed Jamal</span></p>
+          <p>ID: <span>{{ userProfile.user_id || 'N/A' }}</span></p>
+          <p>Created at:
+            <span>{{ userProfile.created_at ? userProfile.created_at.split('T')[0] : 'N/A' }}</span>
+          </p>
         </div>
       </div>
 
       <div class="profile-form">
         <div class="form-grid">
           <template v-for="field in formFields" :key="field.key">
-            <div
-                class="form-item"
-            >
+            <div class="form-item">
               <label :for="field.key" class="form-label">
                 {{ field.label }}
                 <span v-if="field.required" class="required">*</span>
@@ -230,6 +293,8 @@ const handleAvatarUpload = (e) => {
                   v-model="form[field.key]"
                   :placeholder="`Enter ${field.label.toLowerCase()}`"
                   :disabled="loading || nonEditableFields.includes(field.key)"
+                  class="form-input"
+                  :class="{ 'disabled': nonEditableFields.includes(field.key) }"
               />
 
               <select
@@ -237,6 +302,8 @@ const handleAvatarUpload = (e) => {
                   :id="field.key"
                   v-model="form[field.key]"
                   :disabled="loading || nonEditableFields.includes(field.key)"
+                  class="form-select"
+                  :class="{ 'disabled': nonEditableFields.includes(field.key) }"
               >
                 <option value="">Select {{ field.label }}</option>
                 <option
@@ -247,30 +314,43 @@ const handleAvatarUpload = (e) => {
                   {{ option.label }}
                 </option>
               </select>
-
             </div>
           </template>
         </div>
 
         <div class="form-actions">
-
-          <button class="cancel-btn" @click="resetForm">Cancel</button>
-
           <button
-              @click="saveProfile"
-              class="save-btn"
+              class="cancel-btn"
+              @click="resetForm"
+              :disabled="loading || uploadingAvatar || !hasUnsavedChanges"
           >
-            {{ loading ? 'Saving...' : 'Save Changes' }}
-
+            Reset
           </button>
+          <button
+              class="save-btn"
+              @click="saveProfile"
+              :disabled="loading || uploadingAvatar || !hasUnsavedChanges"
+          >
+            <UIcon v-if="loading || uploadingAvatar" name="mdi-loading" class="spinning"/>
+            {{ loading || uploadingAvatar ? 'Saving...' : 'Save Changes' }}
+          </button>
+
+          <ProfileUpdatedSuccess
+              v-if="showSuccessPopup"
+              :show.sync="showSuccessPopup"
+          />
 
         </div>
 
-      </div>
+        <div v-if="savedMessage.text" class="message-container">
+          <p :class="savedMessage.type === 'error' ? 'error-message' : 'success-message'">
+            {{ savedMessage.text }}
+          </p>
+        </div>
 
+      </div>
     </div>
   </section>
-
 </template>
 
 <style scoped lang="scss">
@@ -279,6 +359,8 @@ section {
   width: calc(100% - 40px);
   margin: 20px auto;
   height: auto;
+  min-height: 100vh;
+
 
   .profile-header-container {
 
@@ -412,9 +494,11 @@ section {
         p {
           margin: 10px 0;
           color: var(--primary-text-color);
+          font-size: var(--body-text);
 
           span {
             color: var(--secondary-text-color);
+            font-size: var(--small-text);
           }
         }
       }
@@ -472,6 +556,7 @@ section {
               background: var(--cancel-button-bg);
             }
           }
+
           input:disabled,
           select:disabled {
             cursor: not-allowed;
@@ -516,6 +601,102 @@ section {
     }
 
   }
+}
 
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-label {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: var(--small-text);
+  text-align: center;
+  border-radius: 50%;
+}
+
+.avatar-label:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.form-input:disabled.disabled,
+.form-select:disabled.disabled {
+  background-color: var(--primary-bg);
+  color: var(--primary-text-color);
+  cursor: not-allowed;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.message-container {
+  margin-top: 1rem;
+}
+
+.success-message {
+  color: #10b981;
+  background: #ecfdf5;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #10b981;
+}
+
+.error-message {
+  color: #ef4444;
+  background: #fef2f2;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #ef4444;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.save-btn:disabled,
+.cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

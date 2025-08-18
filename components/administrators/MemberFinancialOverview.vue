@@ -1,27 +1,50 @@
-<script setup>
-import {ref} from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useApi } from '@/composables/useApi'
+
+const api = useApi()
+const route = useRoute()
+const memberId = route.params.id as string | number  // ensure proper type
 
 const memberAnalytics = ref([
-  {
-    title: 'Total Account Balance',
-    icon: 'i-heroicons-banknotes',
-    value: 'RM 12,500.00',
-    valueIcon: 'i-heroicons-currency-dollar',
-  },
-  {
-    title: 'Total Earnings',
-    icon: 'i-heroicons-chart-bar',
-    value: 'RM 3,200.00',
-    valueIcon: 'i-heroicons-arrow-trending-up',
-  },
-  {
-    title: 'Earnings Growth Rate',
-    icon: 'i-heroicons-presentation-chart-line',
-    value: '25%',
-    valueIcon: 'i-heroicons-arrow-trending-up',
-  },
+  { title: 'Total Account Balance', icon: 'i-heroicons-banknotes', value: 'RM 0.00', valueIcon: 'i-heroicons-currency-dollar' },
+  { title: 'Total Earnings', icon: 'i-heroicons-chart-bar', value: 'RM 0.00', valueIcon: 'i-heroicons-arrow-trending-up' },
+  { title: 'Earnings Growth Rate', icon: 'i-heroicons-presentation-chart-line', value: '0%', valueIcon: 'i-heroicons-arrow-trending-up' },
 ])
 
+const fetchMemberAnalytics = async () => {
+  try {
+    const res = await api.get(`/transactions/`)
+    const data = res.data
+    console.log('Member analytics data:', data)
+
+    memberAnalytics.value = [
+      {
+        title: 'Total Account Balance',
+        icon: 'i-heroicons-banknotes',
+        value: `RM ${Number(data.total_account_balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        valueIcon: 'i-heroicons-currency-dollar',
+      },
+      {
+        title: 'Total Earnings',
+        icon: 'i-heroicons-chart-bar',
+        value: `RM ${Number(data.total_earnings).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        valueIcon: 'i-heroicons-arrow-trending-up',
+      },
+      {
+        title: 'Earnings Growth Rate',
+        icon: 'i-heroicons-presentation-chart-line',
+        value: `${Number(data.earnings_growth_rate).toFixed(2)}%`,
+        valueIcon: 'i-heroicons-arrow-trending-up',
+      },
+    ]
+  } catch (error) {
+    console.error('Failed to fetch analytics:', error)
+  }
+}
+
+onMounted(fetchMemberAnalytics)
 </script>
 
 <template>
