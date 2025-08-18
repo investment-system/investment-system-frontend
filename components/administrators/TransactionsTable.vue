@@ -134,7 +134,7 @@ const filteredTransactions = computed(() => {
           <span>{{ PAYMENT_METHOD_LABELS[transaction.payment_method] || transaction.payment_method }}</span>
           <span>{{ transaction.created_at.slice(0, 10) }}</span>
           <div class="transaction-actions">
-            <NuxtLink to="" class="btn btn--update">
+            <NuxtLink :to="`/administrators/transactions/${transaction.transaction_id}`" class="btn btn--update">
               <UIcon name="mdi-file-eye" class="icon"/>
               View
             </NuxtLink>
