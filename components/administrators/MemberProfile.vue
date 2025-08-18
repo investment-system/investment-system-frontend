@@ -1,72 +1,85 @@
-<script setup>
-import {ref} from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useApi } from '@/composables/useApi'
 
-const profileData = ref([
-  {label: 'Email Address', value: 'mohammed.adnan@gmail.com'},
-  {label: 'IC Number', value: '123456-78-9012'},
-  {label: 'Gender', value: 'Male'},
-  {label: 'Date of Birth', value: '1995-05-20'},
-  {label: 'Phone Number', value: '+60123456789'},
-  {label: 'Country', value: 'Malaysia'},
-  {label: 'City', value: 'Kuala Lumpur'},
-  {label: 'State', value: 'Selangor'},
-  {label: 'Bank Name', value: 'Maybank'},
-  {label: 'Account Holder Name', value: 'Mohammed Adnan'},
-  {label: 'Bank Account Number', value: '1234567890'},
-])
+const api = useApi()
+const route = useRoute()
 
-const userStatus = ref("Active")
+const profileData = ref<any[]>([])
+const userStatus = ref("Inactive")
+const member = ref<any>(null)
 
-const memberAnalytics = ref([
-  {
-    title: 'Total Account Balance',
-    icon: 'i-heroicons-banknotes',
-    value: 'RM 12,500.00',
-    valueIcon: 'i-heroicons-currency-dollar',
-  },
-  {
-    title: 'Total Earnings',
-    icon: 'i-heroicons-chart-bar',
-    value: 'RM 3,200.00',
-    valueIcon: 'i-heroicons-arrow-trending-up',
-  },
-  {
-    title: 'Earnings Growth Rate',
-    icon: 'i-heroicons-presentation-chart-line',
-    value: '25%',
-    valueIcon: 'i-heroicons-arrow-trending-up',
-  },
-])
+const toggleUserStatus = async () => {
+  try {
+    await api.patch(`/members/detail/${route.params.id}/`, {
+      registration_status: "paid",
+    })
 
-const toggleUserStatus = () => {
-  userStatus.value = userStatus.value === 'Active' ? 'Inactive' : 'Active'
+    userStatus.value = "Active"
+    member.value.registration_status = "paid"
+  } catch (error) {
+    console.error("Failed to update status:", error)
+  }
 }
 
+onMounted(async () => {
+  try {
+    const response = await api.get(`/members/detail/${route.params.id}/`)
+    member.value = response.data
 
+    profileData.value = [
+      { label: 'Email Address', value: member.value.email ?? '-' },
+      { label: 'IC Number', value: member.value.ic_number ?? '-' },
+      { label: 'Gender', value: member.value.gender ?? '-' },
+      { label: 'Date of Birth', value: member.value.date_of_birth ?? '-' },
+      { label: 'Phone Number', value: member.value.phone_number ?? '-' },
+      { label: 'Country', value: member.value.country ?? '-' },
+      { label: 'Address', value: member.value.address_line ?? '-' },
+      { label: 'City', value: member.value.city ?? '-' },
+      { label: 'State', value: member.value.state ?? '-' },
+      { label: 'Bank Name', value: member.value.bank_name ?? '-' },
+      { label: 'Account Holder Name', value: member.value.account_holder_name ?? '-' },
+      { label: 'Bank Account Number', value: member.value.bank_account_number ?? '-' },
+      { label: 'Registration Status', value: member.value.registration_status ?? '-' },
+    ]
+
+    userStatus.value = member.value.registration_status === "paid" ? "Active" : "Inactive"
+  } catch (error) {
+    console.error("Failed to fetch member detail:", error)
+  }
+})
 </script>
 
 <template>
-
   <section>
-
     <div class="profile-member-container">
-
       <div class="profile-header">
-
         <div class="avatar-wrapper">
-          <img class="avatar-img" src="/images/user-icon.png" alt="Profile Picture"/>
+
+          <img
+              class="avatar-img"
+              :src="member?.profile_picture || '/images/user-icon.png'"
+              alt="Profile Picture"
+          />
+
+
           <div class="status-badge" :class="userStatus.toLowerCase()">
             <UIcon name="i-heroicons-check-circle" class="status-icon"/>
           </div>
         </div>
 
         <div class="user-info">
-          <p>ID: <span>MKM-20250623-0001</span></p>
-          <p>Name: <span>mohammed Jamal</span></p>
+          <p>ID: <span>{{ member?.member_code }}</span></p>
+          <p>Name: <span>{{ member?.full_name }}</span></p>
         </div>
 
-        <button class="status-toggle-btn" @click="toggleUserStatus">
-          {{ userStatus === 'Active' ? 'Deactivate Account' : 'Activate Account' }}
+        <button
+            v-if="userStatus !== 'Active'"
+            class="status-toggle-btn"
+            @click="toggleUserStatus"
+        >
+          Activate Account
         </button>
 
       </div>
@@ -79,11 +92,8 @@ const toggleUserStatus = () => {
           </div>
         </div>
       </div>
-
     </div>
-
   </section>
-
 </template>
 
 <style scoped lang="scss">
@@ -132,9 +142,10 @@ section {
           display: flex;
           align-items: center;
           justify-content: center;
+          background-color:var(--primary-bg);
 
           .status-icon {
-            font-size: 24px;
+            font-size: var(--heading-3);
           }
 
           &.active {
@@ -238,7 +249,7 @@ section {
 
         @media (min-width: 768px) {
           grid-template-columns: 1fr 1fr;
-          gap: 20px;
+          gap: 0 20px;
         }
       }
     }

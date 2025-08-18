@@ -1,65 +1,33 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useApi } from '@/composables/useApi'
 
 const search = ref('')
 const selectedType = ref('All')
+const members = ref<any[]>([])
 
-const members = ref([
-  {
-    id: 1,
-    member_code: 'MBR-20250728-0001',
-    email: 'john.doe@example.com',
-    full_name: 'John Doe',
-    phone_number: '+60123456789',
-    address: '123 Jalan Ampang, Kuala Lumpur',
-    is_active: true,
-    is_staff: false,
-    date_joined: '2025-07-28T10:30:00Z',
-    updated_at: '2025-07-28T11:00:00Z'
-  },
-  {
-    id: 2,
-    member_code: 'MBR-20250728-0002',
-    email: 'jane.ali@example.com',
-    full_name: 'Jane Ali',
-    phone_number: '+60129876543',
-    address: '45 Jalan Bukit, Johor Bahru',
-    is_active: false,
-    is_staff: false,
-    date_joined: '2025-07-28T12:00:00Z',
-    updated_at: '2025-07-28T12:30:00Z'
-  },
-  {
-    id: 3,
-    member_code: 'MBR-20250728-0003',
-    email: 'john.doe@example.com',
-    full_name: 'John Doe',
-    phone_number: '+60123456789',
-    address: '123 Jalan Ampang, Kuala Lumpur',
-    is_active: true,
-    is_staff: false,
-    date_joined: '2025-07-28T10:30:00Z',
-    updated_at: '2025-07-28T11:00:00Z'
-  },
-  {
-    id: 4,
-    member_code: 'MBR-20250728-0004',
-    email: 'jane.ali@example.com',
-    full_name: 'Jane Ali',
-    phone_number: '+60129876543',
-    address: '45 Jalan Bukit, Johor Bahru',
-    is_active: false,
-    is_staff: false,
-    date_joined: '2025-07-28T12:00:00Z',
-    updated_at: '2025-07-28T12:30:00Z'
-  },
-])
+const api = useApi()
+
+onMounted(async () => {
+  try {
+    const response = await api.get('/members/list/')
+    members.value = response.data
+    console.log('Members after assignment:', members.value)
+  } catch (error) {
+    console.error('Failed to fetch members:', error)
+  }
+})
 
 const filteredMembers = computed(() => {
   return members.value.filter((member) => {
-    const matchesSearch = `${member.id} ${member.member_code} ${member.is_active}  ${member.full_name}`
-        .toLowerCase()
-        .includes(search.value.toLowerCase())
+    const matchesSearch = `
+      ${member.member_code}
+      ${member.full_name}
+      ${member.email}
+      ${member.phone_number ?? ''}
+      ${member.address ?? ''}
+      ${member.registration_status}
+    `.toLowerCase().includes(search.value.toLowerCase())
 
     const matchesType =
         selectedType.value === 'All' || member.member_code === selectedType.value
@@ -67,17 +35,13 @@ const filteredMembers = computed(() => {
     return matchesSearch && matchesType
   })
 })
-
 </script>
 
 <template>
   <div class="member">
     <div class="member-header">
-
       <h2 class="member-title">Manage Members</h2>
-
       <div class="member-header-container">
-
         <input
             type="text"
             v-model="search"
@@ -100,23 +64,22 @@ const filteredMembers = computed(() => {
 
         <div
             v-for="member in filteredMembers"
-            :key="member.id"
+            :key="member.member_code"
             class="member-row"
         >
           <span>{{ member.full_name }}</span>
           <span>{{ member.member_code }}</span>
           <span>{{ member.email }}</span>
-          <span>{{ member.phone_number }}</span>
-          <span>{{ member.date_joined.slice(0, 10) }}</span>
+          <span>{{ member.phone_number ?? '-' }}</span>
+          <span>{{ new Date(member.created_at).toLocaleDateString() }}</span>
           <div class="member-actions">
-            <NuxtLink to="" class="btn btn--update">
+            <NuxtLink :to="`/administrators/manage-members/${member.id}`" class="btn btn--update">
               <UIcon name="mdi:file-eye" class="icon" />
               View
             </NuxtLink>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -124,6 +87,7 @@ const filteredMembers = computed(() => {
 <style scoped lang="scss">
 .member {
   padding: 15px;
+  min-height: 50vh;
 
   &-header {
     display: flex;
