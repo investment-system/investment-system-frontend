@@ -78,3 +78,26 @@ export const malaysiaBanks = [
     { value: "citibank", label: "Citibank Malaysia" },
     { value: "tng_ewallet", label: "Touch 'n Go eWallet (TNG)" },
 ];
+
+export const sourceTypeOptions = [
+    { value: 'deposit', label: 'Deposit' },
+    { value: 'withdrawal', label: 'Withdrawal' },
+    { value: 'share', label: 'Share' },
+    { value: 'payment', label: 'Payment' },
+    { value: 'cancellation', label: 'Cancellation' },
+    { value: 'registration_payments', label: 'Registration Payment' },
+    { value: 'Profit_payments', label: 'Profit Payment' }
+]
+
+export const directionOptions = [
+    { value: 'in', label: 'In' },
+    { value: 'out', label: 'Out' },
+    { value: 'reinvest', label: 'Reinvest' }
+]
+
+export const paymentMethodOptions = [
+    { value: 'cash', label: 'Cash' },
+    { value: 'bank_transfer', label: 'Bank Transfer' },
+    { value: 'card', label: 'Card' },
+    { value: 'ewallet', label: 'E-Wallet' }
+]

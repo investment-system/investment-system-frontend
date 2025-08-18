@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useApi } from '~/composables/useApi'
+import TransactionForm from './popup/TransactionForm.vue'
 
 interface Transaction {
   transaction_id: number
@@ -17,6 +18,8 @@ interface Transaction {
 const api = useApi()
 const route = useRoute()
 const memberId = route.params.id as string
+
+const showTransactionForm = ref<boolean>(false)
 
 const SOURCE_TYPE_LABELS: Record<string, string> = {
   deposit: 'Deposit',
@@ -100,6 +103,15 @@ const filteredTransactions = computed(() => {
             class="transaction-search"
             placeholder="Search Transactions ..."
         />
+
+        <button
+            class="transaction-create-btn"
+            @click="showTransactionForm = true">
+          Create transaction
+        </button>
+
+        <TransactionForm v-model:show="showTransactionForm" />
+
       </div>
     </div>
 

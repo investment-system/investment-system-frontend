@@ -1,89 +1,81 @@
-<script setup>
-import {defineEmits, defineProps} from 'vue'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useApi } from '@/composables/useApi'
+import { sourceTypeOptions, directionOptions, paymentMethodOptions } from "@/constants/lists"
+import TransactionSuccess from '../popup/TransactionSuccess.vue'
 
-defineProps({
-  show: Boolean
-})
-
+const props = defineProps<{ show: boolean }>()
 const emit = defineEmits(['update:show'])
 
-const closePopup = () => {
-  emit('update:show', false)
-}
+const api = useApi()
+const route = useRoute()
+const memberId = route.params.id as string
 
-import {ref} from 'vue'
+const showTransactionSuccess = ref(false  )
 
 const form = ref({
   source_type: '',
   direction: 'in',
-  amount: '',
-  payment_method: '',
+  amount: 50.0,
+  payment_method: 'bank_transfer',
   reference_id: '',
-  member_id: ''
+  member: memberId,
+  received_invoice_doc: null as File | null
+})
+
+watch(() => props.show, (newVal) => {
+  if (newVal) {
+    form.value = {
+      source_type: '',
+      direction: 'in',
+      amount: 50.0,
+      payment_method: 'bank_transfer',
+      reference_id: '',
+      member: memberId,
+      received_invoice_doc: null
+    }
+  }
 })
 
 const fields = [
-  {
-    label: 'Source Type',
-    model: 'source_type',
-    type: 'select',
-    placeholder: 'Select source type',
-    options: [
-      {value: 'deposit', label: 'Deposit'},
-      {value: 'withdrawal', label: 'Withdrawal'},
-      {value: 'share', label: 'Share'},
-      {value: 'payment', label: 'Payment'},
-      {value: 'cancellation', label: 'Cancellation'},
-      {value: 'registration_payments', label: 'Registration Payment'}
-    ]
-  },
-  {
-    label: 'Direction',
-    model: 'direction',
-    type: 'select',
-    placeholder: 'Select direction',
-    options: [
-      {value: 'in', label: 'In'},
-      {value: 'out', label: 'Out'}
-    ]
-  },
-  {
-    label: 'Amount',
-    model: 'amount',
-    type: 'number',
-    placeholder: 'Enter transaction amount'
-  },
-  {
-    label: 'Payment Method',
-    model: 'payment_method',
-    type: 'select',
-    placeholder: 'Select payment method',
-    options: [
-      {value: 'cash', label: 'Cash'},
-      {value: 'bank_transfer', label: 'Bank Transfer'},
-      {value: 'card', label: 'Card'},
-      {value: 'ewallet', label: 'E-Wallet'}
-    ]
-  },
-  {
-    label: 'Reference ID',
-    model: 'reference_id',
-    type: 'text',
-    placeholder: 'Enter reference ID (if any)'
-  },
-  {
-    label: 'Member ID',
-    model: 'member_id',
-    type: 'number',
-    placeholder: 'Enter member ID'
-  }
+  { label: 'Source Type', model: 'source_type', type: 'select', placeholder: 'Select source type', options: sourceTypeOptions },
+  { label: 'Direction', model: 'direction', type: 'select', placeholder: 'Select direction', options: directionOptions },
+  { label: 'Amount', model: 'amount', type: 'number', placeholder: 'Enter transaction amount' },
+  { label: 'Payment Method', model: 'payment_method', type: 'select', placeholder: 'Select payment method', options: paymentMethodOptions },
+  { label: 'Reference ID', model: 'reference_id', type: 'text', placeholder: 'Enter reference ID (if any)' },
+  { label: 'Invoice Document', model: 'received_invoice_doc', type: 'file', placeholder: 'Upload invoice document (optional)' }
 ]
 
-const submitForm = () => {
-  console.log('Form submitted:', form.value)
-  // location.reload()
-}
+const closePopup = () => emit('update:show', false)
 
+const submitForm = async () => {
+  try {
+    console.log("Submitting form:", form.value)
+    const formData = new FormData()
+    for (const key in form.value) {
+      if (form.value[key] !== null && form.value[key] !== '') {
+        formData.append(key, form.value[key])
+      }
+    }
+
+    const response = await api.post('/transactions/create/', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+
+    closePopup()
+
+    showTransactionSuccess.value = true
+    setTimeout(() => {
+      showTransactionSuccess.value = false
+      location.reload()
+    }, 3000)
+
+  } catch (error: any) {
+    console.error('Error creating transaction:', error.response?.data || error.message)
+    alert('Error creating transaction:' , error.response?.data || error.message)
+  }
+}
 </script>
 
 <template>
@@ -94,7 +86,6 @@ const submitForm = () => {
         <h4 class="line"></h4>
       </div>
       <div class="popup-body">
-
         <form @submit.prevent="submitForm" class="transaction-form" autocomplete="off">
           <div v-for="field in fields" :key="field.model" class="form-group">
             <label :for="field.model">{{ field.label }}</label>
@@ -112,26 +103,33 @@ const submitForm = () => {
             </select>
 
             <input
-                v-else
-                :id="field.model"
-                v-model="form[field.model]"
+                v-else-if="field.type === 'text' || field.type === 'number'"
                 :type="field.type"
-                class="form-control"
+                v-model="form[field.model]"
                 :placeholder="field.placeholder"
+                class="form-control"
+            />
+
+            <input
+                v-else-if="field.type === 'file'"
+                type="file"
+                @change="e => form[field.model] = e.target.files ? e.target.files[0] : null"
+                class="form-control"
             />
           </div>
 
           <div class="submit-btn-wrapper">
-            <button type="submit" class="submit-btn">Submit</button>
+            <button type="submit" class="submit-btn">Create Transaction</button>
           </div>
-
-
         </form>
-
       </div>
     </div>
   </div>
+
+  <TransactionSuccess v-model:show="showTransactionSuccess" />
+
 </template>
+
 
 <style scoped lang="scss">
 .popup-overlay {
