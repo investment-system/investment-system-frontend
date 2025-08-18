@@ -1,60 +1,82 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue'
-import MemberTransactionFormPopup from "~/components/administrators/MemberTransactionFormPopup.vue";
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useApi } from '~/composables/useApi'
+
+interface Transaction {
+  transaction_id: number
+  transaction_code: string
+  source_type: string
+  reference_id: string
+  direction: string
+  amount: number
+  payment_method: string
+  created_at: string
+}
+
+const api = useApi()
+const route = useRoute()
+const memberId = route.params.id as string
+
+const SOURCE_TYPE_LABELS: Record<string, string> = {
+  deposit: 'Deposit',
+  withdrawal: 'Withdrawal',
+  share: 'Share',
+  payment: 'Payment',
+  cancellation: 'Cancellation',
+  registration_payments: 'Registration Payment',
+}
+const DIRECTION_LABELS: Record<string, string> = {
+  in: 'In',
+  out: 'Out',
+  reinvest: 'Reinvest',
+}
+const PAYMENT_METHOD_LABELS = {
+  cash: 'Cash',
+  bank_transfer: 'Bank Transfer',
+  bank: 'Bank Transfer',
+  card: 'Card',
+  ewallet: 'E-Wallet',
+}
 
 const search = ref('')
 const selectedType = ref('All')
+const transactions = ref<Transaction[]>([])
+const loading = ref(false)
+const error = ref('')
 
-const transactions = ref([
-  {
-    transaction_id: 1,
-    transaction_code: 'DTKM-20250728-0001',
-    member_id: 101,
-    source_type: 'deposit',
-    reference_id: 'REF-001',
-    direction: 'in',
-    amount: 500.00,
-    payment_method: 'bank_transfer',
-    created_at: '2025-07-28T10:00:00',
-  },
-  {
-    transaction_id: 2,
-    transaction_code: 'WTKM-20250728-0002',
-    member_id: 102,
-    source_type: 'withdrawal',
-    reference_id: 'REF-002',
-    direction: 'out',
-    amount: 200.00,
-    payment_method: 'cash',
-    created_at: '2025-07-28T11:30:00',
-  },
-  {
-    transaction_id: 3,
-    transaction_code: 'STKM-20250728-0003',
-    member_id: 103,
-    source_type: 'share',
-    reference_id: 'REF-003',
-    direction: 'in',
-    amount: 750.50,
-    payment_method: 'card',
-    created_at: '2025-07-28T13:45:00',
-  },
-  {
-    transaction_id: 4,
-    transaction_code: 'RTKM-20250728-0004',
-    member_id: 104,
-    source_type: 'registration_payments',
-    reference_id: 'REF-004',
-    direction: 'in',
-    amount: 120.00,
-    payment_method: 'ewallet',
-    created_at: '2025-07-28T14:15:00',
+const fetchTransactions = async () => {
+  if (!memberId) {
+    error.value = 'Invalid member ID'
+    return
   }
-])
+
+  loading.value = true
+  error.value = ''
+
+  try {
+    const response = await api.get(`/transactions/admin/member/${memberId}/transactions/`)
+    if (Array.isArray(response.data)) {
+      transactions.value = response.data
+    } else {
+      console.error('Unexpected API response structure:', response.data)
+      error.value = 'Unexpected API response format'
+    }
+  } catch (err: any) {
+    console.error('Failed to fetch transactions:', err)
+    error.value = err.response?.data?.detail || 'Unable to load transactions. Please try again later.'
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchTransactions()
+})
 
 const filteredTransactions = computed(() => {
   return transactions.value.filter((transaction) => {
-    const matchesSearch = `${transaction.member_id} ${transaction.source_type} ${transaction.transaction_code} ${transaction.direction}`
+    const matchesSearch = `${transaction.source_type} ${transaction.transaction_code} ${transaction.direction}`
         .toLowerCase()
         .includes(search.value.toLowerCase())
 
@@ -64,34 +86,20 @@ const filteredTransactions = computed(() => {
     return matchesSearch && matchesType
   })
 })
-
-
-const showPopup = ref(false)
-
 </script>
 
 <template>
   <div class="transaction">
     <div class="transaction-header">
-
-      <h2 class="transaction-title">Transactions History</h2>
+      <h2 class="transaction-title">Member Transactions</h2>
 
       <div class="transaction-header-container">
-
         <input
             type="text"
             v-model="search"
             class="transaction-search"
-            placeholder="Search Transactions ... "
+            placeholder="Search Transactions ..."
         />
-
-        <nuxt-link to="#" class="transaction-create-btn" @click.prevent="showPopup = true">
-          Create transaction
-        </nuxt-link>
-
-        <MemberTransactionFormPopup v-model:show="showPopup" />
-
-
       </div>
     </div>
 
@@ -115,22 +123,24 @@ const showPopup = ref(false)
         >
           <span></span>
           <span>{{ transaction.transaction_code }}</span>
-          <span>{{ transaction.source_type }}</span>
-          <span>{{ transaction.direction }}</span>
+          <span>{{ SOURCE_TYPE_LABELS[transaction.source_type] || transaction.source_type }}</span>
+          <span>{{ DIRECTION_LABELS[transaction.direction] || transaction.direction }}</span>
           <span>RM {{ parseFloat(transaction.amount).toFixed(2) }}</span>
-          <span>{{ transaction.payment_method }}</span>
+          <span>{{ PAYMENT_METHOD_LABELS[transaction.payment_method] || transaction.payment_method }}</span>
           <span>{{ transaction.created_at.slice(0, 10) }}</span>
           <div class="transaction-actions">
-            <NuxtLink to="" class="btn btn--update">
-              <UIcon name="mdi-file-eye" class="icon"/>
+            <NuxtLink :to="`/administrators/transactions/${transaction.transaction_id}`" class="btn btn--update">
+              <UIcon name="mdi:file-eye" class="icon"/>
               View
             </NuxtLink>
           </div>
         </div>
       </div>
-
     </div>
 
+    <div v-if="!loading && !transactions.length" class="no-transactions">
+      No transactions found for this member.
+    </div>
   </div>
 </template>
 
