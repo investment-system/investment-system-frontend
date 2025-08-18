@@ -26,8 +26,10 @@ const fetchUserProfile = async () => {
       month: 'short',
       year: 'numeric'
     })
-    profilePicture.value = data.profile_picture || ''
+    // profilePicture.value = data.profile_picture || ''
 
+
+    console.log(profilePicture.value)
 
     profileData.value = [
       { label: 'Full Name', value: data.user.full_name },
@@ -60,16 +62,17 @@ onMounted(fetchUserProfile)
 
   <section>
 
-    <div class="admin-member-container">
+    <div class="admin-container">
 
       <div class="profile-header">
 
         <div class="avatar-wrapper">
           <img
-              :src="profilePicture || '/images/user-pic.png'"
+              :src="profileData?.profile_picture || '/images/user-icon.png'"
               alt="Profile Picture"
               class="avatar-img"
           />
+
           <div class="status-badge" :class="userStatus">
             <UIcon name="i-heroicons-check-circle" class="status-icon"/>
           </div>
@@ -104,7 +107,7 @@ section {
   width: calc(100% - 40px);
   margin: 20px auto 50px;
 
-  .admin-member-container {
+  .admin-container {
     display: grid;
     grid-template-columns: 1fr;
     padding: 24px 0;
@@ -219,7 +222,7 @@ section {
     .profile-info {
       .form-grid {
         display: grid;
-        gap: 10px;
+        gap: 0 10px;
         margin: 20px 0;
 
         .form-item {
