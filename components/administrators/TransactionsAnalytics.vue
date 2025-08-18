@@ -19,6 +19,11 @@ const dashboardStats = ref([
     value: 0,
   },
   {
+    title: 'Registration Amount',
+    icon: 'mdi-chart-donut',
+    value: 0,
+  },
+  {
     title: 'Share Completed',
     icon: 'mdi-check-circle-outline',
     value: 0,
@@ -54,6 +59,9 @@ const fetchStats = async () => {
           break
         case 'Share Amount':
           stat.value = parseFloat(transactionData.share_amount) ?? stat.value
+          break
+        case 'Registration Amount':
+          stat.value = parseFloat(transactionData.registration_amount) ?? stat.value
           break
         case 'Share Completed':
           stat.value = transactionData.share_completed ?? stat.value
@@ -180,8 +188,6 @@ onMounted(() => {
         font-size: 24px;
       }
 
-
-
       &:nth-child(1) {
         background: linear-gradient(135deg, rgba(13, 71, 161, 0.15) 0%, rgba(25, 118, 210, 0.15) 100%);
 
@@ -219,6 +225,22 @@ onMounted(() => {
 
         .icon-container {
           color: #1a237e;
+        }
+      }
+
+      &:nth-child(6) {
+        background: linear-gradient(135deg, rgba(0, 150, 136, 0.15) 0%, rgba(128, 203, 196, 0.15) 100%);
+
+        .icon-container {
+          color: #004d40;
+        }
+      }
+
+      &:nth-child(7) {
+        background: linear-gradient(135deg, rgba(255, 152, 0, 0.15) 0%, rgba(255, 204, 128, 0.15) 100%);
+
+        .icon-container {
+          color: #e65100;
         }
       }
 
