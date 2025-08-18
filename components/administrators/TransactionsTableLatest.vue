@@ -102,9 +102,6 @@ const filteredTransactions = computed(() => {
 
       <div class="transaction-header-container">
 
-        <nuxt-link to="" class="transaction-create-btn">
-          Create transaction
-        </nuxt-link>
 
       </div>
     </div>
@@ -166,29 +163,6 @@ const filteredTransactions = computed(() => {
     font-weight: normal;
     height: 36px;
     align-content: center;
-  }
-
-  .transaction-create-btn {
-    width: 100%;
-    font-size: var(--button-font-size);
-    color: var(--primary-text-color);
-    background: var(--button-bg);
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    padding: 10px;
-    text-align: center;
-    height: 36px;
-    align-content: center;
-    transition: var(--transition);
-
-    &:hover {
-      background: var(--hover-button-bg);
-    }
-
-    @media (min-width: 640px) {
-      width: auto;
-    }
   }
 
   .transaction-header-container {
