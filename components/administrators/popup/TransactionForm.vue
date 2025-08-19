@@ -207,6 +207,7 @@ const submitForm = async () => {
             height: 36px;
             display: flex;
             align-items: center;
+            max-width: 200px;
           }
         }
 

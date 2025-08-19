@@ -144,6 +144,14 @@ const filteredTransactions = computed(() => {
 
     </div>
 
+    <div v-if="!loading && !transactions.length" class="no-transactions">
+
+      <img src="/images/no-data-icon.png" class="no-transactions-img-container" alt="no">
+
+      <p class="no-transactions-header">No transactions found.</p>
+
+    </div>
+
   </div>
 </template>
 
@@ -224,6 +232,7 @@ const filteredTransactions = computed(() => {
     display: flex;
     flex-direction: column;
     min-width: 1000px;
+    min-height: 100px;
   }
 
   &-row {
@@ -385,5 +394,30 @@ const filteredTransactions = computed(() => {
     }
   }
 }
+
+.no-transactions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100px;
+}
+
+.no-transactions img {
+  width: 80px;
+  height: auto;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.no-transactions p {
+  font-size: var(--body-text);
+  font-weight: 500;
+  color: var(--primary-text-color);
+  margin: 0;
+}
+
+
 
 </style>
