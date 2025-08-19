@@ -55,6 +55,11 @@ export const sourceTypeOptions = [
     {value: 'Profit_payments', label: 'Profit Payment'}
 ]
 
+export const memberSourceTypeOptions = [
+    {value: 'share', label: 'Share'},
+    {value: 'registration_payments', label: 'Registration Payment'},
+]
+
 export const directionOptions = [
     {value: 'in', label: 'In'},
     {value: 'out', label: 'Out'},

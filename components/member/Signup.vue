@@ -74,7 +74,11 @@ const handleSignup = async () => {
     setTimeout(() => {
       popupType.value = 'success'
       showPopup.value = true
-      router.push('/member/auth/login')
+
+      setTimeout(() => {
+        router.push('/member/auth/login')
+      }, 1500)
+
     }, 2000)
 
   } catch (error: any) {
@@ -85,6 +89,7 @@ const handleSignup = async () => {
     loading.value = false
   }
 }
+
 </script>
 
 <template>

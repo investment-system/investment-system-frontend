@@ -90,7 +90,7 @@ const handleLogin = async () => {
     <div class="container">
       <div class="login-form">
 
-        <h2> Welcome back to Koperasi Masjid</h2>
+        <h2> Welcome to Koperasi Masjid</h2>
 
         <form @submit.prevent="handleLogin">
           <div v-for="question in loginQuestions" :key="question.id">
@@ -110,7 +110,6 @@ const handleLogin = async () => {
           <div class="links">
 
             <NuxtLink to="/member/auth/signup">Sign Up</NuxtLink>
-            or <NuxtLink href="/member/auth/password-reset-email"> Forgot Password? </NuxtLink>
 
           </div>
 
