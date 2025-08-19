@@ -4,7 +4,7 @@
 
 <template>
   <MemberHeader/>
-  <MemberInvestmentListLatest/>
+  <MemberInvestmentList/>
   <Footer/>
 </template>
 

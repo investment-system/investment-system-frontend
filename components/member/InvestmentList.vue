@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useApi } from '~/composables/useApi'
 import { sourceTypeOptions, directionOptions, paymentMethodOptions } from '@/constants/lists'
+import TransactionForm from '../member/popup/MemberTransactionForm.vue'
 
 interface Transaction {
   transaction_id: number
@@ -25,21 +26,20 @@ const SOURCE_TYPE_LABELS = createLabelMap(sourceTypeOptions)
 const DIRECTION_LABELS = createLabelMap(directionOptions)
 const PAYMENT_METHOD_LABELS = createLabelMap(paymentMethodOptions)
 
-
 const search = ref('')
 const selectedType = ref('All')
 const transactions = ref<Transaction[]>([])
 const loading = ref(false)
 const error = ref('')
 
+const showTransactionForm = ref(false)
+
 const fetchTransactions = async () => {
   loading.value = true
   error.value = ''
 
   try {
-
     const response = await api.get('/transactions/user/')
-
     if (Array.isArray(response.data)) {
       transactions.value = response.data
     } else if (response.data.transactions && typeof response.data.transactions === 'string') {
@@ -49,7 +49,6 @@ const fetchTransactions = async () => {
       console.error('Unexpected API response structure:', response.data)
       error.value = 'Unexpected API response format'
     }
-
   } catch (err) {
     console.error('Failed to fetch transactions:', err)
     error.value = 'Unable to load transactions. Please try again later.'
@@ -74,13 +73,20 @@ const filteredTransactions = computed(() => {
     return matchesSearch && matchesType
   })
 })
-
 </script>
 
 <template>
   <div class="transaction">
-    <div class="investor-transactions-header">
-      <h2 class="transaction-title">Financial Records</h2>
+
+    <div class="transaction-header">
+      <h2 class="transaction-title">Transactions Records</h2>
+      <div class="transaction-header-container">
+        <button class="transaction-create-btn" @click="showTransactionForm = true">
+          Create transaction
+        </button>
+
+        <TransactionForm v-model:show="showTransactionForm"/>
+      </div>
     </div>
 
     <div class="transaction-table-wrapper">
@@ -109,7 +115,7 @@ const filteredTransactions = computed(() => {
           <span>{{ PAYMENT_METHOD_LABELS[transaction.payment_method] || transaction.payment_method }}</span>
           <span>{{ transaction.created_at.slice(0, 10) }}</span>
           <div class="transaction-actions">
-            <NuxtLink :to="`/member/transactions/${transaction.transaction_id}`" class="btn btn--update">
+            <NuxtLink :to="`/member/investments/${transaction.transaction_id}`" class="btn btn--update">
               <UIcon name="mdi-file-eye" class="icon" />
               View
             </NuxtLink>
@@ -117,13 +123,16 @@ const filteredTransactions = computed(() => {
         </div>
       </div>
     </div>
+
   </div>
 </template>
+
 
 <style scoped lang="scss">
 .transaction {
   padding: 15px;
   min-height: 100vh;
+  display: block;
 
   &-header {
     display: flex;
@@ -138,7 +147,41 @@ const filteredTransactions = computed(() => {
     font-weight: normal;
     height: 36px;
     align-content: center;
-    margin: 20px 0;
+  }
+
+  .transaction-create-btn {
+    width: 100%;
+    font-size: var(--button-font-size);
+    color: var(--primary-text-color);
+    background: var(--button-bg);
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    height: 36px;
+    align-content: center;
+    transition: var(--transition);
+
+    &:hover {
+      background: var(--hover-button-bg);
+    }
+
+    @media (min-width: 640px) {
+      width: auto;
+    }
+  }
+
+  .transaction-header-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 
 
@@ -148,6 +191,28 @@ const filteredTransactions = computed(() => {
     gap: 20px;
     margin: 20px 0;
 
+    .transaction-create-btn {
+      width: 100%;
+      font-size: var(--button-font-size);
+      color: var(--primary-text-color);
+      background: var(--button-bg);
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+      height: 36px;
+      align-content: center;
+      transition: var(--transition);
+
+      &:hover {
+        background: var(--hover-button-bg);
+      }
+
+      @media (min-width: 640px) {
+        width: auto;
+      }
+    }
 
     @media (min-width: 640px) {
       flex-direction: row;
