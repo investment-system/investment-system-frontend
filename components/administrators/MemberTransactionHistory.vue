@@ -1,8 +1,24 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useApi } from '~/composables/useApi'
+import {ref, computed, onMounted} from 'vue'
+import {useRoute} from 'vue-router'
+import {useApi} from '~/composables/useApi'
 import TransactionForm from './popup/TransactionForm.vue'
+import UpdateCancelTransaction from './popup/UpdateCancelTransaction.vue'
+
+const showUpdateCancelTransaction = ref(false)
+const selectedTransaction = ref<number | null>(null)
+const showTransactionForm = ref(false)
+const openDropdown = ref<number | null>(null)
+
+const transactions = ref<Transaction[]>([])
+const search = ref('')
+const selectedType = ref('All')
+const loading = ref(false)
+const error = ref('')
+
+const api = useApi()
+const route = useRoute()
+const memberId = route.params.id as string
 
 interface Transaction {
   transaction_id: number
@@ -14,12 +30,6 @@ interface Transaction {
   payment_method: string
   created_at: string
 }
-
-const api = useApi()
-const route = useRoute()
-const memberId = route.params.id as string
-
-const showTransactionForm = ref<boolean>(false)
 
 const SOURCE_TYPE_LABELS: Record<string, string> = {
   deposit: 'Deposit',
@@ -42,76 +52,57 @@ const PAYMENT_METHOD_LABELS = {
   ewallet: 'E-Wallet',
 }
 
-const search = ref('')
-const selectedType = ref('All')
-const transactions = ref<Transaction[]>([])
-const loading = ref(false)
-const error = ref('')
-
 const fetchTransactions = async () => {
   if (!memberId) {
     error.value = 'Invalid member ID'
     return
   }
-
   loading.value = true
   error.value = ''
-
   try {
     const response = await api.get(`/transactions/admin/member/${memberId}/transactions/`)
-    if (Array.isArray(response.data)) {
-      transactions.value = response.data
-    } else {
-      console.error('Unexpected API response structure:', response.data)
-      error.value = 'Unexpected API response format'
-    }
+    transactions.value = Array.isArray(response.data) ? response.data : []
   } catch (err: any) {
-    console.error('Failed to fetch transactions:', err)
-    error.value = err.response?.data?.detail || 'Unable to load transactions. Please try again later.'
+    console.error(err)
+    error.value = err.response?.data?.detail || 'Failed to fetch transactions.'
   } finally {
     loading.value = false
   }
 }
 
-onMounted(() => {
-  fetchTransactions()
-})
-
 const filteredTransactions = computed(() => {
-  return transactions.value.filter((transaction) => {
-    const matchesSearch = `${transaction.source_type} ${transaction.transaction_code} ${transaction.direction}`
+  return transactions.value.filter((t) => {
+    const matchesSearch = `${t.source_type} ${t.transaction_code} ${t.direction}`
         .toLowerCase()
         .includes(search.value.toLowerCase())
-
-    const matchesType =
-        selectedType.value === 'All' || transaction.source_type === selectedType.value
-
+    const matchesType = selectedType.value === 'All' || t.source_type === selectedType.value
     return matchesSearch && matchesType
   })
+})
+
+const toggleDropdown = (id: number) => {
+  openDropdown.value = openDropdown.value === id ? null : id
+}
+
+const openUpdatePopup = (transactionId: number) => {
+  selectedTransaction.value = transactionId
+  showUpdateCancelTransaction.value = true
+}
+
+onMounted(() => {
+  fetchTransactions()
 })
 </script>
 
 <template>
   <div class="transaction">
+
     <div class="transaction-header">
       <h2 class="transaction-title">Member Transactions</h2>
-
       <div class="transaction-header-container">
-        <input
-            type="text"
-            v-model="search"
-            class="transaction-search"
-            placeholder="Search Transactions ..."
-        />
-
-        <button
-            class="transaction-create-btn"
-            @click="showTransactionForm = true">
-          Create transaction
-        </button>
-
-        <TransactionForm v-model:show="showTransactionForm" />
-
+        <input type="text" v-model="search" class="transaction-search" placeholder="Search Transactions ..."/>
+        <button class="transaction-create-btn" @click="showTransactionForm = true">Create transaction</button>
+        <TransactionForm v-model:show="showTransactionForm"/>
       </div>
     </div>
 
@@ -128,11 +119,7 @@ const filteredTransactions = computed(() => {
           <span>Actions</span>
         </div>
 
-        <div
-            v-for="transaction in filteredTransactions"
-            :key="transaction.transaction_id"
-            class="transaction-row"
-        >
+        <div v-for="transaction in filteredTransactions" :key="transaction.transaction_id" class="transaction-row">
           <span></span>
           <span>{{ transaction.transaction_code }}</span>
           <span>{{ SOURCE_TYPE_LABELS[transaction.source_type] || transaction.source_type }}</span>
@@ -140,12 +127,26 @@ const filteredTransactions = computed(() => {
           <span>RM {{ parseFloat(transaction.amount).toFixed(2) }}</span>
           <span>{{ PAYMENT_METHOD_LABELS[transaction.payment_method] || transaction.payment_method }}</span>
           <span>{{ transaction.created_at.slice(0, 10) }}</span>
+
           <div class="transaction-actions">
-            <NuxtLink :to="`/administrators/transactions/${transaction.transaction_id}`" class="btn btn--update">
-              <UIcon name="mdi:file-eye" class="icon"/>
-              View
-            </NuxtLink>
+            <div class="dropdown">
+              <button class="dropdown-toggle" @click="toggleDropdown(transaction.transaction_id)">
+                <UIcon name="mdi-dots-vertical"/>
+                Actions
+              </button>
+              <div class="dropdown-menu" v-if="openDropdown === transaction.transaction_id">
+                <NuxtLink :to="`/administrators/transactions/${transaction.transaction_id}`" class="dropdown-item">
+                  <UIcon name="mdi:file-eye" class="icon"/>
+                  View
+                </NuxtLink>
+                <button class="dropdown-item" @click="openUpdatePopup(transaction.transaction_id)">
+                  <UIcon name="mdi-pencil" class="icon"/>
+                  Update
+                </button>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -153,12 +154,15 @@ const filteredTransactions = computed(() => {
     <div v-if="!loading && !transactions.length" class="no-transactions">
       No transactions found for this member.
     </div>
+
+    <UpdateCancelTransaction v-model:show="showUpdateCancelTransaction" :transaction-id="selectedTransaction"/>
   </div>
 </template>
 
 <style scoped lang="scss">
 .transaction {
   padding: 15px;
+  min-height: 50vh;
 
   &-header {
     display: flex;
@@ -289,6 +293,59 @@ const filteredTransactions = computed(() => {
     justify-content: center;
   }
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  .dropdown-toggle {
+    cursor: pointer;
+    padding: 6px 12px;
+    background-color: var(--cancel-button-bg);
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    height: 36px;
+    transition: var(--transition);
+
+    &:hover {
+      background: var(--cancel-hover-button-bg);
+    }
+
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    background-color: var(--primary-bg);
+    min-width: 140px;
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 1000;
+
+    button {
+      background: transparent;
+      outline: none;
+      border: none;
+      min-width: 140px;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      color: var(--primary-text-color);
+      text-decoration: none;
+      height: 36px;
+
+      &:hover {
+        background-color: var(--cancel-button-bg);
+      }
+    }
+  }
+
+}
+
 
 .scroll-hint {
   display: block;

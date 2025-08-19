@@ -83,12 +83,10 @@ const fetchTransaction = async () => {
   }
 }
 
-// 🔹 Mounted
 onMounted(() => {
   fetchTransaction()
 })
 
-// 🔹 Print invoice
 const invoiceSection = ref<HTMLElement | null>(null)
 const printInvoice = () => {
   const originalTitle = document.title
