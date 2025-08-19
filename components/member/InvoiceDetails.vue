@@ -2,10 +2,20 @@
 import { ref, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useRoute } from 'vue-router'
-import {gender, sourceTypeOptions, directionOptions, paymentMethodOptions } from '@/constants/lists'
+import {countries,gender, malaysiaBanks,malaysiaStates,sourceTypeOptions, directionOptions, paymentMethodOptions } from '@/constants/lists'
 
 const api = useApi()
 const route = useRoute()
+const createLabelMap = (options: { value: string; label: string }[]) =>
+    Object.fromEntries(options.map(opt => [opt.value, opt.label]))
+
+const SOURCE_TYPE_LABELS = createLabelMap(sourceTypeOptions)
+const DIRECTION_LABELS = createLabelMap(directionOptions)
+const PAYMENT_METHOD_LABELS = createLabelMap(paymentMethodOptions)
+const GENDER = createLabelMap(gender)
+const COUNTRIES = createLabelMap(countries)
+const MALAYSIA_STATES = createLabelMap(malaysiaStates)
+const MALAYSIA_BANKS = createLabelMap(malaysiaBanks)
 
 const profile = ref({})
 const profileData = ref([])
@@ -19,11 +29,11 @@ const getUserInfo = async () => {
       { label: 'Email', value: data.email },
       { label: 'Gender', value: GENDER[data.gender] || data.gender },
       { label: 'Contact Number', value: data.phone_number },
-      { label: 'Country', value: data.country },
-      { label: 'Street Address', value: data.address_line },
+      { label: 'Country', value: COUNTRIES[data.country] || data.country },
+      { label: 'State', value: MALAYSIA_STATES[data.state] || data.state },
       { label: 'City', value: data.city },
-      { label: 'State', value: data.state },
-      { label: 'Bank Name', value: data.bank_name },
+      { label: 'Street Address', value: data.address_line },
+      { label: 'Bank Name', value: MALAYSIA_BANKS[data.bank_name] || data.bank_name },
       { label: 'Account Holder', value: data.account_holder_name },
       { label: 'Account Number', value: data.bank_account_number },
     ]
@@ -33,14 +43,6 @@ const getUserInfo = async () => {
 }
 
 onMounted(getUserInfo)
-
-const createLabelMap = (options: { value: string; label: string }[]) =>
-    Object.fromEntries(options.map(opt => [opt.value, opt.label]))
-
-const SOURCE_TYPE_LABELS = createLabelMap(sourceTypeOptions)
-const DIRECTION_LABELS = createLabelMap(directionOptions)
-const PAYMENT_METHOD_LABELS = createLabelMap(paymentMethodOptions)
-const GENDER = createLabelMap(gender)
 
 const invoiceSection = ref<HTMLElement | null>(null)
 const transaction = ref<any>(null)
