@@ -210,7 +210,7 @@ const filteredTransactions = computed(() => {
     display: flex;
     flex-direction: column;
     min-width: 1000px;
-    min-height: 100px;
+    min-height: 50vh;
   }
 
   &-row {
@@ -356,7 +356,7 @@ const filteredTransactions = computed(() => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 100px;
+  margin-top: -50vh;
 }
 
 .no-transactions img {
@@ -372,7 +372,6 @@ const filteredTransactions = computed(() => {
   color: var(--primary-text-color);
   margin: 0;
 }
-
 
 
 </style>

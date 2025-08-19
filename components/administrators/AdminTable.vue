@@ -243,6 +243,7 @@ onMounted(fetchAdmins)
     display: flex;
     flex-direction: column;
     min-width: 1200px;
+    min-height: 50vh;
   }
 
   &-row {
@@ -410,7 +411,7 @@ onMounted(fetchAdmins)
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 100px;
+  margin-top: -50vh;
 }
 
 .no-admins img {

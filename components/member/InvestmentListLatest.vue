@@ -170,7 +170,7 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     min-width: 1000px;
-    min-height: 100px;
+    min-height: 50vh;
   }
 
   &-row {
@@ -317,7 +317,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 100px;
+  margin-top: -50vh;
 }
 
 .no-transactions img {

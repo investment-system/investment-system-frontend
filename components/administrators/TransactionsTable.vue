@@ -100,9 +100,6 @@ const filteredTransactions = computed(() => {
             class="transaction-search"
             placeholder="Search Transactions ... "
         />
-        <nuxt-link to="" class="transaction-create-btn">
-          Create transaction
-        </nuxt-link>
 
       </div>
     </div>
@@ -174,29 +171,6 @@ const filteredTransactions = computed(() => {
     align-content: center;
   }
 
-  .transaction-create-btn {
-    width: 100%;
-    font-size: var(--button-font-size);
-    color: var(--primary-text-color);
-    background: var(--button-bg);
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    padding: 10px;
-    text-align: center;
-    height: 36px;
-    align-content: center;
-    transition: var(--transition);
-
-    &:hover {
-      background: var(--hover-button-bg);
-    }
-
-    @media (min-width: 640px) {
-      width: auto;
-    }
-  }
-
   .transaction-header-container {
     display: flex;
     flex-direction: column;
@@ -232,7 +206,7 @@ const filteredTransactions = computed(() => {
     display: flex;
     flex-direction: column;
     min-width: 1000px;
-    min-height: 100px;
+    min-height: 50vh;
   }
 
   &-row {
@@ -401,7 +375,7 @@ const filteredTransactions = computed(() => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 100px;
+  margin-top: -50vh;
 }
 
 .no-transactions img {
