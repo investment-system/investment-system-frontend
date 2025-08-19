@@ -5,6 +5,7 @@ import { useApi } from '@/composables/useApi'
 const search = ref('')
 const selectedType = ref('All')
 const members = ref<any[]>([])
+const loading = ref(false)
 
 const api = useApi()
 
@@ -39,6 +40,7 @@ const filteredMembers = computed(() => {
 
 <template>
   <div class="member">
+
     <div class="member-header">
       <h2 class="member-title">Manage Members</h2>
       <div class="member-header-container">
@@ -81,6 +83,15 @@ const filteredMembers = computed(() => {
         </div>
       </div>
     </div>
+
+    <div v-if="!loading && !filteredMembers.length" class="no-members">
+
+      <img src="/images/no-data-icon.png" class="no-members-img-container" alt="no">
+
+      <p class="no-members-header">No transactions found for this member.</p>
+
+    </div>
+
   </div>
 </template>
 
@@ -252,5 +263,30 @@ const filteredMembers = computed(() => {
     }
   }
 }
+
+
+.no-members {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100px;
+}
+
+.no-members img {
+  width: 80px;
+  height: auto;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.no-members p {
+  font-size: var(--body-text);
+  font-weight: 500;
+  color: var(--primary-text-color);
+  margin: 0;
+}
+
 
 </style>

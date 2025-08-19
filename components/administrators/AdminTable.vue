@@ -67,6 +67,7 @@ onMounted(fetchAdmins)
 
 <template>
   <div class="admin">
+    
     <div class="admin-header">
 
       <h2 class="admin-title">Manage Administrators</h2>
@@ -143,6 +144,15 @@ onMounted(fetchAdmins)
     >
       Delete Selected
     </button>
+
+    <div v-if="!loading && !admins.length" class="no-admins">
+
+      <img src="/images/no-data-icon.png" class="no-admins-img-container" alt="no">
+
+      <p class="no-admins-header">No transactions found for this member.</p>
+
+    </div>
+
 
     <DeleteAdminConfirmation
         v-if="showDeletePopup"
@@ -393,5 +403,30 @@ onMounted(fetchAdmins)
     }
   }
 }
+
+.no-admins {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100px;
+}
+
+.no-admins img {
+  width: 80px;
+  height: auto;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.no-admins p {
+  font-size: var(--body-text);
+  font-weight: 500;
+  color: var(--primary-text-color);
+  margin: 0;
+}
+
+
 
 </style>
