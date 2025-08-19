@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
 import {useRoute} from 'vue-router'
+import {countries, gender, malaysiaBanks, malaysiaStates } from '@/constants/lists.js'
 
 const route = useRoute()
 
@@ -27,6 +28,11 @@ const api = useApi()
 const profile = ref({})
 const profileData = ref([])
 const profilePicture = ref('')
+const getLabel = (list, value) => {
+  if (!value) return "Not provided"
+  const item = list.find(i => i.value === value)
+  return item ? item.label : value
+}
 
 const getUserInfo = async () => {
   try {
@@ -38,14 +44,14 @@ const getUserInfo = async () => {
       { label: 'Email Address', value: data.email },
       { label: 'Full Name', value: data.full_name },
       { label: 'IC Number', value: data.ic_number },
-      { label: 'Gender', value: data.gender },
+      { label: 'Gender', value: getLabel(gender, data.gender) },
       { label: 'Date of Birth', value: data.date_of_birth },
       { label: 'Phone Number', value: data.phone_number },
-      { label: 'Country', value: data.country },
+      { label: 'Country', value: getLabel(countries, data.state) },
       { label: 'Address Line', value: data.address_line },
       { label: 'City', value: data.city },
-      { label: 'State', value: data.state },
-      { label: 'Bank Name', value: data.bank_name },
+      { label: 'State', value: getLabel(malaysiaStates, data.state) },
+      { label: 'Bank Name', value: getLabel(malaysiaBanks, data.bank_name) },
       { label: 'Account Holder Name', value: data.account_holder_name },
       { label: 'Bank Account Number', value: data.bank_account_number },
     ]

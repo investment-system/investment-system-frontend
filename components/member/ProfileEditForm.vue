@@ -3,6 +3,7 @@ import {ref, reactive, onMounted, computed, onUnmounted} from 'vue'
 import {useRoute} from 'vue-router'
 import {useApi} from '~/composables/useApi'
 import ProfileUpdatedSuccess from "./popup/ProfileUpdatedSuccess.vue";
+import {gender, malaysiaBanks, malaysiaStates, countries} from '@/constants/lists.js';
 
 const api = useApi()
 const route = useRoute()
@@ -13,24 +14,19 @@ const settingLinks = ref([
   {link: "/member/auth/change-password", title: "Change Password", icon: "mdi-lock"},
 ])
 
-const nonEditableFields = ['email', 'full_name', 'gender']
+const nonEditableFields = ['email', 'full_name']
 const formFields = ref([
   {key: 'full_name', label: 'Full Name', type: 'text'},
   {key: 'ic_number', label: 'IC Number', type: 'text'},
-  {
-    key: 'gender',
-    label: 'Gender',
-    type: 'select',
-    options: [{value: 'male', label: 'Male'}, {value: 'female', label: 'Female'}]
-  },
+  {key: 'gender', label: 'Gender', type: 'select', options: gender},
   {key: 'date_of_birth', label: 'Date of Birth', type: 'date'},
   {key: 'phone_number', label: 'Phone Number', type: 'tel'},
   {key: 'email', label: 'Email', type: 'email'},
-  {key: 'country', label: 'Country', type: 'text'},
-  {key: 'state', label: 'State', type: 'text'},
+  {key: 'country', label: 'Country', type: 'select', options: countries},
+  {key: 'state', label: 'State', type: 'select', options: malaysiaStates},
   {key: 'city', label: 'City', type: 'text'},
   {key: 'address_line', label: 'Address', type: 'text'},
-  {key: 'bank_name', label: 'Bank Name', type: 'text'},
+  {key: 'bank_name', label: 'Bank Name', type: 'select', options: malaysiaBanks},
   {key: 'account_holder_name', label: 'Account Holder', type: 'text'},
   {key: 'bank_account_number', label: 'Account Number', type: 'text'}
 ])
@@ -445,6 +441,7 @@ section {
             height: 36px;
             align-content: center;
             background: var(--cancel-button-bg);
+            max-width: 200px;
 
             &:focus {
               outline: none;
