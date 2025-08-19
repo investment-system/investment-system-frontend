@@ -18,6 +18,12 @@ const toggleUserStatus = async () => {
 
     userStatus.value = "Active"
     member.value.registration_status = "paid"
+
+    setTimeout (() => {
+      location.reload()
+    },1500)
+
+    location.reload()
   } catch (error) {
     console.error("Failed to update status:", error)
   }
