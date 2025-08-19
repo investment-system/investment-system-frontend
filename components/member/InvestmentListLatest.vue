@@ -113,7 +113,7 @@ onMounted(() => {
           <span>{{ PAYMENT_METHOD_LABELS[transaction.payment_method] || transaction.payment_method }}</span>
           <span>{{ transaction.created_at.slice(0, 10) }}</span>
           <div class="transaction-actions">
-            <NuxtLink :to="`/member/transactions/${transaction.transaction_id}`" class="btn btn--update">
+            <NuxtLink :to="`/member/investments/${transaction.transaction_id}`" class="btn btn--update">
               <UIcon name="mdi-file-eye" class="icon" />
               View
             </NuxtLink>
