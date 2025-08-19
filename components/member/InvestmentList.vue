@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useApi } from '~/composables/useApi'
+import { sourceTypeOptions, directionOptions, paymentMethodOptions } from '@/constants/lists'
 
 interface Transaction {
   transaction_id: number
@@ -16,25 +17,14 @@ interface Transaction {
 
 const api = useApi()
 
-const SOURCE_TYPE_LABELS: Record<string, string> = {
-  deposit: 'Deposit',
-  withdrawal: 'Withdrawal',
-  share: 'Share',
-  payment: 'Payment',
-  cancellation: 'Cancellation',
-  registration_payments: 'Registration Payment',
+const createLabelMap = (options: { value: string; label: string }[]): Record<string, string> => {
+  return Object.fromEntries(options.map(opt => [opt.value, opt.label]))
 }
-const DIRECTION_LABELS: Record<string, string> = {
-  in: 'In',
-  out: 'Out',
-  reinvest: 'Reinvest',
-}
-const PAYMENT_METHOD_LABELS = {
-  cash: 'Cash',
-  bank_transfer: 'Bank Transfer',
-  card: 'Card',
-  ewallet: 'E-Wallet',
-}
+
+const SOURCE_TYPE_LABELS = createLabelMap(sourceTypeOptions)
+const DIRECTION_LABELS = createLabelMap(directionOptions)
+const PAYMENT_METHOD_LABELS = createLabelMap(paymentMethodOptions)
+
 
 const search = ref('')
 const selectedType = ref('All')

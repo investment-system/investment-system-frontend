@@ -1,7 +1,8 @@
-<script setup>
-import {ref, onMounted} from 'vue'
-import {useApi} from '@/composables/useApi'
-import {useRoute} from 'vue-router'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useApi } from '@/composables/useApi'
+import { useRoute } from 'vue-router'
+import {gender, sourceTypeOptions, directionOptions, paymentMethodOptions } from '@/constants/lists'
 
 const api = useApi()
 const route = useRoute()
@@ -11,76 +12,53 @@ const profileData = ref([])
 
 const getUserInfo = async () => {
   try {
-    const {data} = await api.get('/members/profile/')
+    const { data } = await api.get('/members/profile/')
     profile.value = data
-
     profileData.value = [
-      {label: 'Name', value: data.full_name},
-      {label: 'Email', value: data.email},
-      {label: 'Gender', value: data.gender},
-      {label: 'Contact Number', value: data.phone_number},
-      {label: 'Country', value: data.country},
-      {label: 'Street Address', value: data.address_line},
-      {label: 'City', value: data.city},
-      {label: 'State', value: data.state},
-      {label: 'Bank Name', value: data.bank_name},
-      {label: 'Account Holder', value: data.account_holder_name},
-      {label: 'Account Number', value: data.bank_account_number},
+      { label: 'Name', value: data.full_name },
+      { label: 'Email', value: data.email },
+      { label: 'Gender', value: GENDER[data.gender] || data.gender },
+      { label: 'Contact Number', value: data.phone_number },
+      { label: 'Country', value: data.country },
+      { label: 'Street Address', value: data.address_line },
+      { label: 'City', value: data.city },
+      { label: 'State', value: data.state },
+      { label: 'Bank Name', value: data.bank_name },
+      { label: 'Account Holder', value: data.account_holder_name },
+      { label: 'Account Number', value: data.bank_account_number },
     ]
   } catch (error) {
     console.error('Error fetching user info:', error)
   }
 }
 
-onMounted(() => {
-  getUserInfo()
-})
+onMounted(getUserInfo)
 
-const SOURCE_TYPE_LABELS = {
-  deposit: 'Deposit',
-  withdrawal: 'Withdrawal',
-  share: 'Share',
-  payment: 'Payment',
-  cancellation: 'Cancellation',
-  registration_payments: 'Registration Payment',
-}
-const DIRECTION_LABELS = {
-  in: 'In',
-  out: 'Out',
-  reinvest: 'Reinvest',
-}
-const PAYMENT_METHOD_LABELS = {
-  cash: 'Cash',
-  bank_transfer: 'Bank Transfer',
-  card: 'Card',
-  ewallet: 'E-Wallet',
-}
+const createLabelMap = (options: { value: string; label: string }[]) =>
+    Object.fromEntries(options.map(opt => [opt.value, opt.label]))
 
-const invoiceSection = ref(null)
+const SOURCE_TYPE_LABELS = createLabelMap(sourceTypeOptions)
+const DIRECTION_LABELS = createLabelMap(directionOptions)
+const PAYMENT_METHOD_LABELS = createLabelMap(paymentMethodOptions)
+const GENDER = createLabelMap(gender)
 
-const transaction = ref(null)
+const invoiceSection = ref<HTMLElement | null>(null)
+const transaction = ref<any>(null)
 const loading = ref(true)
+
+const formatDate = (dateStr: string) => {
+  return new Date(dateStr).toLocaleDateString('en-GB')
+}
 
 onMounted(async () => {
   try {
-    const {data} = await api.get(`/transactions/user/${route.params.id}/`)
-
-
-    console.log(data)
-
+    const { data } = await api.get(`/transactions/user/${route.params.id}/`)
     transaction.value = {
       ...data,
-      source_type: SOURCE_TYPE_LABELS[data.source_type] || data.source_type,
-      direction: DIRECTION_LABELS[data.direction] || data.direction,
-      payment_method: PAYMENT_METHOD_LABELS[data.payment_method] || data.payment_method,
+      source_type_label: SOURCE_TYPE_LABELS[data.source_type] || data.source_type,
+      direction_label: DIRECTION_LABELS[data.direction] || data.direction,
+      payment_method_label: PAYMENT_METHOD_LABELS[data.payment_method] || data.payment_method,
     }
-
-    if (transaction.value.share_record?.profit) {
-
-    } else {
-
-    }
-
   } catch (error) {
     console.error('Error fetching transaction:', error)
   } finally {
@@ -96,128 +74,101 @@ const printInvoice = () => {
     document.title = originalTitle
   }, 1000)
 }
-
 </script>
 
 <template>
-
-
   <div class="no-print">
-    <MemberHeader/>
+    <MemberHeader />
   </div>
 
   <section class="invoice invoice-body" ref="invoiceSection">
-
     <div class="print-only print-header">
-      <img src="/images/logo.png" alt="koperasi masjid logo" class="koperasi masjid logo"/>
+      <img src="/images/logo.png" alt="koperasi masjid logo" class="koperasi masjid logo" />
       <h1>INVOICE</h1>
     </div>
 
     <div class="section profile">
       <h3>Investor Profile</h3>
-      <hr class="divider"/>
-
+      <hr class="divider" />
       <div class="profile-info">
         <div class="item" v-for="(item, index) in profileData" :key="index">
           <label class="label">{{ item.label }}</label>
           <p class="data">{{ item.value }}</p>
         </div>
       </div>
-
     </div>
 
     <div class="section invoice">
       <h3>Transaction & Invoice</h3>
-      <hr class="divider"/>
+      <hr class="divider" />
       <div class="grid">
-
         <div class="item">
           <span class="label">Invoice ID</span>
           <span class="data">{{ transaction?.reference_id }}</span>
         </div>
-
         <div class="item">
           <span class="label">Reference Code</span>
           <span class="data">{{ transaction?.transaction_code }}</span>
         </div>
-
         <div class="item">
           <span class="label">Date</span>
-          <span class="data">{{ transaction?.created_at?.split('T')[0] }}</span>
+          <span class="data">{{ formatDate(transaction?.created_at) }}</span>
         </div>
-
         <div class="item">
           <span class="label">Transaction Type</span>
-          <span class="data">{{ transaction?.source_type }}</span>
+          <span class="data">{{ transaction?.source_type_label }}</span>
         </div>
-
         <div class="item">
-          <span class="label">mount (MYR)</span>
+          <span class="label">Amount (MYR)</span>
           <span class="data">{{ transaction?.amount }}</span>
         </div>
-
         <div class="item">
           <span class="label">Direction</span>
-          <span class="data">{{ transaction?.direction }}</span>
+          <span class="data">{{ transaction?.direction_label }}</span>
         </div>
-
         <div class="item">
           <span class="label">Payment Method</span>
-          <span class="data">{{ transaction?.payment_method }}</span>
+          <span class="data">{{ transaction?.payment_method_label }}</span>
         </div>
-
         <div class="item">
           <span class="label file-label">Invoice Document</span>
           <span class="data file-data">
-            <a v-if="transaction?.received_invoice_doc"
-               :href="transaction.received_invoice_doc"
-               target="_blank">View Document</a>
+            <a v-if="transaction?.received_invoice_doc" :href="transaction.received_invoice_doc" target="_blank">
+              View Document
+            </a>
             <span v-else>No document</span>
           </span>
         </div>
       </div>
     </div>
 
-    <div class="section investment"
-         v-if="transaction?.source_type === 'Share' && transaction?.share_record">
+    <div class="section investment" v-if="transaction?.source_type === 'Share' && transaction?.share_record">
       <h3>Share Investment Overview</h3>
-      <hr class="divider"/>
+      <hr class="divider" />
       <div class="grid profit-cancel-container">
-        <div class="item"><span class="label">Activity</span><span class="data">{{
-            transaction.share_record.project_name
-          }}</span></div>
-        <div class="item"><span class="label">Investment Date</span><span
-            class="data">{{ transaction.share_record.share_date }}</span></div>
-        <div class="item"><span class="label">Profit Rate</span><span
-            class="data">{{ transaction.share_record.share_return_rate }}%</span></div>
-        <div class="item"><span class="label">Duration (Days)</span><span
-            class="data">{{ transaction.share_record.share_duration_days }}</span></div>
-        <div class="item"><span class="label">Status</span><span class="data">{{
-            transaction.share_record.status
-          }}</span></div>
+        <div class="item"><span class="label">Activity</span><span class="data">{{ transaction.share_record.project_name }}</span></div>
+        <div class="item"><span class="label">Investment Date</span><span class="data">{{ transaction.share_record.share_date }}</span></div>
+        <div class="item"><span class="label">Profit Rate</span><span class="data">{{ transaction.share_record.share_return_rate }}%</span></div>
+        <div class="item"><span class="label">Duration (Days)</span><span class="data">{{ transaction.share_record.share_duration_days }}</span></div>
+        <div class="item"><span class="label">Status</span><span class="data">{{ transaction.share_record.status }}</span></div>
       </div>
 
       <div class="profit" v-if="transaction.share_record.profit">
         <h3>Profit Settlement</h3>
-        <hr class="divider"/>
+        <hr class="divider" />
         <div class="grid">
-          <div class="item"><span class="label">Payout Type</span><span
-              class="data">{{ transaction.share_record.profit.payout_type }}</span></div>
-          <div class="item"><span class="label">Profit Amount</span><span
-              class="data">{{ transaction.share_record.profit.profit_amount }}</span></div>
-          <div class="item"><span class="label">Refund Amount</span><span
-              class="data">{{ transaction.share_record.profit.refund_amount }}</span></div>
+          <div class="item"><span class="label">Payout Type</span><span class="data">{{ transaction.share_record.profit.payout_type }}</span></div>
+          <div class="item"><span class="label">Profit Amount</span><span class="data">{{ transaction.share_record.profit.profit_amount }}</span></div>
+          <div class="item"><span class="label">Refund Amount</span><span class="data">{{ transaction.share_record.profit.refund_amount }}</span></div>
         </div>
       </div>
 
       <div class="cancel" v-else-if="transaction.share_record.cancel">
         <h3>Cancellation Details</h3>
-        <hr class="divider"/>
-        <div class="grid ">
-          <div class="item"><span class="label">Cancel Penalty Amount</span><span
-              class="data">{{ transaction.share_record.cancel.penalty_amount }}</span></div>
-          <div class="item"><span class="label">Refund Amount</span><span
-              class="data">{{ transaction.share_record.cancel.refund_amount }}</span></div>
+        <hr class="divider" />
+        <div class="grid">
+          <div class="item"><span class="label">Cancel Penalty Amount</span><span class="data">{{ transaction.share_record.cancel.penalty_amount }}</span></div>
+          <div class="item"><span class="label">Refund Amount</span><span class="data">{{ transaction.share_record.cancel.refund_amount }}</span></div>
         </div>
       </div>
     </div>
@@ -225,28 +176,23 @@ const printInvoice = () => {
     <div class="print-only print-footer">
       <div class="contact-info">
         <p><span>Koperasi masjid</span></p>
-        <p><span> Email </span> info@koperasimasjid.com | <span>Phone </span> +60 19-335 5368</p>
+        <p><span>Email</span> info@koperasimasjid.com | <span>Phone</span> +60 19-335 5368</p>
       </div>
       <div>
-        <img src="/images/logo.png" alt="koperasi masjid logo" class="logo small-logo"/>
+        <img src="/images/logo.png" alt="koperasi masjid logo" class="logo small-logo" />
       </div>
-
     </div>
 
     <div class="section btn-container">
-
       <button class="print-btn" @click="printInvoice">Save PDF</button>
-
     </div>
-
   </section>
 
   <div class="no-print">
-    <Footer/>
+    <Footer />
   </div>
-
-
 </template>
+
 
 <style scoped lang="scss">
 
