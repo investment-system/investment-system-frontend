@@ -129,10 +129,13 @@ onMounted(() => {
       <div class="bank-card__info">
         <div>
           <h3 class="bank-title">Bank Card Number</h3>
-          <h4 class="bank-account-number">**** **** **** 1212</h4>
+          <h4 class="bank-account-number">**** **** **** ****</h4>
         </div>
         <div>
-
+          <div>
+            <h3 class="date-title">Expired Date</h3>
+            <h4 class="date">MM/YY</h4>
+          </div>
         </div>
       </div>
     </div>
