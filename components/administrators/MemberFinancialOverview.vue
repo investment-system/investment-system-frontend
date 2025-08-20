@@ -16,7 +16,7 @@ const memberAnalytics = ref([
 
 const fetchMemberAnalytics = async () => {
   try {
-    const response = await api.get(`/transactions/admin/${memberId}/stats/`)
+    const response = await api.get(`/transactions/${memberId}/stats/`)
     const data = response.data
 
     memberAnalytics.value = [
