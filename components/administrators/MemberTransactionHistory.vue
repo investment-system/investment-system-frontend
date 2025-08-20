@@ -3,7 +3,7 @@ import {ref, computed, onMounted} from 'vue'
 import {useRoute} from 'vue-router'
 import {useApi} from '~/composables/useApi'
 import TransactionForm from './popup/TransactionForm.vue'
-import UpdateCancelTransaction from './popup/UpdateCancelTransaction.vue'
+import UpdateCancelTransaction from './popup/UpdateShareTransaction.vue'
 
 const showUpdateCancelTransaction = ref(false)
 const selectedTransaction = ref<number | null>(null)

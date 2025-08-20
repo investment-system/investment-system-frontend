@@ -112,7 +112,7 @@ const submitForm = async () => {
           <div v-for="field in fields" :key="field.model" class="form-group">
             <label :for="field.model">
               {{ field.label }}
-              <span v-if="field.required" style="color:red">*</span>
+              <span v-if="field.required" style=""></span>
             </label>
 
             <select

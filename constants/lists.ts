@@ -77,3 +77,12 @@ export const gender = [
     {value: 'male', label: 'Male'},
     {value: 'female', label: 'Female'}
 ]
+
+export const shareStatus = [
+    {value: 'pending', label: 'Pending'},
+    {value: 'active', label: 'Active'},
+    {value: 'completed', label: 'Completed'},
+    {value: 'canceled', label: 'Canceled'},
+]
+
+

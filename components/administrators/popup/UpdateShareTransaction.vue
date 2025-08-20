@@ -1,153 +1,192 @@
-<script setup>
-import {defineEmits, defineProps} from 'vue'
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+import { defineEmits, defineProps } from 'vue'
+import { useApi } from '~/composables/useApi'
+import { shareStatus } from '@/constants/lists'
 
-defineProps({
-  show: Boolean
+const props = defineProps({
+  show: Boolean,
+  transactionId: Number
 })
 
-const emit = defineEmits(['update:show'])
+const emit = defineEmits(['update:show', 'updated'])
+const api = useApi()
+const loading = ref(false)
+const error = ref('')
 
-const closePopup = () => {
-  emit('update:show', false)
+const shareRecordId = ref<number | null>(null)
+const transactionShareStatus = ref('')
+
+const filteredShareStatus = computed(() => {
+  if (!transactionShareStatus.value) return shareStatus
+  return shareStatus.filter(c =>
+      c.label.toLowerCase().startsWith(transactionShareStatus.value.toLowerCase())
+  )
+})
+
+const SOURCE_TYPE_LABELS: Record<string, string> = {
+  deposit: 'Deposit',
+  withdrawal: 'Withdrawal',
+  share: 'Share',
+  payment: 'Payment',
+  cancellation: 'Cancellation',
+  registration_payments: 'Registration Payment',
+  Profit_payments: 'Profit Payment'
+}
+const DIRECTION_LABELS: Record<string, string> = { in: 'In', out: 'Out', reinvest: 'Reinvest' }
+const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  cash: 'Cash',
+  bank_transfer: 'Bank Transfer',
+  card: 'Card',
+  ewallet: 'E-Wallet'
 }
 
-const form = {
+const fields = ref([
+  { label: 'Source Type', model: 'source_type', type: 'select', editable: false, options: Object.entries(SOURCE_TYPE_LABELS).map(([value, label]) => ({ value, label })) },
+  { label: 'Direction', model: 'direction', type: 'select', editable: false, options: Object.entries(DIRECTION_LABELS).map(([value, label]) => ({ value, label })) },
+  { label: 'Amount (MYR)', model: 'amount', type: 'number', editable: false },
+  { label: 'Payment Method', model: 'payment_method', type: 'select', editable: false, options: Object.entries(PAYMENT_METHOD_LABELS).map(([value, label]) => ({ value, label })) },
+  { label: 'Project Name', model: 'project_name', type: 'text', editable: true },
+  { label: 'Share Date', model: 'share_date', type: 'date', editable: false },
+  { label: 'Return Rate (%)', model: 'share_return_rate', type: 'number', editable: true },
+  { label: 'Expected Maturity Date', model: 'expected_share_maturity_date', type: 'date', editable: true },
+  { label: 'Status', model: 'status', type: 'select', editable: true, options: filteredShareStatus.value },
+  { label: 'Duration (Days)', model: 'share_duration_days', type: 'number', editable: true }
+])
+
+const form = ref({
   source_type: '',
-  direction: 'in',
-  amount: '50',
+  direction: '',
+  amount: '',
   payment_method: '',
   reference_id: '',
   member_id: '',
-  project_name: 'KKM',
+  project_name: '',
   share_date: '',
   share_return_rate: '',
   expected_share_maturity_date: '',
-  status: 'active',
+  status: '',
   received_transaction: '',
   share_duration_days: 365,
-  profit_payout_created: false
-}
+  profit_payout_created: false,
+  share_record_id: null
+})
 
-const fields = [
-  {
-    label: 'Source Type',
-    model: 'source_type',
-    type: 'select',
-    placeholder: 'Select source type',
-    options: [
-      { value: 'deposit', label: 'Deposit' },
-      { value: 'withdrawal', label: 'Withdrawal' },
-      { value: 'share', label: 'Share' },
-      { value: 'payment', label: 'Payment' },
-      { value: 'cancellation', label: 'Cancellation' },
-      { value: 'registration_payments', label: 'Registration Payment' }
-    ]
-  },
-  {
-    label: 'Member ID',
-    model: 'member_id',
-    type: 'number',
-    placeholder: 'Enter member ID'
-  },
-  {
-    label: 'Project Name',
-    model: 'project_name',
-    type: 'text',
-    placeholder: 'Enter project name (default: KKM)'
-  },
-  {
-    label: 'Share Date',
-    model: 'share_date',
-    type: 'date',
-    placeholder: 'Select share date'
-  },
-  {
-    label: 'Return Rate (%)',
-    model: 'share_return_rate',
-    type: 'number',
-    placeholder: 'Enter return rate'
-  },
-  {
-    label: 'Expected Maturity Date',
-    model: 'expected_share_maturity_date',
-    type: 'date',
-    placeholder: 'Select expected maturity date'
-  },
-  {
-    label: 'Status',
-    model: 'status',
-    type: 'select',
-    placeholder: 'Select status',
-    options: [
-      { value: 'active', label: 'Active' },
-      { value: 'completed', label: 'Completed' },
-      { value: 'cancelled', label: 'Cancelled' }
-    ]
-  },
-  {
-    label: 'Transaction ID',
-    model: 'received_transaction',
-    type: 'number',
-    placeholder: 'Enter transaction ID'
-  },
-  {
-    label: 'Duration (Days)',
-    model: 'share_duration_days',
-    type: 'number',
-    placeholder: 'Enter share duration in days'
+const fetchTransaction = async () => {
+  loading.value = true
+  error.value = ''
+  try {
+    const { data } = await api.get(`/transactions/transactions/${props.transactionId}/`)
+
+    form.value = {
+      transactionId: data.transaction_id,
+      transaction_code: data.transaction_code,
+      source_type: data.source_type,
+      direction: data.direction,
+      amount: data.amount,
+      payment_method: data.payment_method,
+      reference_id: data.reference_id,
+      member_id: data.member,
+      project_name: data.share_record?.project_name || '',
+      share_date: data.share_record?.share_date || '',
+      share_return_rate: data.share_record?.share_return_rate || '',
+      expected_share_maturity_date: data.share_record?.expected_share_maturity_date || '',
+      status: data.share_record?.status || '',
+      share_duration_days: data.share_record?.share_duration_days || 365,
+      received_transaction: data.received_invoice_doc || '',
+      profit_payout_created: data.share_record?.profit?.payout_created || false,
+      share_record_id: data.share_record?.share_id || null
+    }
+
+  } catch (err) {
+    console.error('Error fetching transaction:', err)
+    error.value = 'Unable to fetch transaction.'
+  } finally {
+    loading.value = false
   }
-]
-
-const submitForm = () => {
-  console.log('Form submitted:', form.value)
-  // location.reload()
 }
 
+watch(() => props.show, (val) => {
+  if (val && props.transactionId) fetchTransaction()
+})
+
+const closePopup = () => emit('update:show', false)
+
+const submitForm = async () => {
+  if (!form.value.share_record_id) {
+    console.warn('Share record ID missing')
+    return alert('Share record ID missing')
+  }
+
+  const payload = {
+    project_name: form.value.project_name || '',
+    status: form.value.status || 'pending',
+    expected_share_maturity_date: form.value.expected_share_maturity_date || form.value.share_date,
+    share_duration_days: Number(form.value.share_duration_days) || 365 ,
+    share_return_rate: Number(form.value.share_return_rate) || 10
+  }
+
+
+  try {
+    const response = await api.patch(
+        `/share/share-record/${form.value.share_record_id}/`,
+        payload
+    )
+
+
+    if (response?.data?.error) {
+      console.error('Backend returned an error:', response.data.error)
+      return alert('Failed to update transaction: ' + response.data.error)
+    }
+
+    emit('updated')
+    closePopup()
+
+  } catch (err: any) {
+
+    alert('Failed to update transaction: ' + err.message)
+    console.error('Failed to update ShareRecord:', err)
+
+    const message =
+        err?.response?.data?.detail ||
+        err?.response?.data?.error ||
+        'Failed to update transaction'
+
+    alert(message)
+  }
+}
 </script>
 
 <template>
   <div v-if="show" class="popup-overlay" @click.self="closePopup">
     <div class="popup-container">
       <div class="popup-header">
-        <h4 class="popup-title">Update Share Transaction</h4>
-        <h4 class="line"></h4>
+        <h4>Update Share Transaction</h4>
       </div>
-      <div class="popup-body">
 
-        <form @submit.prevent="submitForm" class="transaction-form" autocomplete="off">
+      <div class="popup-body" v-if="!loading && !error">
+        <form @submit.prevent="submitForm" class="transaction-form">
           <div v-for="field in fields" :key="field.model" class="form-group">
+
             <label :for="field.model">{{ field.label }}</label>
 
-            <select
-                v-if="field.type === 'select'"
-                :id="field.model"
-                v-model="form[field.model]"
-                class="form-control"
-            >
+            <select class="form-control" v-if="field.type === 'select'" :id="field.model" v-model="form[field.model]" :disabled="!field.editable">
               <option disabled value="">Please select</option>
-              <option v-for="option in field.options" :key="option.value" :value="option.value">
-                {{ option.label }}
-              </option>
+              <option v-for="option in field.options" :key="option.value" :value="option.value">{{ option.label }}</option>
             </select>
 
-            <input
-                v-else
-                :id="field.model"
-                v-model="form[field.model]"
-                :type="field.type"
-                class="form-control"
-                :placeholder="field.placeholder"
-            />
+            <input class="form-control" v-else :id="field.model" v-model="form[field.model]" :type="field.type" :readonly="!field.editable"/>
           </div>
 
-          <div class="submit-btn-wrapper">
+          <div class="btn-wrapper">
+            <button type="button" class="cancel-btn" @click="closePopup">Cancel</button>
             <button type="submit" class="submit-btn">Submit</button>
           </div>
-
-
         </form>
-
       </div>
+
+      <div v-if="loading">Loading transaction...</div>
+      <div v-if="error">{{ error }}</div>
     </div>
   </div>
 </template>
@@ -231,27 +270,40 @@ const submitForm = () => {
           }
         }
 
-        .submit-btn-wrapper {
-          text-align: right;
+        .btn-wrapper {
+          display: flex;
+          justify-content: end;
+          gap: 20px;
 
-          .submit-btn {
-            background: var(--button-bg);
-            color: var(--primary-text-color);
-            font-size: var(--text-button-text);
+          button {
             height: 36px;
             padding: 10px 15px;
-            display: inline-flex;
-            align-items: center;
+            align-items: end;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             margin-top: 20px;
+            color: var(--primary-bg-text-color);
+            font-size: var(--text-button-text);
             transition: var(--transition);
+          }
+
+          .submit-btn {
+            background: var(--button-bg);
 
             &:hover {
               background: var(--hover-button-bg);
             }
           }
+
+          .cancel-btn {
+            background: var(--cancel-button-bg);
+
+            &:hover {
+              background: var(--cancel-hover-button-bg);
+            }
+          }
+
         }
       }
     }
