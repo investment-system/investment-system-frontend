@@ -2,73 +2,40 @@
 import { ref, onMounted } from 'vue'
 import { useApi } from '~/composables/useApi'
 
-const dashboardStats = ref([
-  {
-    title: 'Total Members',
-    icon: 'mdi-account-group',
-    value: 0,
-    trendIcon: 'mdi-trending-up',
-  },
-  {
-    title: 'Share Amount',
-    icon: 'mdi-chart-donut',
-    value: 0,
-    trendIcon: 'mdi-trending-up',
-  },
-  {
-    title: 'Share Completed',
-    icon: 'mdi-check-circle-outline',
-    value: 0,
-    trendIcon: 'mdi-check',
-  },
+const generalStats = ref([
+  { title: 'Total Members', icon: 'mdi-account-group', value: 0, trendIcon: 'mdi-trending-up' },
+  { title: 'Share Amount', icon: 'mdi-chart-donut', value: 0, trendIcon: 'mdi-trending-up' },
+  { title: 'Share Completed', icon: 'mdi-check-circle-outline', value: 0, trendIcon: 'mdi-check' },
 ])
 
+const memberBalance = ref(0)
 const api = useApi()
+const memberId = ref<number | null>(null)
 
-const fetchStats = async () => {
+onMounted(async () => {
   try {
-    const membersResponse = await api.get('/members/stats/')
-    const memberData = membersResponse.data
+    const profileRes = await api.get('/auth/profile/')
+    memberId.value = profileRes.data.id
 
-    const transactionsResponse = await api.get('/transactions/stats/')
-    const transactionData = transactionsResponse.data
+    const membersRes = await api.get('/members/stats/')
+    const transactionsRes = await api.get(`/transactions/${memberId.value}/stats/`) // member-specific
+    const memberData = membersRes.data
+    const transactionData = transactionsRes.data
 
-    dashboardStats.value = dashboardStats.value.map(stat => {
-      if (stat.title === 'Total Members') {
-        stat.value = memberData.total_members ?? stat.value
-      } else if (stat.title === 'Share Amount') {
-        stat.value = parseFloat(transactionData.share_amount) ?? stat.value
-      } else if (stat.title === 'Share Completed') {
-        stat.value = transactionData.share_completed ?? stat.value
-      }
+    generalStats.value = generalStats.value.map(stat => {
+      if (stat.title === 'Total Members') stat.value = memberData.total_members ?? stat.value
+      if (stat.title === 'Share Amount') stat.value = parseFloat(transactionData.share_amount) ?? stat.value
+      if (stat.title === 'Share Completed') stat.value = transactionData.share_completed ?? stat.value
       return stat
     })
-  } catch (error) {
-    console.error('Failed to fetch dashboard stats:', error)
+
+    memberBalance.value = parseFloat(transactionData.share_amount) ?? 0
+  } catch (err) {
+    console.error('Failed to fetch dashboard data:', err)
   }
-}
-
-const balance = ref('0.00')  // default value before fetch
-
-// const fetchBalance = async () => {
-//   try {
-//     const response = await api.get('/transactions/balance/')
-//     const data = response.data
-//
-//     balance.value = data.balance ?? balance.value
-//   } catch (error) {
-//     console.error('Failed to fetch balance:', error)
-//   }
-// }
-//
-// onMounted(() => {
-//   fetchBalance()
-// })
-
-onMounted(() => {
-  fetchStats()
 })
 </script>
+
 
 <template>
   <section class="dashboard">
@@ -78,14 +45,10 @@ onMounted(() => {
         <img src="/images/malaysia%20flag.png" alt="Flag of Malaysia" class="flag-container"/>
         <span class="coin">MYR</span>
       </div>
-
       <div class="bank-card__balance">
         <span class="title">Your Balance</span>
-        <span class="amount">
-      RM <span class="total-amount"> balance </span>
-    </span>
+        <span class="amount">RM {{ memberBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
       </div>
-
       <div class="bank-card__info">
         <div>
           <h3 class="bank-title">Bank Card Number</h3>
@@ -99,38 +62,24 @@ onMounted(() => {
     </div>
 
     <div class="investment-overview">
-
       <h3>Investment Overview</h3>
-
       <FinancialIconDivider/>
-
-      <div class="investment-overview">
-        <div class="investor-overview-cards">
-          <div
-              v-for="(stat, index) in dashboardStats"
-              :key="index"
-              class="investor-overview-card"
-          >
-            <span class="card-title">
-        <span class="icon-container">
-          <UIcon :name="stat.icon" class="main-icon"/>
-        </span>
-        {{ stat.title }}
-      </span>
-
-            <p class="stat-details">
-              <span class="number">{{ stat.value }}</span>
-              <span class="trend-icon">
-          <UIcon :name="stat.trendIcon" class="icon"/>
-        </span>
-            </p>
-          </div>
+      <div class="investor-overview-cards">
+        <div v-for="(stat, index) in generalStats" :key="index" class="investor-overview-card">
+          <span class="card-title">
+            <span class="icon-container"><UIcon :name="stat.icon" class="main-icon"/></span>
+            {{ stat.title }}
+          </span>
+          <p class="stat-details">
+            <span class="number">{{ stat.value }}</span>
+            <span class="trend-icon"><UIcon :name="stat.trendIcon" class="icon"/></span>
+          </p>
         </div>
       </div>
-
     </div>
   </section>
 </template>
+
 
 <style scoped lang="scss">
 .dashboard {

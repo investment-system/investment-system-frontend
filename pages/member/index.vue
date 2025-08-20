@@ -1,10 +1,11 @@
 <script setup lang="ts">
 
+import Dashboard from "~/components/member/Dashboard.vue";
 </script>
 
 <template>
   <MemberHeader/>
-  <MemberInvestorDashboard/>
+  <Dashboard/>
   <MemberInvestmentListLatest/>
   <Footer/>
 </template>
