@@ -5,38 +5,44 @@ import { useApi } from '@/composables/useApi'
 
 const api = useApi()
 const route = useRoute()
-const memberId = route.params.id as string | number  // ensure proper type
+const memberId = route.params.id as string | number
 
 const memberAnalytics = ref([
-  { title: 'Total Account Balance', icon: 'i-heroicons-banknotes', value: 'RM 0.00', valueIcon: 'i-heroicons-currency-dollar' },
-  { title: 'Total Earnings', icon: 'i-heroicons-chart-bar', value: 'RM 0.00', valueIcon: 'i-heroicons-arrow-trending-up' },
-  { title: 'Earnings Growth Rate', icon: 'i-heroicons-presentation-chart-line', value: '0%', valueIcon: 'i-heroicons-arrow-trending-up' },
+  { title: 'Account Balance', icon: 'i-heroicons-banknotes', value: 'RM 0.00', valueIcon: 'i-heroicons-currency-dollar' },
+  { title: 'Profit Earned', icon: 'i-heroicons-chart-pie', value: 'RM 0.00', valueIcon: 'i-heroicons-arrow-trending-up' },
+  { title: 'Total Deposits', icon: 'i-heroicons-arrow-down-circle', value: 'RM 0.00', valueIcon: 'i-heroicons-arrow-down' },
+  { title: 'Total Withdrawals', icon: 'i-heroicons-arrow-up-circle', value: 'RM 0.00', valueIcon: 'i-heroicons-arrow-up' },
 ])
 
 const fetchMemberAnalytics = async () => {
   try {
-    const res = await api.get(`/transactions/`)
-    const data = res.data
-    console.log('Member analytics data:', data)
+    const response = await api.get(`/transactions/admin/${memberId}/stats/`)
+    const data = response.data
 
     memberAnalytics.value = [
       {
-        title: 'Total Account Balance',
+        title: 'Account Balance',
         icon: 'i-heroicons-banknotes',
-        value: `RM ${Number(data.total_account_balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        value: `RM ${Number(data.share_amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         valueIcon: 'i-heroicons-currency-dollar',
       },
       {
-        title: 'Total Earnings',
-        icon: 'i-heroicons-chart-bar',
-        value: `RM ${Number(data.total_earnings).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        title: 'Profit Earned',
+        icon: 'i-heroicons-chart-pie',
+        value: `RM ${Number(data.profit).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         valueIcon: 'i-heroicons-arrow-trending-up',
       },
       {
-        title: 'Earnings Growth Rate',
-        icon: 'i-heroicons-presentation-chart-line',
-        value: `${Number(data.earnings_growth_rate).toFixed(2)}%`,
-        valueIcon: 'i-heroicons-arrow-trending-up',
+        title: 'Total Deposits',
+        icon: 'i-heroicons-arrow-down-circle',
+        value: `RM ${Number(data.money_in).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        valueIcon: 'i-heroicons-arrow-down',
+      },
+      {
+        title: 'Total Withdrawals',
+        icon: 'i-heroicons-arrow-up-circle',
+        value: `RM ${Number(data.money_out).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        valueIcon: 'i-heroicons-arrow-up',
       },
     ]
   } catch (error) {
@@ -91,7 +97,7 @@ section {
     }
 
     @media (min-width: 1024px) {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 
