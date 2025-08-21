@@ -142,6 +142,7 @@ const submitForm = async () => {
 
     emit('updated')
     closePopup()
+    location.reload()
 
   } catch (err: any) {
 

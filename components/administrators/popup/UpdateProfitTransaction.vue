@@ -74,6 +74,8 @@ const submitForm = async () => {
     emit('updated')
     closePopup()
 
+    location.reload()
+
   } catch (err: any) {
     const message =
         err?.response?.data?.detail ||
