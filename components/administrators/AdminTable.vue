@@ -411,7 +411,7 @@ onMounted(fetchAdmins)
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-top: -50vh;
+  margin-top: -0vh;
 }
 
 .no-admins img {

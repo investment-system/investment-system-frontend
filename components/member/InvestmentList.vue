@@ -387,7 +387,7 @@ const filteredTransactions = computed(() => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-top: -50vh;
+  margin-top: -30vh;
 }
 
 .no-transactions img {

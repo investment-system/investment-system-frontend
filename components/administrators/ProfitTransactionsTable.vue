@@ -64,12 +64,13 @@ const openUpdatePopup = (transactionId: number) => {
 onMounted(() => {
   fetchTransactions()
 })
+
 </script>
 
 <template>
   <div class="transaction">
     <div class="transaction-header">
-      <h2 class="transaction-title">Pending Profit Approvals</h2>
+      <h2 class="transaction-title">Pending Profit Approvals & Cancellations</h2>
     </div>
 
     <div class="transaction-table-wrapper">
