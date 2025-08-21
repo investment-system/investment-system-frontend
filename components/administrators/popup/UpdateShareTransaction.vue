@@ -4,6 +4,7 @@ import { defineEmits, defineProps } from 'vue'
 import { useApi } from '~/composables/useApi'
 import { shareStatus } from '@/constants/lists'
 
+
 const props = defineProps({
   show: Boolean,
   transactionId: Number
@@ -189,6 +190,7 @@ const submitForm = async () => {
       <div v-if="error">{{ error }}</div>
     </div>
   </div>
+
 </template>
 
 <style scoped lang="scss">

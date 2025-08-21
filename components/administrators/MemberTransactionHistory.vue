@@ -3,9 +3,9 @@ import {ref, computed, onMounted} from 'vue'
 import {useRoute} from 'vue-router'
 import {useApi} from '~/composables/useApi'
 import TransactionForm from './popup/TransactionForm.vue'
-import UpdateCancelTransaction from './popup/UpdateShareTransaction.vue'
+import UpdateShareTransaction from './popup/UpdateShareTransaction.vue'
 
-const showUpdateCancelTransaction = ref(false)
+const showUpdateShareTransaction = ref(false)
 const selectedTransaction = ref<number | null>(null)
 const showTransactionForm = ref(false)
 const openDropdown = ref<number | null>(null)
@@ -86,7 +86,7 @@ const toggleDropdown = (id: number) => {
 
 const openUpdatePopup = (transactionId: number) => {
   selectedTransaction.value = transactionId
-  showUpdateCancelTransaction.value = true
+  showUpdateShareTransaction.value = true
 }
 
 onMounted(() => {
@@ -159,7 +159,7 @@ onMounted(() => {
 
     </div>
 
-    <UpdateCancelTransaction v-model:show="showUpdateCancelTransaction" :transaction-id="selectedTransaction"/>
+    <UpdateShareTransaction v-model:show="showUpdateShareTransaction" :transaction-id="selectedTransaction"/>
   </div>
 </template>
 

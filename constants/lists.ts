@@ -85,4 +85,11 @@ export const shareStatus = [
     {value: 'canceled', label: 'Canceled'},
 ]
 
+export const payoutType = [
+    {value: 'pending', label: 'Pending'},
+    {value: 'full_transfer', label: 'Full Transfer'},
+    {value: 'partial', label: 'Partial Transfer'},
+    {value: 'reinvest', label: 'Reinvest All'},
+]
+
 
