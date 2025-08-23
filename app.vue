@@ -80,6 +80,8 @@
 
   --transition: all 0.3s ease-in-out;
 
+  --shadow: rgba(0, 0, 0, 0.1)
+
 }
 
 

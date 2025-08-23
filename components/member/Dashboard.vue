@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useApi } from '~/composables/useApi'
+import ProgressCircle from "~/components/member/ProgressCircle.vue";
 
 const generalStats = ref([
   { title: 'Total Members', icon: 'mdi-account-group', value: 0, trendIcon: 'mdi-trending-up' },
@@ -40,26 +41,29 @@ onMounted(async () => {
 <template>
   <section class="dashboard">
 
-    <div class="bank-card">
-      <div class="bank-card__header">
-        <img src="/images/malaysia%20flag.png" alt="Flag of Malaysia" class="flag-container"/>
-        <span class="coin">MYR</span>
-      </div>
-      <div class="bank-card__balance">
-        <span class="title">Your Balance</span>
-        <span class="amount">RM {{ memberBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
-      </div>
-      <div class="bank-card__info">
-        <div>
-          <h3 class="bank-title">Bank Card Number</h3>
-          <h4 class="bank-account-number">**** **** **** ****</h4>
-        </div>
-        <div>
-          <h3 class="date-title">Expired Date</h3>
-          <h4 class="date">MM/YY</h4>
-        </div>
-      </div>
+    <div class="bank-cards">
+      <ProgressCircle/>
     </div>
+<!--    <div class="bank-card">-->
+<!--      <div class="bank-card__header">-->
+<!--        <img src="/images/malaysia%20flag.png" alt="Flag of Malaysia" class="flag-container"/>-->
+<!--        <span class="coin">MYR</span>-->
+<!--      </div>-->
+<!--      <div class="bank-card__balance">-->
+<!--        <span class="title">Your Balance</span>-->
+<!--        <span class="amount">RM {{ memberBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>-->
+<!--      </div>-->
+<!--      <div class="bank-card__info">-->
+<!--        <div>-->
+<!--          <h3 class="bank-title">Bank Card Number</h3>-->
+<!--          <h4 class="bank-account-number">**** **** **** ****</h4>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <h3 class="date-title">Expired Date</h3>-->
+<!--          <h4 class="date">MM/YY</h4>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
     <div class="investment-overview">
       <h3>Investment Overview</h3>
