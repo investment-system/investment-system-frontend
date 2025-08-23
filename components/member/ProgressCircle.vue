@@ -34,7 +34,6 @@ const latestShareTransaction = ref<Transaction | null>(null)
 const loading = ref(false)
 const error = ref('')
 
-// ✅ Use duration from backend
 const goalDays = computed(() => {
   return latestShareTransaction.value?.share_record?.share_duration_days || 0
 })
@@ -51,7 +50,6 @@ const percentage = computed(() => {
   return Math.min(100, Math.round((daysPassed.value / goalDays.value) * 100))
 })
 
-// Helper function for date formatting
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -79,15 +77,12 @@ const fetchTransactions = async () => {
       return
     }
 
-    // filter only "share" transactions
     const shareTransactions = allTransactions.filter(t => t.source_type === 'share')
 
-    // sort by date (newest first)
     shareTransactions.sort(
         (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     )
 
-    // pick the first one (latest)
     latestShareTransaction.value = shareTransactions[0] || null
 
     console.log('Latest share transaction:', latestShareTransaction.value)
@@ -103,6 +98,7 @@ const fetchTransactions = async () => {
 onMounted(() => {
   fetchTransactions()
 })
+
 </script>
 
 <template>
@@ -113,7 +109,8 @@ onMounted(() => {
         <h2 class="title">Share Progress</h2>
         <div class="status-badge" v-if="latestShareTransaction">
           <span class="status-dot"></span>
-          Active
+          {{ latestShareTransaction.share_record.status.toUpperCase() }}
+
         </div>
       </div>
     </div>
