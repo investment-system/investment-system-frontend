@@ -222,7 +222,7 @@ onMounted(() => {
 .progress-circle-card {
   background: var(--card-hover);
   border: 1px solid var(--accent-color);
-  border-radius: 1.5rem;
+  border-radius: 12px;
   overflow: hidden;
   transition: var(--transition);
   position: relative;
@@ -451,7 +451,7 @@ onMounted(() => {
     gap: 20px;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
-    border-radius: 24px;
+    border-radius: 12px;
     padding: 12px 24px;
 
     .info-card {
