@@ -85,6 +85,11 @@ export const shareStatus = [
     {value: 'canceled', label: 'Canceled'},
 ]
 
+export const cancelStatus = [
+    {value: 'pending', label: 'Pending'},
+    {value: 'full_transfer', label: 'Full Transfer'},
+]
+
 export const payoutType = [
     {value: 'pending', label: 'Pending'},
     {value: 'full_transfer', label: 'Full Transfer'},

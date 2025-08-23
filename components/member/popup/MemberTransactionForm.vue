@@ -20,7 +20,7 @@ const validationErrors = ref<Record<string, string>>({})
 const form = ref({
   source_type: '',
   direction: 'in',
-  amount: null as number | null,
+  amount: '50',
   payment_method: '',
   reference_id: '',
   member: null as number | null,
@@ -29,9 +29,10 @@ const form = ref({
 
 onMounted(async () => {
   try {
-    const res = await api.get('/auth/profile/')
-    currentUser.value = res.data
-    memberId.value = res.data.id
+    const profileRes = await api.get('/auth/profile/')
+    currentUser.value = profileRes.data
+    memberId.value = profileRes.data.id
+
   } catch (err) {
     console.error("Failed to fetch current user profile", err)
   }
@@ -46,7 +47,7 @@ watch(() => props.show, (newVal) => {
     form.value = {
       source_type: '',
       direction: 'in',
-      amount: null,
+      amount: '50',
       payment_method: '',
       reference_id: '',
       member: memberId.value,
@@ -65,7 +66,6 @@ const fields = [
   { label: 'Invoice Document', model: 'received_invoice_doc', type: 'file', placeholder: 'Upload invoice document', required: true }
 ]
 
-// Validate form fields
 const validateForm = () => {
   const errors: Record<string, string> = {}
 
@@ -80,10 +80,8 @@ const validateForm = () => {
   return Object.keys(errors).length === 0
 }
 
-// Close popup
 const closePopup = () => emit('update:show', false)
 
-// Submit form
 const submitForm = async () => {
   if (!memberId.value) {
     alert('Member profile not loaded yet. Please wait.')
@@ -115,7 +113,10 @@ const submitForm = async () => {
     closePopup()
     emit('success')
 
-    setTimeout(() => { showTransactionSuccess.value = false }, 3000)
+    setTimeout(() => {
+      showTransactionSuccess.value = false
+      location.reload()
+    }, 3000)
   } catch (error: any) {
     console.error('Error creating transaction:', error.response?.data || error.message)
     errorMessage.value = error.response?.data?.detail || error.message

@@ -116,7 +116,7 @@ onMounted(() => {
 
       <img src="/images/no-data-icon.png" class="no-transactions-img-container" alt="no">
 
-      <p class="no-transactions-header">No transactions found for this member.</p>
+      <p class="no-transactions-header">No transactions found.</p>
 
     </div>
 
