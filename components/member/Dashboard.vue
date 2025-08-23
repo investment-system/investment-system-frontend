@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useApi } from '~/composables/useApi'
-import ProgressCircle from "~/components/member/ProgressCircle.vue";
+import LatestShareProgressCircle from "~/components/member/LatestShareProgressCircle.vue";
 
 interface StatItem {
   title: string
@@ -58,7 +58,7 @@ onMounted(async () => {
   <section class="dashboard">
 
     <div class="bank-cards">
-      <ProgressCircle/>
+      <LatestShareProgressCircle/>
     </div>
 
     <div class="investment-overview">
@@ -167,9 +167,10 @@ onMounted(async () => {
       }
 
       .card-title {
-        display: grid;
-        grid-template-columns: 1fr 3fr;
+        display: flex;
         align-items: center;
+        text-align: center;
+        justify-content: start;
         font-size: var(--body-text);
         color: var(--primary-text-color);
 

@@ -180,9 +180,10 @@ onMounted(() => {
       }
 
       .card-title {
-        display: grid;
-        grid-template-columns: 1fr 3fr;
+        display: flex;
         align-items: center;
+        text-align: center;
+        justify-content: start;
         font-size: var(--body-text);
         color: var(--primary-text-color);
 

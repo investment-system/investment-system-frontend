@@ -250,7 +250,7 @@ onMounted(() => {
         background: rgba(46, 125, 50, 0.2);
         backdrop-filter: blur(10px);
         color: var(--profit-color);
-        padding: 0.5rem 1rem;
+        padding: 5px 10px;
         border-radius: 2rem;
         font-size: var(--small-text);
         font-weight: 500;
