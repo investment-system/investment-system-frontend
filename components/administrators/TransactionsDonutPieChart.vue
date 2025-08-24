@@ -39,12 +39,13 @@ const error = ref('')
 const transactionCounts = ref<Record<string, number>>({})
 
 const typeColors = ref<Record<string, string>>({
-  'share': '#D9A200',
-  'deposit': '#2E7D32',
-  'withdrawal': '#D32F2F',
-  'transfer': '#1976D2',
-  'loan': '#7B1FA2',
-  'dividend': '#F57C00'
+  share: '#FDD835',
+  deposit: '#43A047',
+  withdrawal: '#E53935',
+  payment: '#1E88E5',
+  cancellation: '#8E24AA',
+  registration_payments: '#FB8C00',
+  Profit_payments: '#FFB300'
 })
 
 const transactionPercentages = ref<Record<string, number>>({})
@@ -130,7 +131,7 @@ const totalBalance = ref(0)
 
 const fetchStats = async () => {
   try {
-    const { data: transactionData } = await api.get('/transactions/stats/')
+    const {data: transactionData} = await api.get('/transactions/stats/')
 
     totalBalance.value = parseFloat(transactionData.total_balance) ?? 0
 
@@ -415,7 +416,7 @@ onMounted(() => {
         }
       }
 
-      .total-amount{
+      .total-amount {
         font-size: var(--date-text);
         color: var(--secondary-text-color);
       }
