@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import {useApi} from "~/composables/useApi";
+import TransactionsDonutPieChart from "~/components/administrators/TransactionsDonutPieChart.vue";
 
 const api = useApi()
-
-const totalBalance = ref(0)
 
 const dashboardStats = ref([
   {
@@ -97,8 +96,6 @@ const fetchStats = async () => {
       return stat
     })
 
-    totalBalance.value = parseFloat(transactionData.total_balance) ?? 0
-
   } catch (error) {
     console.error('Failed to fetch dashboard stats:', error)
   }
@@ -113,31 +110,8 @@ onMounted(() => {
 <template>
   <section class="dashboard">
 
-    <div class="bank-card">
-      <div class="bank-card__header">
-        <img src="/images/malaysia%20flag.png" alt="Flag of Malaysia" class="flag-container"/>
-        <span class="coin">MYR</span>
-      </div>
-
-      <div class="bank-card__balance">
-        <span class="title">Your Balance</span>
-        <span class="amount">
-          <span class="total-amount">{{ totalBalance.toFixed(2) }}</span>
-        </span>
-      </div>
-
-      <div class="bank-card__info">
-        <div>
-          <h3 class="bank-title">Bank Card Number</h3>
-          <h4 class="bank-account-number">**** **** **** ****</h4>
-        </div>
-        <div>
-          <div>
-            <h3 class="date-title">Expired Date</h3>
-            <h4 class="date">MM/YY</h4>
-          </div>
-        </div>
-      </div>
+    <div>
+      <TransactionsDonutPieChart/>
     </div>
 
     <div class="investment-overview">
@@ -175,6 +149,7 @@ onMounted(() => {
   grid-template-columns: 1fr;
   width: calc(100% - 40px);
   margin: 20px;
+  gap: 20px;
 
   @media (min-width: 1024px) {
     max-width: 1280px;
@@ -182,115 +157,6 @@ onMounted(() => {
     grid-template-columns: 1fr 2fr;
     gap: 20px;
     width: calc(100% - 40px);
-  }
-}
-
-.bank-card {
-  background-image: url("/images/bank-card-bg.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  height: 220px;
-  width: 100%;
-
-  @media (min-width: 1024px) {
-    display: block;
-    align-items: center;
-    gap: 32px;
-    max-width: 400px;
-  }
-
-  &__header {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: rgba(241, 241, 241, 0.7);
-    height: 35px;
-    width: 100px;
-    border-radius: 500px;
-    gap: 15px;
-
-    img {
-      width: 30px;
-      height: 30px;
-      border-radius: 500px;
-    }
-
-    .coin {
-      font-size: var(--body-text);
-      color: var(--primary-text);
-    }
-
-    flex: 1;
-  }
-
-  &__balance {
-    display: inline-grid;
-    padding: 24px 0;
-    gap: 16px;
-
-    span {
-      color: var(--accent-color);
-      display: inline-block;
-    }
-
-    @media (min-width: 1024px) {
-      font-size: var(--body-text);
-    }
-
-    .title {
-      font-size: var(--body-text);
-      color: var(--special-text-color);
-    }
-
-    .total-amount {
-      font-weight: normal;
-      color: var(--accent-color);
-      font-size: var(--heading-3);
-
-      @media (min-width: 1024px) {
-        font-size: var(--heading-3);
-      }
-    }
-  }
-
-  &__info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin: 0;
-    padding: 0;
-    gap: 0;
-
-    @media (min-width: 768px) {
-      gap: 16px;
-    }
-
-    @media (min-width: 1024px) {
-      gap: 16px;
-    }
-
-    .bank-title,
-    .date-title {
-      color: var(--special-text-color);
-      font-size: var(--body-text);
-      font-weight: normal;
-    }
-
-    .bank-account-number,
-    .date {
-      color: var(--secondary-text-color);
-      font-size: var(--body-text);
-      gap: 12px;
-      padding: 12px 0;
-      text-align: left;
-      font-weight: normal;
-
-      @media (min-width: 1024px) {
-        font-size: 18px;
-      }
-    }
   }
 }
 

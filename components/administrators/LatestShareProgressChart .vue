@@ -120,7 +120,6 @@ onMounted(() => {
     <div class="container">
       <div class="chart-card">
 
-        <!-- Header -->
         <div class="chart-header">
           <h2 class="chart-title">Share Investment Progress</h2>
           <div class="chart-subtitle">Top 5 nearest to maturity</div>
@@ -437,17 +436,6 @@ onMounted(() => {
                         transition: var(--transition);
                         position: relative;
                         background-color: var(--accent-color);
-
-                        &::after {
-                          content: '';
-                          position: absolute;
-                          top: 0;
-                          left: 0;
-                          right: 0;
-                          bottom: 0;
-                          background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
-                          animation: shine 2s ease-in-out infinite;
-                        }
                       }
                     }
 
@@ -581,8 +569,4 @@ onMounted(() => {
   50% { background-position: -200% 0; }
 }
 
-@keyframes shine {
-  0%, 100% { transform: translateX(-100%); }
-  50% { transform: translateX(100%); }
-}
 </style>
