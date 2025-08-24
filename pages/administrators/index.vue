@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import Dashboard from "~/components/administrators/Dashboard.vue";
+import LatestShareProgressChart from "~/components/administrators/LatestShareProgressChart .vue";
 
 
 </script>
@@ -8,6 +9,7 @@ import Dashboard from "~/components/administrators/Dashboard.vue";
 <template>
   <AdministratorsHeader/>
   <Dashboard/>
+  <LatestShareProgressChart/>
   <AdministratorsTransactionsTableLatest/>
   <Footer/>
 </template>
