@@ -134,8 +134,6 @@ const fetchStats = async () => {
 
     totalBalance.value = parseFloat(transactionData.total_balance) ?? 0
 
-    console.log(totalBalance.value)
-
   } catch (error) {
     console.error('Failed to fetch dashboard stats:', error)
   }
