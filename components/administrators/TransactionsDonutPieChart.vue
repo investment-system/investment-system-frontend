@@ -209,7 +209,7 @@ onMounted(() => {
 
             <div class="circle-center">
               <span class="total-amount">Balance </span>
-              <span class="total-amount">{{ totalBalance.toFixed(2) }} RM </span>
+              <span class="total-amount">{{ totalBalance.toFixed(2) }}</span>
               <span class="total-amount">RM </span>
             </div>
 
