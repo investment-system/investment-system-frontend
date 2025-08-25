@@ -62,6 +62,7 @@
   --special-text-color: #f5f5f5;
 
   --error-text: #D32F2F;
+  --pending-text: #f57c00;
 
   --table-header-bg: rgba(245, 179, 1, 0.3);
 

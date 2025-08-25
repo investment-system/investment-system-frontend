@@ -238,7 +238,7 @@ onMounted(() => {
       transition: var(--transition);
 
       .chart-header {
-        padding: 20px;
+        padding: 20px 0;
 
         .chart-title {
           font-size: var(--heading-3);
