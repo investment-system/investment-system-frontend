@@ -5,6 +5,7 @@ import { useApi } from '~/composables/useApi'
 import { useCookie } from '#app'
 
 const api = useApi()
+const showPassword = ref(false)
 
 const loginQuestions = [
   {
@@ -90,30 +91,73 @@ const handleLogin = async () => {
     <div class="container">
       <div class="login-form">
 
-        <h2> Welcome back to Koperasi Masjid</h2>
+        <h2> Welcome to Koperasi Masjid</h2>
 
         <form @submit.prevent="handleLogin">
-          <div v-for="question in loginQuestions" :key="question.id">
+          <div v-for="question in loginQuestions" :key="question.id" class="form-field">
             <label :for="question.id">{{ question.label }}</label>
-            <input
-                :type="question.type"
-                :id="question.id"
-                v-model="form[question.id]"
-                :placeholder="question.placeholder"
-                required
-            />
-            <p class="error" v-if="fieldErrors[question.id]">{{ fieldErrors[question.id] }}</p>
+
+            <div v-if="question.id !== 'password'" class="input-wrapper">
+              <input
+                  :type="question.type"
+                  :id="question.id"
+                  v-model="form[question.id]"
+                  :placeholder="question.placeholder"
+                  :class="{ 'error-input': fieldErrors[question.id] }"
+                  :aria-describedby="fieldErrors[question.id] ? `${question.id}-error` : undefined"
+                  required
+              />
+
+            </div>
+
+            <div v-else class="input-wrapper password-wrapper">
+
+              <input
+                  :type="showPassword ? 'text' : 'password'"
+                  :id="question.id"
+                  v-model="form[question.id]"
+                  :placeholder="question.placeholder"
+                  :class="{ 'error-input': fieldErrors[question.id] }"
+                  :aria-describedby="fieldErrors[question.id] ? `${question.id}-error` : undefined"
+                  required
+              />
+
+              <a
+                  type="button"
+                  class="toggle-password"
+                  @click="showPassword = !showPassword"
+                  :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                  :title="showPassword ? 'Hide password' : 'Show password'"
+              >
+                <UIcon
+                    :name="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                    class="eye-icon"
+                />
+              </a>
+
+            </div>
+
+            <p
+                v-if="fieldErrors[question.id]"
+                :id="`${question.id}-error`"
+                class="error-message"
+                role="alert"
+            >
+              {{ fieldErrors[question.id] }}
+            </p>
           </div>
 
-          <p class="error" v-if="generalError">{{ generalError }}</p>
+          <p v-if="generalError" class="error-message general-error" role="alert">
+            {{ generalError }}
+          </p>
 
           <div class="links">
-
-            <NuxtLink href=""> Forgot Password? </NuxtLink>
-
+            Don't have an account?
+            <NuxtLink to="/member/auth/signup">Sign Up</NuxtLink>
           </div>
 
           <button type="submit" class="login-btn" :disabled="loading">
+            <span v-if="loading" class="loading-spinner"></span>
             {{ loading ? 'Logging in...' : 'Login' }}
           </button>
         </form>
@@ -136,10 +180,11 @@ const handleLogin = async () => {
 
 <style scoped lang="scss">
 .login-container {
+  display: flex;
   align-items: center;
   min-height: 100vh;
   background: var(--linear-gradient-bg);
-  padding: 40px 0;
+  padding: 40px 20px;
 
   .container {
     display: flex;
@@ -149,16 +194,17 @@ const handleLogin = async () => {
     background: var(--primary-bg);
     max-width: 1020px;
     margin: 0 auto;
-    height: 500px;
-    border-radius: 50px;
+    min-height: 500px;
+    border-radius: 12px;
     gap: 20px;
     padding: 0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   }
 
   .login-form {
     width: 100%;
     max-width: 480px;
-    height: auto;
+    padding: 40px;
 
     h2 {
       text-align: center;
@@ -174,36 +220,122 @@ const handleLogin = async () => {
       display: flex;
       flex-direction: column;
 
-      label {
-        width: 100%;
-        max-width: 350px;
-        height: 36px;
-        margin: 0 auto;
+      .form-field {
+        position: relative;
+
+        label {
+          width: 100%;
+          max-width: 350px;
+          height: 36px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          font-size: var(--label-text);
+        }
+
+        .input-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          input {
+            display: block;
+            padding: 16px;
+            background-color: var(--input-field-bg);
+            border-radius: 6px;
+            border: none;
+            font-size: var(--label-text);
+            transition: border-color 0.3s;
+            width: 100%;
+            max-width: 350px;
+            height: 36px;
+            margin: 0 auto;
+            outline: none;
+
+            &::placeholder {
+              color: var(--secondary-text-color);
+              opacity: 0.7;
+            }
+
+            &:focus {
+              border-color: var(--accent-color);
+              background-color: var(--card-bg);
+              box-shadow: 0 0 0 4px rgba(var(--accent-color-rgb), 0.1);
+            }
+
+            &.error-input {
+              border-color: var(--danger-color);
+              background-color: rgba(var(--danger-color-rgb), 0.05);
+            }
+          }
+
+          .input-icon {
+            position: absolute;
+            left: 20px;
+            color: var(--secondary-text-color);
+            pointer-events: none;
+            z-index: 2;
+            font-size: var(--small-text);
+            transition: var(--transition);
+          }
+
+          &:focus-within .input-icon {
+            color: var(--accent-color);
+          }
+
+          &.password-wrapper {
+            .toggle-password {
+              position: absolute;
+              right: 12px;
+              top: 50%;
+              transform: translateY(-50%);
+              background: none;
+              cursor: pointer;
+              padding: 12px;
+              transition: var(--transition);
+              border: none;
+              outline: none;
+
+              .toggle-icon-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .eye-icon {
+                  color: var(--secondary-text-color);
+                  transition: var(--transition);
+                }
+              }
+            }
+          }
+        }
+
+        .error-message {
+          color: var(--danger-color);
+          font-size: var(--small-text);
+          margin-top: 8px;
+          display: flex;
+          align-items: center;
+          height: 36px;
+
+          &::before {
+            content: "";
+            font-size: var(--small-text);
+          }
+        }
+      }
+
+      .general-error {
+        color: var(--danger-color);
+        font-size: var(--small-text);
         display: flex;
         align-items: center;
-        font-size: var(--label-text);
-      }
-
-      input {
-        display: block;
-        padding: 15px;
-        background-color: var(--input-field-bg);
-        border-radius: 6px;
-        border: none;
-        font-size: var(--label-text);
-        transition: border-color 0.3s;
+        height: 36px;
         width: 100%;
         max-width: 350px;
-        height: 36px;
         margin: 0 auto;
-        outline: none;
-      }
 
-      .error {
-        color: var(--error-text);
-        font-size: var(--label-text);
-        margin-bottom: 15px;
-        text-align: center;
+
       }
 
       .links {
@@ -229,7 +361,7 @@ const handleLogin = async () => {
 
       }
 
-      button {
+      .login-btn {
         background-color: var(--button-bg);
         color: var(--primary-text-color);
         padding: 10px;
@@ -243,90 +375,100 @@ const handleLogin = async () => {
         margin: 0 auto;
         transition: var(--transition);
 
+        &:hover {
+          background: var(--hover-button-bg);
+        }
+
         &:disabled {
-          background-color: var(--button-disabled-bg);
+          background: var(--button-disabled-bg);
           cursor: not-allowed;
-          color: var(--primary-text-hover);
+          color: var(--secondary-text-color);
+          transform: none;
+          box-shadow: none;
+        }
+
+        .loading-spinner {
+          width: 20px;
+          height: 20px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top: 2px solid white;
+          animation: spin 1s linear infinite;
         }
       }
     }
   }
 
-  .login-btn:hover {
-    background: var(--hover-button-bg);
-    color: var(--primary-text-hover);
-  }
-
   .image-container {
-    display: block;
-    background: var(--card-bg);
-    width: 100%;
+    width: calc(100% - 40px);
+    margin: 0 auto;
     max-width: 480px;
     height: 460px;
-    margin: 0 auto;
-    padding: 15px;
+    padding: 40px;
     text-align: center;
-    border-radius: 25px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     img {
       width: 100%;
-      max-width: 350px;
+      max-width: 280px;
       height: auto;
       border-radius: 12px;
-      display: block;
-      margin: 20px auto;
+      margin-bottom: 24px;
     }
 
     h3 {
-      font-size: var(--heading-3);
-      font-weight: normal;
-      width: 100%;
+      font-size: var(--heading-4);
+      font-weight: 500;
+      color: var(--primary-text-color);
+      line-height: 1.5;
+      margin: 0;
     }
   }
 
+  // Responsive Design
   @media (max-width: 899px) {
+    padding: 20px;
 
     .container {
       flex-direction: column;
-      padding: 0;
       width: 100%;
-      height: 100%;
-      margin: 40px 0;
+      min-height: auto;
+      gap: 0;
     }
 
     .login-form,
     .image-container {
       width: 100%;
       max-width: 100%;
-      min-height: 450px;
+      padding: 30px;
+    }
+
+    .image-container {
       height: auto;
-    }
-
-    .login-form h2,
-    .login-form form label,
-    .login-form form input,
-    .login-form form button,
-    .image-container h3 {
-      width: 90%;
-    }
-
-    .login-form h2,
-    .image-container h3 {
-      margin: 20px auto;
-    }
-
-    .image-container img {
-      max-width: 90%;
-      margin: 30px auto;
+      min-height: 300px;
     }
   }
 
   @media (max-width: 480px) {
+    padding: 10px;
+    background: var(--primary-bg);
 
-    .login-container {
-      align-items: center;
-      background: var(--primary-bg) !important;
-      padding: 0;
+    .container {
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    .login-form,
+    .image-container {
+      padding: 20px;
+    }
+
+    .login-form form .form-field .input-wrapper input {
+      padding: 14px 44px 14px 44px;
     }
 
     .image-container h3 {
@@ -335,12 +477,24 @@ const handleLogin = async () => {
   }
 }
 
-@media (max-width: 899px) {
+// Animations
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  .login-container {
-    align-items: center;
-    background: var(--primary-bg) !important;
-    padding: 0;
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>

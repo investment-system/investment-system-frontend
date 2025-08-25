@@ -159,6 +159,7 @@ const handleLogin = async () => {
             {{ loading ? 'Logging in...' : 'Login' }}
           </button>
         </form>
+
       </div>
 
       <div class="image-container">
@@ -187,7 +188,7 @@ const handleLogin = async () => {
     max-width: 1020px;
     margin: 0 auto;
     min-height: 500px;
-    border-radius: 24px;
+    border-radius: 12px;
     gap: 20px;
     padding: 0;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -295,24 +296,8 @@ const handleLogin = async () => {
 
                 .eye-icon {
                   color: var(--secondary-text-color);
-                  transition: all 0.3s ease;
+                  transition: var(--transition);
                 }
-              }
-
-              &:hover {
-                .eye-icon {
-                  color: var(--accent-color);
-                  transform: scale(1.1);
-                }
-              }
-
-              &:active {
-                transform: translateY(-50%) scale(0.95);
-              }
-
-              &:focus {
-                outline: 2px solid var(--accent-color);
-                outline-offset: 2px;
               }
             }
           }
@@ -327,8 +312,8 @@ const handleLogin = async () => {
           height: 36px;
 
           &::before {
-            content: "⚠";
-            font-size: 14px;
+            content: "";
+            font-size: var(--small-text);
           }
         }
       }
@@ -408,13 +393,13 @@ const handleLogin = async () => {
   }
 
   .image-container {
-    background: var(--card-bg);
-    width: 100%;
+    width: calc(100% - 40px);
+    margin: 0 auto;
     max-width: 480px;
     height: 460px;
     padding: 40px;
     text-align: center;
-    border-radius: 20px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
