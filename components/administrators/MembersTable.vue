@@ -76,7 +76,7 @@ const filteredMembers = computed(() => {
           <div class="member-actions">
             <NuxtLink :to="`/administrators/manage-members/${member.id}`" class="btn btn--update">
               <UIcon name="mdi:file-eye" class="icon" />
-              View
+              Review Member
             </NuxtLink>
           </div>
         </div>
