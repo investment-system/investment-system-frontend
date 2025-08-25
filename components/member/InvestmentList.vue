@@ -79,10 +79,10 @@ const filteredTransactions = computed(() => {
   <div class="transaction">
 
     <div class="transaction-header">
-      <h2 class="transaction-title">Transactions Records</h2>
+      <h2 class="transaction-title">Transaction Dashboard</h2>
       <div class="transaction-header-container">
         <button class="transaction-create-btn" @click="showTransactionForm = true">
-          Create transaction
+          Submit Transaction Request
         </button>
 
         <TransactionForm v-model:show="showTransactionForm"/>

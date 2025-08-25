@@ -157,7 +157,6 @@ const submitForm = async () => {
                    @change="e => form[field.model] = e.target.files ? e.target.files[0] : null"
                    class="form-control"/>
 
-            <!-- Validation error per field -->
             <p v-if="validationErrors[field.model]" class="field-error">
               {{ validationErrors[field.model] }}
             </p>
@@ -167,7 +166,7 @@ const submitForm = async () => {
 
           <div class="submit-btn-wrapper">
             <button type="submit" class="submit-btn" :disabled="submitting">
-              {{ submitting ? 'Submitting...' : 'Create Transaction' }}
+              {{ submitting ? 'Submitting Request...' : 'Request Transaction' }}
             </button>
           </div>
         </form>
@@ -255,7 +254,7 @@ const submitForm = async () => {
             height: 36px;
             display: flex;
             align-items: center;
-            max-width: 200px;
+            max-width: 220px;
           }
         }
 
