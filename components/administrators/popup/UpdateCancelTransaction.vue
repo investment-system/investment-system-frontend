@@ -79,7 +79,6 @@ const submitForm = async () => {
     await api.put(`/cancels/cancellation-record/${props.transactionId}/`, payload, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
-    console.log('Cancel transaction updated successfully')
     emit('updated')
     closePopup()
   } catch (err) {

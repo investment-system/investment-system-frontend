@@ -69,8 +69,6 @@ const submitForm = async () => {
     }
 
     errorMessage.value = ""
-    console.log("Submitting form:", form.value)
-
     const formData = new FormData()
     for (const key in form.value) {
       if (form.value[key] !== null && form.value[key] !== '') {

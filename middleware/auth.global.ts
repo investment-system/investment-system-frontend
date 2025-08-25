@@ -1,6 +1,5 @@
 export default defineNuxtRouteMiddleware((to) => {
     const role = useCookie<string>('role').value
-    console.log('Middleware: path=', to.path, 'role=', role)
 
     const LOGIN_ROUTES = {
         admin: '/administrators/auth/login',
@@ -13,20 +12,17 @@ export default defineNuxtRouteMiddleware((to) => {
         '/administrators/auth/login'
     ]
 
-    const normalizedPath = to.path.replace(/\/$/, '') // remove trailing slash
+    const normalizedPath = to.path.replace(/\/$/, '')
 
     if (PUBLIC_ROUTES.includes(normalizedPath)) {
-        console.log('Public route, allow access')
         return
     }
 
     if (to.path.startsWith('/administrators') && role !== 'admin') {
-        console.log('Redirect to admin login')
         return navigateTo(LOGIN_ROUTES.admin)
     }
 
     if (to.path.startsWith('/member') && role !== 'member') {
-        console.log('Redirect to member login')
         return navigateTo(LOGIN_ROUTES.member)
     }
 })

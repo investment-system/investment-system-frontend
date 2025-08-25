@@ -23,8 +23,6 @@ export const useApi = () => {
             accessToken = tokenCookie.value;
         }
 
-        console.log('Interceptor access token:', accessToken);
-
         if (accessToken && config.headers) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }

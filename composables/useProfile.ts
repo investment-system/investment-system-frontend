@@ -12,7 +12,6 @@ export function useProfile() {
     async function fetchProfile() {
         loading.value = true
         error.value = null
-        console.log('Fetching profile with token:', token)
 
         if (!token) {
             error.value = 'No auth token found, please login again.'
@@ -26,7 +25,6 @@ export function useProfile() {
                     Authorization: `Token ${token}`,
                 },
             })
-            console.log('Profile fetched successfully:', response.data)
             profileData.value = response.data
         } catch (e) {
             console.error('Error fetching profile:', e)

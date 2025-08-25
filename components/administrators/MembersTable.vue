@@ -13,7 +13,6 @@ onMounted(async () => {
   try {
     const response = await api.get('/members/list/')
     members.value = response.data
-    console.log('Members after assignment:', members.value)
   } catch (error) {
     console.error('Failed to fetch members:', error)
   }

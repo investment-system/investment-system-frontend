@@ -29,8 +29,6 @@ const fetchUserProfile = async () => {
     // profilePicture.value = data.profile_picture || ''
 
 
-    console.log(profilePicture.value)
-
     profileData.value = [
       { label: 'Full Name', value: data.user.full_name },
       { label: 'Email Address', value: data.user.email },

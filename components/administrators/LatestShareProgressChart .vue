@@ -94,12 +94,9 @@ const fetchTransactions = async () => {
         t => t.source_type === 'share' && t.share_record?.status === 'active'
     )
 
-    // Sort by nearest end date
     shares.sort((a, b) => getDaysLeft(a) - getDaysLeft(b))
 
-    // Take top 5
     shareTransactions.value = shares.slice(0, 5)
-    console.log('Top 5 nearest active shares:', shareTransactions.value)
 
   } catch (err) {
     console.error('Failed to fetch transactions:', err)

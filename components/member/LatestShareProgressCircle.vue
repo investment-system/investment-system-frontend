@@ -85,8 +85,6 @@ const fetchTransactions = async () => {
 
     latestShareTransaction.value = shareTransactions[0] || null
 
-    console.log('Latest share transaction:', latestShareTransaction.value)
-
   } catch (err) {
     console.error('Failed to fetch transactions:', err)
     error.value = 'Unable to load transactions. Please try again later.'
