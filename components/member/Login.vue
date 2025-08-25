@@ -155,7 +155,6 @@ const handleLogin = async () => {
           </div>
 
           <button type="submit" class="login-btn" :disabled="loading">
-            <span v-if="loading" class="loading-spinner"></span>
             {{ loading ? 'Logging in...' : 'Login' }}
           </button>
         </form>
@@ -471,17 +470,6 @@ const handleLogin = async () => {
 }
 
 // Animations
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes spin {
   0% {
     transform: rotate(0deg);
