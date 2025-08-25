@@ -24,6 +24,7 @@ const getUserInfo = async () => {
   try {
     const { data } = await api.get('/members/profile/')
     profile.value = data
+
     profileData.value = [
       { label: 'Name', value: data.full_name },
       { label: 'Email', value: data.email },
@@ -55,6 +56,8 @@ const formatDate = (dateStr: string) => {
 onMounted(async () => {
   try {
     const { data } = await api.get(`/transactions/user/${route.params.id}/`)
+
+
     transaction.value = {
       ...data,
       source_type_label: SOURCE_TYPE_LABELS[data.source_type] || data.source_type,
