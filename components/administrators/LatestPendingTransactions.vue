@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
 import {useApi} from '~/composables/useApi'
+import TransactionFailed from "~/components/administrators/popup/TransactionFailed.vue";
 
 interface ShareRecord {
   share_id: number
@@ -80,7 +81,7 @@ const fetchTransactions = async () => {
         t => t.source_type === 'share' && t.share_record?.status === 'pending'
     )
 
-    shareTransactions.value = shares.slice(0, 20)
+    shareTransactions.value = shares.slice(0, 8)
 
   } catch (err) {
     console.error('Failed to fetch transactions:', err)
@@ -101,6 +102,8 @@ onMounted(() => {
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Pending Investments</h2>
+        <div class="chart-subtitle"> 8 latest transactions</div>
+
       </div>
 
       <div v-if="loading" class="loading-container">
@@ -170,9 +173,21 @@ onMounted(() => {
   margin: 0 auto;
   padding: 50px 0;
 
+
   .section-header {
-    text-align: start;
-    margin-bottom: 24px;
+      padding: 20px 0;
+
+      .chart-title {
+        font-size: var(--heading-3);
+        font-weight: normal;
+        color: var(--primary-text-color);
+      }
+
+      .chart-subtitle {
+        font-size: var(--small-text);
+        color: var(--secondary-text-color);
+        margin: 0;
+      }
 
     .section-title {
       font-size: var(--heading-4);
