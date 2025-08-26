@@ -21,7 +21,6 @@ interface Transaction {
   transaction_code: string
   member: number
   source_type: string
-  reference_id: string
   direction: string
   amount: string
   payment_method: string

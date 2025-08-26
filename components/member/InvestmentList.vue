@@ -9,7 +9,6 @@ interface Transaction {
   transaction_code: string
   member_id: number
   source_type: string
-  reference_id: string
   direction: string
   amount: number
   payment_method: string

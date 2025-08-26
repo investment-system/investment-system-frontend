@@ -22,7 +22,6 @@ const form = ref({
   direction: 'in',
   amount: '50',
   payment_method: '',
-  reference_id: '',
   member: null as number | null,
   received_invoice_doc: null as File | null
 })
@@ -49,7 +48,6 @@ watch(() => props.show, (newVal) => {
       direction: 'in',
       amount: '50',
       payment_method: '',
-      reference_id: '',
       member: memberId.value,
       received_invoice_doc: null
     }
@@ -62,7 +60,6 @@ const fields = [
   { label: 'Source Type', model: 'source_type', type: 'select', placeholder: 'Select source type', options: memberSourceTypeOptions, required: true },
   { label: 'Amount', model: 'amount', type: 'number', placeholder: 'Enter transaction amount', required: true },
   { label: 'Payment Method', model: 'payment_method', type: 'select', placeholder: 'Select payment method', options: paymentMethodOptions, required: true },
-  { label: 'Reference ID', model: 'reference_id', type: 'text', placeholder: 'Enter reference ID', required: true },
   { label: 'Invoice Document', model: 'received_invoice_doc', type: 'file', placeholder: 'Upload invoice document', required: true }
 ]
 
