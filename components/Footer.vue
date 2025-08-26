@@ -1,10 +1,10 @@
 <template>
   <footer class="footer">
     <p>
-      © {{ currentYear }}
+      © {{ currentYear }} All Copyright Reserved For
       <a href="https://members.koperasimasjid.com" target="_blank" rel="noopener" class="link">
         koperasimasjid2u.com
-      </a>. All rights reserved.
+      </a>.
     </p>
   </footer>
 </template>
