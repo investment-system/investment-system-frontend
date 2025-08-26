@@ -138,7 +138,9 @@ onMounted(() => {
         </div>
 
         <div v-else-if="error" class="error-container">
-          <div class="error-icon"><UIcon name="mdi-error"/></div>
+          <div class="error-icon">
+            <UIcon name="mdi-error"/>
+          </div>
           <p class="error-message">{{ error }}</p>
           <button @click="fetchTransactions" class="retry-button">Retry</button>
         </div>
@@ -162,9 +164,11 @@ onMounted(() => {
               >
 
                 <div class="row-cell project-cell">
-                  <div class="project-indicator" ></div>
+                  <div class="project-indicator"></div>
                   <div class="project-info">
-                    <div class="project-name">{{ transaction.share_record.project_name || `Share #${transaction.share_record.share_id}` }}</div>
+                    <div class="project-name">
+                      {{ transaction.share_record.project_name || `Share #${transaction.share_record.share_id}` }}
+                    </div>
                     <div class="project-date">Started {{ formatDate(transaction.share_record.share_date) }}</div>
                   </div>
                 </div>
@@ -196,7 +200,10 @@ onMounted(() => {
                     {{ getDaysLeft(transaction) }}
                     <span class="days-label">days left</span>
                   </div>
-                  <div class="maturity-date">{{ formatDate(transaction.share_record.expected_share_maturity_date) }}</div>
+                  <div class="maturity-date">{{
+                      formatDate(transaction.share_record.expected_share_maturity_date)
+                    }}
+                  </div>
                 </div>
 
                 <div class="row-cell status-cell">
@@ -289,9 +296,17 @@ onMounted(() => {
                 animation: loading 1.5s ease-in-out infinite;
                 border-radius: 4px;
 
-                &.long { width: 80%; }
-                &.medium { width: 60%; }
-                &.short { width: 40%; }
+                &.long {
+                  width: 80%;
+                }
+
+                &.medium {
+                  width: 60%;
+                }
+
+                &.short {
+                  width: 40%;
+                }
               }
             }
 
@@ -471,7 +486,7 @@ onMounted(() => {
 
                   .maturity-date {
                     font-size: var(--date-text);
-                    color: var(--secondary-text-color );
+                    color: var(--secondary-text-color);
                   }
                 }
 
@@ -505,10 +520,11 @@ onMounted(() => {
         text-align: center;
         padding: 64px 24px;
 
-        .empty-icon {
-          font-size: var(--heading-4);
-          margin-bottom: 16px;
-          opacity: 0.6;
+        .empty-icon img {
+          width: 120px;
+          height: auto;
+          margin-bottom: 1rem;
+          opacity: 0.7;
         }
 
         .empty-title {
@@ -562,8 +578,12 @@ onMounted(() => {
 
 // Animations
 @keyframes loading {
-  0%, 100% { background-position: 200% 0; }
-  50% { background-position: -200% 0; }
+  0%, 100% {
+    background-position: 200% 0;
+  }
+  50% {
+    background-position: -200% 0;
+  }
 }
 
 </style>

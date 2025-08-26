@@ -373,5 +373,4 @@ const filteredTransactions = computed(() => {
   margin: 0;
 }
 
-
 </style>
