@@ -57,7 +57,6 @@ export const sourceTypeOptions = [
 
 export const memberSourceTypeOptions = [
     {value: 'share', label: 'Share'},
-    {value: 'registration_payments', label: 'Registration Payment'},
 ]
 
 export const directionOptions = [

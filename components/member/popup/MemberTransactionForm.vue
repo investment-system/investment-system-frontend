@@ -18,9 +18,9 @@ const errorMessage = ref('')
 const validationErrors = ref<Record<string, string>>({})
 
 const form = ref({
-  source_type: '',
+  source_type: 'share',
   direction: 'in',
-  amount: '50',
+  amount: '300',
   payment_method: '',
   member: null as number | null,
   received_invoice_doc: null as File | null
@@ -44,9 +44,9 @@ watch(() => props.show, (newVal) => {
       return
     }
     form.value = {
-      source_type: '',
+      source_type: 'share',
       direction: 'in',
-      amount: '50',
+      amount: '300',
       payment_method: '',
       member: memberId.value,
       received_invoice_doc: null

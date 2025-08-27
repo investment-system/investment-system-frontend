@@ -54,10 +54,9 @@ const handleLogin = async () => {
       password: form.password,
     })
 
-    // Support both simple token and JWT response structures
     const accessToken = data.access || data.token
     const refreshTokenValue = data.refresh || null
-    const userType = data.user?.user_type || 'member'  // fallback to 'member'
+    const userType = data.user?.user_type || 'admin'
 
     if (!accessToken) {
       throw new Error('Login response missing token information')
@@ -152,8 +151,7 @@ const handleLogin = async () => {
           </p>
 
           <div class="links">
-            Don't have an account?
-            <NuxtLink to="/member/auth/signup">Sign Up</NuxtLink>
+
           </div>
 
           <button type="submit" class="login-btn" :disabled="loading">
