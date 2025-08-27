@@ -493,13 +493,14 @@ onMounted(() => {
 
   @media (min-width: 640px) {
     .progress-section {
-      gap: 0px;
+      gap: 0;
     }
   }
 
   @media (min-width: 768px) {
     .card-body {
       padding: 10px;
+      min-height: 145px;
     }
 
     .circle-container {
