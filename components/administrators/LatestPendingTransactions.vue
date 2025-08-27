@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
 import {useApi} from '~/composables/useApi'
-import TransactionFailed from "~/components/administrators/popup/TransactionFailed.vue";
 
 interface ShareRecord {
   share_id: number
