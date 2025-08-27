@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import Dashboard from "~/components/administrators/Dashboard.vue";
-import LatestShareProgressChart from "~/components/administrators/LatestShareProgressChart .vue";
 import LatestPendingTransactions from "~/components/administrators/LatestPendingTransactions.vue";
 
 
@@ -10,7 +9,6 @@ import LatestPendingTransactions from "~/components/administrators/LatestPending
 <template>
   <AdministratorsHeader/>
   <Dashboard/>
-  <LatestShareProgressChart/>
   <LatestPendingTransactions/>
   <AdministratorsTransactionsTableLatest/>
   <Footer/>
