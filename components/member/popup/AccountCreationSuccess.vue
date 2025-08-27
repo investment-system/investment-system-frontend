@@ -28,21 +28,20 @@ const closePopup = () => {
         <h3 class="popup-title">Welcome to Our Platform!</h3>
 
         <p class="popup-message">
-          Your account has been created successfully. We’re excited to have you on board! Please check your registered
-          email for setup guidelines and verification instructions.
+          Your account has been created successfully! We’re excited to have you on board.
+          Please check your registered email for setup guidelines and activation instructions.
         </p>
 
         <div class="qr-section">
           <div class="qr-content">
             <div class="qr-text">
-              <h5>Bank Transfer QR Code</h5>
+              <h5>Complete Your Membership Activation</h5>
               <p>
-                To activate your membership, please complete a RM 50 registration fee along with a minimum investment of
-                RM 250.
+                To activate your membership, please make a one-time RM 50 registration fee
+                together with a minimum RM 250 investment.
                 <br/>
-                Simply scan the QR code below to make a secure bank transfer, and remember to keep your payment receipt
-                for confirmation.
-
+                Simply scan the QR code below to make a secure bank transfer.
+                Don’t forget to keep your payment receipt for confirmation.
               </p>
             </div>
             <div class="qr-code-wrapper">
@@ -55,10 +54,11 @@ const closePopup = () => {
         <div class="footer-info">
           <p class="security-note">
             <UIcon name="mdi-shield-check" class="security-icon"/>
-            Your account is secured with industry-standard encryption
+            Your account is protected with industry-standard encryption.
           </p>
           <p class="support-note">
-            Need help? Contact our support team at support@koperasimasjid2u.com.
+            Need help? Contact our support team at
+            <a href="mailto:support@koperasimasjid2u.com">support@koperasimasjid2u.com</a>.
           </p>
         </div>
 
@@ -82,8 +82,8 @@ const closePopup = () => {
     background-color: var(--primary-bg);
     border-radius: 12px;
     width: 100%;
-    max-width: 480px;
-    padding: 24px;
+    max-width: 550px;
+    padding: 20px;
     text-align: center;
     position: relative;
     max-height: 700px;
@@ -113,7 +113,6 @@ const closePopup = () => {
       flex-direction: column;
       align-items: center;
       gap: 10px;
-      margin-top: 8px;
 
       .icon-wrapper {
         background-color: #dff0d8;
@@ -181,10 +180,10 @@ const closePopup = () => {
             gap: 8px;
 
             .qr-code {
-              width: 80px;
-              height: 80px;
+              width: 90px;
+              height: 90px;
               border-radius: 6px;
-              border: 1px solid var(--border-color);
+              border: 1px solid var(--card-border);
             }
 
             .qr-label {
