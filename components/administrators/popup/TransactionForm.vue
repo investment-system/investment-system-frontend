@@ -18,7 +18,7 @@ const errorMessage = ref("")
 const form = ref({
   source_type: '',
   direction: 'in',
-  amount: 50.0,
+  amount: '300.00',
   payment_method: 'bank_transfer',
   member: memberId,
   received_invoice_doc: null as File | null
@@ -29,7 +29,7 @@ watch(() => props.show, (newVal) => {
     form.value = {
       source_type: '',
       direction: 'in',
-      amount: 50.0,
+      amount: '300.00',
       payment_method: 'bank_transfer',
       member: memberId,
       received_invoice_doc: null

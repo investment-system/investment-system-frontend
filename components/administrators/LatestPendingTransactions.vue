@@ -234,12 +234,14 @@ onMounted(() => {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 10px;
 
+
     .transaction-card {
       background: var(--primary-bg);
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 16px;
       transition: var(--transition);
+      max-width: 300px;
 
       &.urgent {
         border-left: 5px solid var(--danger-color);
