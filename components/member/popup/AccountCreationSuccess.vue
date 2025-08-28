@@ -45,6 +45,7 @@ const closePopup = () => {
               </p>
             </div>
             <div class="qr-code-wrapper">
+
               <img src="/images/Qr-code.png" alt="Bank Transfer QR Code" class="qr-code"/>
               <span class="qr-label">Scan & Pay</span>
             </div>
