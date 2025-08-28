@@ -2,6 +2,14 @@
 import { ref, onMounted } from 'vue'
 import { useApi } from '~/composables/useApi'
 import LatestShareProgressCircle from "~/components/member/LatestShareProgressCircle.vue";
+import ProfileCompletionPopup from "~/components/member/popup/ProfileCompletion.vue";
+
+interface ProfileResponse {
+  id: number
+  full_name: string
+  email: string
+  is_profile_complete: boolean
+}
 
 interface StatItem {
   title: string
@@ -21,21 +29,37 @@ const memberBalance = ref(0)
 const api = useApi()
 const memberId = ref<number | null>(null)
 
+const showPopup = ref(false)
+
 onMounted(async () => {
   try {
-    const profileRes = await api.get('/auth/profile/')
+    const profileRes = await api.get<ProfileResponse>('/auth/profile/')
     memberId.value = profileRes.data?.id ?? null
 
     if (!memberId.value) throw new Error('Member ID not found')
 
+    const isProfileComplete = profileRes.data?.is_profile_complete ?? false
+    if (!isProfileComplete) {
+      const key = `profile-popup-shown-${memberId.value}`
+      if (!localStorage.getItem(key)) {
+        showPopup.value = true
+        localStorage.setItem(key, "true")
+
+        // ⏱️ Auto-close after 5 seconds (adjust as needed)
+        setTimeout(() => {
+          showPopup.value = false
+        }, 5000)
+      }
+    }
+
     const membersRes = await api.get('/members/stats/')
-    const transactionsRes = await api.get(`/transactions/${memberId.value}/stats/`) // member-specific
+    const transactionsRes = await api.get(`/transactions/${memberId.value}/stats/`)
 
     const memberData = membersRes.data ?? {}
     const transactionData = transactionsRes.data ?? {}
 
-    const totalBalance = parseFloat(transactionData.share_amount) || 0
     const shareAmount = parseFloat(transactionData.share_amount) || 0
+    const totalBalance = shareAmount
     const totalMembers = memberData.total_members ?? 0
     const shareCompleted = transactionData.share_completed ?? 0
 
@@ -47,12 +71,13 @@ onMounted(async () => {
     ]
 
     memberBalance.value = totalBalance
-  } catch (err) {
-    console.error('Failed to fetch dashboard data:', err)
+  } catch (err: any) {
+    console.error("Dashboard data fetch failed:", err.response?.data || err.message)
   }
 })
-</script>
 
+
+</script>
 
 <template>
   <section class="dashboard">
@@ -78,8 +103,10 @@ onMounted(async () => {
       </div>
     </div>
   </section>
-</template>
 
+  <ProfileCompletionPopup v-model:show="showPopup" />
+
+</template>
 
 <style scoped lang="scss">
 .dashboard {

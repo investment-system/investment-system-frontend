@@ -126,6 +126,7 @@ const submitForm = async () => {
 <template>
   <div v-if="show" class="popup-overlay" @click.self="closePopup">
     <div class="popup-container">
+
       <div class="popup-header">
         <h4 class="popup-title">Create Transaction</h4>
         <hr class="line"/>

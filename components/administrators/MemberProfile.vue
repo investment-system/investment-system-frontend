@@ -34,6 +34,8 @@ onMounted(async () => {
     const response = await api.get(`/members/detail/${route.params.id}/`)
     member.value = response.data
 
+    console.log('this is member',member)
+
     profileData.value = [
       { label: 'Email Address', value: member.value.email ?? '-' },
       { label: 'IC Number', value: member.value.ic_number ?? '-' },
@@ -49,6 +51,8 @@ onMounted(async () => {
       { label: 'Bank Account Number', value: member.value.bank_account_number ?? '-' },
       { label: 'Registration Status', value: member.value.registration_status ?? '-' },
     ]
+
+    console.log(profileData.value)
 
     userStatus.value = member.value.registration_status === "paid" ? "Active" : "Inactive"
   } catch (error) {
