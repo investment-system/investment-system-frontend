@@ -44,8 +44,12 @@ const handleLogout = () => {
 <template>
   <header class="main-header">
     <nav class="nav-container">
+
       <a href="/" class="nav-logo">
         <img src="/images/logo.png" class="logo" alt="Koperasi-masjid-logo"/>
+        <small class="sub-text">
+          <UIcon name="mdi-view-dashboard-edit-outline" />
+          Administrator Dashboard</small>
       </a>
 
       <button
@@ -100,11 +104,26 @@ const handleLogout = () => {
     .nav-logo {
       display: flex;
       align-items: center;
+      gap: 10px;
 
       .logo {
         width: 100px;
         height: 60px;
         object-fit: contain;
+      }
+
+      .sub-text {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: var(--body-text);
+        font-weight: normal;
+        color: var(--accent-color);
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
       }
     }
 
