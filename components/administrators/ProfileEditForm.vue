@@ -3,7 +3,7 @@ import {ref, reactive, computed, onMounted, onUnmounted} from 'vue'
 import {useRoute} from 'vue-router'
 import {useApi} from '~/composables/useApi'
 import ProfileUpdatedSuccess from "./popup/ProfileUpdatedSuccess.vue";
-
+import {positionChoices} from '@/constants/lists.js'
 
 const api = useApi()
 const route = useRoute()
@@ -15,7 +15,7 @@ const settingLinks = ref([
   {link: "/administrators/auth/change-password", title: "Change Password", icon: "mdi-lock"},
 ])
 
-const nonEditableFields = ['email', 'full_name', 'gender', 'role', 'position']
+const nonEditableFields = ['email', 'full_name', 'gender', 'role']
 
 const formFields = ref([
   {key: 'full_name', label: 'Full Name', type: 'text'},
@@ -30,7 +30,7 @@ const formFields = ref([
   {key: 'state', label: 'State', type: 'text'},
   {key: 'postal_code', label: 'Postal Code', type: 'text'},
   {key: 'country', label: 'Country', type: 'text'},
-  {key: 'position', label: 'Position', type: 'text'},
+  {key: 'position', label: 'Position', type: 'select', options: positionChoices},
   {key: 'role', label: 'Role', type: 'text'},
 ])
 
@@ -71,26 +71,42 @@ const hasUnsavedChanges = computed(() => {
 const loadUserProfile = async () => {
   loading.value = true
   try {
-    const {data} = await api.get('/administrators/profile/', {
+    const { data } = await api.get('/administrators/profile/', {
       headers: {
         Authorization: `Token ${useCookie('token').value}`
       }
     })
 
-    // Map data to form fields
+    // Map data to form fields correctly
     Object.keys(form).forEach(key => {
-      form[key] = data[key] ?? ''
+      if (key === 'full_name') {
+        form.full_name = data.user?.full_name || ''
+      } else if (key === 'email') {
+        form.email = data.user?.email || ''
+      } else if (key === 'role') {
+        form.role = data.user?.user_type || data.role || ''
+      } else {
+        form[key] = data[key] ?? ''
+      }
     })
 
+    // Fill in userProfile object
     userProfile.value = {
       user_id: data.admin_code || '',
-      email: data.email || '',
-      created_at: data.created_at || '',
+      email: data.user?.email || '',
+      created_at: data.user?.date_joined || '',
       avatar: data.profile_picture || '/images/user-icon.png',
     }
 
-    originalData.value = {...form}
+    // Save original for reset
+    originalData.value = { ...form }
     hasAvatarChanged.value = false
+
+    console.log("=== Full Profile Loaded ===")
+    console.log("Form Data:", form)
+    console.log("User Profile:", userProfile.value)
+    console.log("Original Data:", originalData.value)
+
   } catch (error) {
     console.error('Profile load error:', error)
     showMessage('Failed to load profile data', 'error')
@@ -115,6 +131,8 @@ const uploadAvatar = async () => {
     })
 
     return data.profile_picture || data.avatar_url
+
+    console.log(data)
   } catch (error) {
     console.error('Avatar upload error:', error)
     throw new Error('Failed to upload avatar')
@@ -131,23 +149,29 @@ const saveProfile = async () => {
     if (hasAvatarChanged.value && avatarFile.value) {
       try {
         avatarUrl = await uploadAvatar()
-      } catch (error) {
-      }
+      } catch (error) {}
     }
 
-    const updateData = {...form}
+    // clone form
+    const updateData = { ...form }
+
+    // remove non-editable fields
+    nonEditableFields.forEach(field => {
+      delete updateData[field]
+    })
+
     if (avatarUrl) {
       updateData.profile_picture = avatarUrl
     }
 
-    const {data} = await api.patch('/administrators/profile/', updateData, {
+    const { data } = await api.patch('/administrators/profile/', updateData, {
       headers: {
         Authorization: `Token ${useCookie('token').value}`,
         'Content-Type': 'application/json'
       }
     })
 
-    originalData.value = {...form}
+    originalData.value = { ...form }
     hasAvatarChanged.value = false
 
     if (avatarUrl) {
@@ -161,11 +185,9 @@ const saveProfile = async () => {
     setTimeout(() => {
       showSuccessPopup.value = false
     }, 1500)
-
   } catch (error) {
     console.error('Profile save error:', error)
-    const errorMessage = error.response?.data?.message || 'Failed to save profile data'
-    showMessage(errorMessage, 'error')
+    console.error('Failed to save profile data')
   } finally {
     loading.value = false
   }
@@ -220,10 +242,12 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
 })
+
 </script>
 
 <template>
   <section>
+
     <div class="setting-tabs">
       <div
           class="setting-container"
@@ -390,7 +414,10 @@ section {
     margin-bottom: 20px;
     width: auto;
 
+
     @media (min-width: 768px) {
+      display: flex;
+      gap: 20px;
       width: fit-content;
     }
 
@@ -427,7 +454,7 @@ section {
   }
 
   .profile-member-container {
-    width: calc(100% - 40px);
+    width: 100%;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr;
@@ -435,7 +462,7 @@ section {
 
     @media (min-width: 768px) {
       max-width: 1280px;
-      grid-template-columns:  1fr 3fr;
+      grid-template-columns:  2fr 3fr;
       gap: 20px;
     }
 
@@ -511,7 +538,7 @@ section {
         gap: 10px;
 
         @media (min-width: 768px) {
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(1, 1fr);
         }
 
         @media (min-width: 1024px) {
@@ -549,6 +576,7 @@ section {
             height: 36px;
             align-content: center;
             background: var(--cancel-button-bg);
+            min-width: 200px;
 
             &:focus {
               outline: none;

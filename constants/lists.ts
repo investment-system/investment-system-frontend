@@ -96,4 +96,9 @@ export const payoutType = [
     {value: 'reinvest', label: 'Reinvest All'},
 ]
 
-
+export const positionChoices = [
+    {value: 'administrators', label: 'Administrators'},
+    {value: 'manager', label: 'Manager'},
+    {value: 'staff', label: 'Staff'},
+    {value: 'executive', label: 'Executive'},
+]

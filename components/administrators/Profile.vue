@@ -1,15 +1,15 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { useProfile } from '~/composables/useProfile.ts'
+import {ref, computed, watch} from 'vue'
+import {useRoute} from 'vue-router'
+import {useProfile} from '~/composables/useProfile.ts'
 
-const { profileData } = useProfile()
+const {profileData} = useProfile()
 const route = useRoute()
 
 const settingLinks = ref([
-  { link: "/administrators/profile", title: "Profile", icon: "mdi-account" },
-  { link: "/administrators/profile/edit", title: "Edit Profile", icon: "mdi-account" },
-  { link: "/administrators/auth/change-password", title: "Change Password", icon: "mdi-lock" },
+  {link: "/administrators/profile", title: "Profile", icon: "mdi-account"},
+  {link: "/administrators/profile/edit", title: "Edit Profile", icon: "mdi-account"},
+  {link: "/administrators/auth/change-password", title: "Change Password", icon: "mdi-lock"},
 ])
 
 const profilePicture = ref('')
@@ -17,22 +17,25 @@ const profilePicture = ref('')
 const displayData = computed(() => {
   if (!profileData.value) return []
 
+  const profile = profileData.value
+
   return [
-    { label: 'Full Name', value: profileData.value.full_name || '-' },
-    { label: 'Email Address', value: profileData.value.email || '-' },
-    { label: 'IC Number', value: profileData.value.ic_number || '-' },
-    { label: 'Gender', value: profileData.value.gender || '-' },
-    { label: 'Date of Birth', value: profileData.value.date_of_birth || '-' },
-    { label: 'Phone Number', value: profileData.value.phone_number || '-' },
-    { label: 'Address Line 1', value: profileData.value.address_line1 || '-' },
-    { label: 'Address Line 2', value: profileData.value.address_line2 || '-' },
-    { label: 'City', value: profileData.value.city || '-' },
-    { label: 'State', value: profileData.value.state || '-' },
-    { label: 'Postal Code', value: profileData.value.postal_code || '-' },
-    { label: 'Country', value: profileData.value.country || '-' },
-    { label: 'Position', value: profileData.value.position || '-' },
-    { label: 'Role', value: profileData.value.role || '-' }
+    {label: 'Full Name', value: profileData.value.user?.full_name || '-'},
+    {label: 'Email', value: profileData.value.user?.email || '-'},
+    {label: 'IC Number', value: profileData.value.ic_number || '-'},
+    {label: 'Gender', value: profileData.value.gender || '-'},
+    {label: 'Date of Birth', value: profileData.value.date_of_birth || '-'},
+    {label: 'Phone Number', value: profileData.value.phone_number || '-'},
+    {label: 'Address Line 1', value: profileData.value.address_line1 || '-'},
+    {label: 'Address Line 2', value: profileData.value.address_line2 || '-'},
+    {label: 'City', value: profileData.value.city || '-'},
+    {label: 'State', value: profileData.value.state || '-'},
+    {label: 'Postal Code', value: profileData.value.postal_code || '-'},
+    {label: 'Country', value: profileData.value.country || '-'},
+    {label: 'Position', value: profileData.value.position || '-'},
+    {label: 'Role', value: profileData.value.role || '-'}
   ]
+
 })
 </script>
 
@@ -51,7 +54,7 @@ const displayData = computed(() => {
             class="setting-link"
             :class="{ active: route.path.startsWith(settingLink.link) }"
         >
-          <UIcon :name="settingLink.icon" />
+          <UIcon :name="settingLink.icon"/>
           {{ settingLink.title }}
         </nuxt-link>
       </div>
@@ -72,7 +75,7 @@ const displayData = computed(() => {
         <div class="user-info">
           <p>ID: <span>{{ profileData?.admin_code || 'N/A' }}</span></p>
           <p>Created at:
-            <span>{{ profileData?.created_at ? profileData.created_at.split('T')[0] : 'N/A' }}</span>
+            <span>{{ profileData?.user?.date_joined ? profileData.user.date_joined.split('T')[0] : 'N/A' }}</span>
           </p>
 
         </div>
@@ -112,6 +115,8 @@ section {
     width: auto;
 
     @media (min-width: 768px) {
+      display: flex;
+      gap: 20px;
       width: fit-content;
     }
 
@@ -148,7 +153,7 @@ section {
   }
 
   .profile-member-container {
-    width: calc(100% - 40px);
+    width: 100%;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr;
