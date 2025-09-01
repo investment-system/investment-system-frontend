@@ -32,12 +32,12 @@ const currentYear = new Date().getFullYear()
 
 .link {
   text-decoration: none;
-  color: var(--primary-color);
+  color: var(--secondary-text-color);
   transition: var(--transition);
 }
 
 .link:hover {
-  color: var(--accent-color);
+  color: var(--primary-text-color);
   text-decoration: underline;
 }
 

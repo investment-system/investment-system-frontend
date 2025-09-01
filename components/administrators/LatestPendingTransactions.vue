@@ -240,7 +240,6 @@ onMounted(() => {
       border-radius: 12px;
       padding: 16px;
       transition: var(--transition);
-      max-width: 300px;
 
       &.urgent {
         border-left: 5px solid var(--danger-color);

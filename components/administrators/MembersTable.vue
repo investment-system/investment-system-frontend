@@ -148,19 +148,19 @@ const filteredMembers = computed(() => {
   &-table {
     display: flex;
     flex-direction: column;
-    min-width: 1000px;
+    min-width: 1200px;
     min-height: 50vh;
   }
 
   &-row {
     display: grid;
     grid-template-columns:
-    minmax(180px,0)
+    minmax(200px, 2fr)
     minmax(180px, 1fr)
-    minmax(180px, 1fr)
-    minmax(180px, 1fr)
-    minmax(150px, 1fr)
-    minmax(100px, 1fr)
+    minmax(220px, 2fr)
+    minmax(140px, 1fr)
+    minmax(140px, 1fr)
+    minmax(160px, 1fr)
     100px;
     align-items: center;
     padding: 0 20px;
