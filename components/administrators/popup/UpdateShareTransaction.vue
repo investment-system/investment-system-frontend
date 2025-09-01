@@ -244,9 +244,9 @@ const submitForm = async () => {
         .form-group {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 16px;
+          gap: 0;
           text-align: start;
-          width: calc(100% - 40px);
+          width: 100%;
           margin: 0 auto;
 
           label {

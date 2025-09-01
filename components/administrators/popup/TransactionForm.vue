@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useApi } from '@/composables/useApi'
-import { sourceTypeOptions, directionOptions, paymentMethodOptions } from "@/constants/lists"
+import {ref, watch, computed} from 'vue'
+import {useRoute} from 'vue-router'
+import {useApi} from '@/composables/useApi'
+import {sourceTypeOptions, directionOptions, paymentMethodOptions} from "@/constants/lists"
 import TransactionSuccess from '../popup/TransactionSuccess.vue'
 
 const props = defineProps<{ show: boolean }>()
@@ -39,11 +39,38 @@ watch(() => props.show, (newVal) => {
 })
 
 const fields = [
-  { label: 'Source Type', model: 'source_type', type: 'select', placeholder: 'Select source type', options: sourceTypeOptions, required: true },
-  { label: 'Direction', model: 'direction', type: 'select', placeholder: 'Select direction', options: directionOptions, required: true },
-  { label: 'Amount', model: 'amount', type: 'number', placeholder: 'Enter transaction amount', required: true },
-  { label: 'Payment Method', model: 'payment_method', type: 'select', placeholder: 'Select payment method', options: paymentMethodOptions, required: true },
-  { label: 'Invoice Document', model: 'received_invoice_doc', type: 'file', placeholder: 'Upload invoice document (optional)', required: true }
+  {
+    label: 'Source Type',
+    model: 'source_type',
+    type: 'select',
+    placeholder: 'Select source type',
+    options: sourceTypeOptions,
+    required: true
+  },
+  {
+    label: 'Direction',
+    model: 'direction',
+    type: 'select',
+    placeholder: 'Select direction',
+    options: directionOptions,
+    required: true
+  },
+  {label: 'Amount', model: 'amount', type: 'number', placeholder: 'Enter transaction amount', required: true},
+  {
+    label: 'Payment Method',
+    model: 'payment_method',
+    type: 'select',
+    placeholder: 'Select payment method',
+    options: paymentMethodOptions,
+    required: true
+  },
+  {
+    label: 'Invoice Document',
+    model: 'received_invoice_doc',
+    type: 'file',
+    placeholder: 'Upload invoice document (optional)',
+    required: true
+  }
 ]
 
 const closePopup = () => emit('update:show', false)
@@ -74,7 +101,7 @@ const submitForm = async () => {
     }
 
     await api.post('/transactions/create/', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: {'Content-Type': 'multipart/form-data'}
     })
 
     closePopup()
@@ -149,7 +176,7 @@ const submitForm = async () => {
     </div>
   </div>
 
-  <TransactionSuccess v-model:show="showTransactionSuccess" />
+  <TransactionSuccess v-model:show="showTransactionSuccess"/>
 </template>
 
 
@@ -205,9 +232,9 @@ const submitForm = async () => {
         .form-group {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 16px;
+          gap: 0;
           text-align: start;
-          width: calc(100% - 40px);
+          width: 100%;
           margin: 0 auto;
 
           label {
@@ -216,6 +243,7 @@ const submitForm = async () => {
             height: 36px;
             display: flex;
             align-items: center;
+            width: 100%;
           }
 
           .form-control {
@@ -229,7 +257,7 @@ const submitForm = async () => {
             height: 36px;
             display: flex;
             align-items: center;
-            max-width: 200px;
+            width: 100%;
           }
         }
 
@@ -300,6 +328,7 @@ const submitForm = async () => {
     }
   }
 }
+
 .error-message {
   color: #b00020;
   font-size: 14px;
