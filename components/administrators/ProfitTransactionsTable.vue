@@ -119,6 +119,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .transaction {
   padding: 15px;
+  min-height: 50vh;
 
   &-header {
     display: flex;
@@ -133,6 +134,29 @@ onMounted(() => {
     font-weight: normal;
     height: 36px;
     align-content: center;
+  }
+
+  .transaction-create-btn {
+    width: 100%;
+    font-size: var(--button-font-size);
+    color: var(--primary-text-color);
+    background: var(--button-bg);
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    height: 36px;
+    align-content: center;
+    transition: var(--transition);
+
+    &:hover {
+      background: var(--hover-button-bg);
+    }
+
+    @media (min-width: 640px) {
+      width: auto;
+    }
   }
 
   .transaction-header-container {
@@ -164,29 +188,26 @@ onMounted(() => {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     width: 100%;
-    min-width: 1000px;
-
+    height: 200px;
   }
 
   &-table {
     display: flex;
     flex-direction: column;
-    min-width: 1000px;
-    min-height: 50vh;
+    min-width: 1200px;
   }
 
   &-row {
     display: grid;
     grid-template-columns:
-    30px
-    40px
-    minmax(150px, 1fr)
-    minmax(150px, 1fr)
-    minmax(150px, 1fr)
-    minmax(150px, 1fr)
-    minmax(150px, 1fr)
-    minmax(150px, 1fr)
-    150px;
+      30px
+      minmax(120px, 0.8fr)
+      minmax(160px, 1fr)
+      minmax(80px, 0.5fr)
+      minmax(120px, 1fr)
+      minmax(140px, 1fr)
+      minmax(160px, 1fr)
+      100px;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
     font-size: var(--small-text);
@@ -203,6 +224,7 @@ onMounted(() => {
       top: 0;
       z-index: 10;
       border-radius: 6px 6px 0 0;
+      min-width: 1200px;
     }
 
     span {
@@ -300,8 +322,7 @@ onMounted(() => {
     }
 
     &-row {
-      grid-template-columns: 30px 40px 1fr 1fr 1fr 1fr 1fr 1fr;
-      gap: 20px;
+      gap: 20px; // keep same columns, just add breathing space
     }
   }
 
@@ -327,9 +348,8 @@ onMounted(() => {
     }
 
     &-row {
-      grid-template-columns: 30px 40px 1fr 1fr 1fr 1fr 1fr 1fr;
       gap: 0;
-      padding: 0;
+      padding: 0 10px;
       height: 48px;
       align-content: center;
     }

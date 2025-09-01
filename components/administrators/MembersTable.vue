@@ -237,6 +237,14 @@ const filteredMembers = computed(() => {
     height: 36px;
     align-content: center;
     font-size: var(--button-font-size);
+    color: var(--primary-text-color);
+    text-decoration: none;
+    transition: var(--transition);
+
+    &:hover{
+      color: var(--secondary-text-color);
+      text-decoration: underline;
+    }
   }
 }
 
