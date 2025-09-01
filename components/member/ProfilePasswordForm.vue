@@ -270,6 +270,8 @@ section {
     width: auto;
 
     @media (min-width: 768px) {
+      display: flex;
+      gap: 20px;
       width: fit-content;
     }
 

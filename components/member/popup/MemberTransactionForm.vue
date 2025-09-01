@@ -228,7 +228,6 @@ const submitForm = async () => {
         .form-group {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 16px;
           text-align: start;
           width: calc(100% - 40px);
           margin: 0 auto;
@@ -239,6 +238,7 @@ const submitForm = async () => {
             height: 36px;
             display: flex;
             align-items: center;
+            width: 100%;
           }
 
           .form-control {
@@ -252,7 +252,8 @@ const submitForm = async () => {
             height: 36px;
             display: flex;
             align-items: center;
-            max-width: 220px;
+            width: 100%;
+
           }
         }
 

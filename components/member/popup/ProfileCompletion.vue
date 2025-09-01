@@ -215,7 +215,6 @@ onUnmounted(() => {
         </template>
       </div>
 
-      <!-- Actions -->
       <div class="form-actions">
         <button class="btn secondary" @click="resetForm">Cancel</button>
         <button class="btn primary" @click="saveProfile" :disabled="loading">
@@ -223,7 +222,6 @@ onUnmounted(() => {
         </button>
       </div>
 
-      <!-- Success Toast -->
       <ProfileUpdatedSuccess v-if="showSuccessPopup" :show.sync="showSuccessPopup"/>
     </div>
   </div>
@@ -242,7 +240,7 @@ onUnmounted(() => {
 }
 
 .popup-container {
-  background: #fff;
+  background: var(--primary-bg);
   border-radius: 16px;
   width: 100%;
   max-width: 600px;
@@ -262,8 +260,7 @@ onUnmounted(() => {
   margin-bottom: 16px;
   background-color: var(--secondary-bg);
   height: 50px;
-  align-content: center;
-  padding: 12px;
+  padding: 0 12px;
   border-radius: 6px;
 
   .popup-title {
@@ -275,6 +272,7 @@ onUnmounted(() => {
     flex-grow: 1;
     border-bottom: 2px solid var(--border-color);
     height: 0;
+    margin: 0 10px;
   }
 
   .close-btn {
@@ -289,31 +287,35 @@ onUnmounted(() => {
       color: var(--primary-text-color);
     }
   }
-
 }
 
 .avatar-card {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  display: block;
   text-align: center;
   margin-bottom: 20px;
   padding: 20px;
   border-radius: 12px;
   border: 1px solid var(--card-border);
+  gap: 20px;
+
+  @media (min-width: 768px) {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
 
   .avatar-label {
-    display: inline-block;
     position: relative;
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
 
     .avatar-img {
-      width: 100%;
-      height: 100%;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
       object-fit: cover;
     }
 
@@ -341,10 +343,14 @@ onUnmounted(() => {
   }
 
   .user-meta {
-    margin-top: 5px;
+    margin-top: 10px;
     font-size: var(--small-text);
     color: var(--secondary-text-color);
-    text-align: start;
+
+    @media (min-width: 768px) {
+      margin-left: 15px;
+      margin-top: 0;
+    }
 
     h4 {
       font-size: var(--heading-4);
@@ -353,20 +359,21 @@ onUnmounted(() => {
     }
 
     .user-info {
-      margin: 10px;
+      margin-top: 8px;
 
-      span{
-        margin-right: 5px;
+      span {
+        margin-right: 10px;
+        display: inline-flex;
+        align-items: center;
 
-        .user-icon{
+        .user-icon {
           margin-right: 5px;
         }
-
       }
-
     }
   }
 }
+
 
 .form-grid {
   display: grid;
