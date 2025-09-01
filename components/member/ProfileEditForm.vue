@@ -269,6 +269,8 @@ section {
     width: auto;
 
     @media (min-width: 768px) {
+      display: flex;
+      gap: 20px;
       width: fit-content;
     }
 
@@ -313,7 +315,7 @@ section {
 
     @media (min-width: 768px) {
       max-width: 1280px;
-      grid-template-columns:  1fr 3fr;
+      grid-template-columns:  2fr 3fr;
       gap: 20px;
     }
 
@@ -403,7 +405,7 @@ section {
         gap: 10px;
 
         @media (min-width: 768px) {
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(1, 1fr);
         }
 
         @media (min-width: 1024px) {
