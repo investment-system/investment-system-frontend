@@ -107,10 +107,7 @@ const printInvoice = () => {
       <h3>Transaction & Invoice</h3>
       <hr class="divider" />
       <div class="grid">
-        <div class="item">
-          <span class="label">Invoice ID</span>
-          <span class="data">{{ transaction?.reference_id }}</span>
-        </div>
+
         <div class="item">
           <span class="label">Reference Code</span>
           <span class="data">{{ transaction?.transaction_code }}</span>

@@ -13,7 +13,6 @@ const printInvoice = () => {
       <h3>Invoice Info</h3>
       <hr class="divider"/>
       <div class="grid">
-        <div class="item"><span class="label">Invoice ID:</span><span class="data">INV-20250012</span></div>
         <div class="item"><span class="label">Transaction ID:</span><span class="data">TXN-INV-20250012</span></div>
         <div class="item"><span class="label">Invoice Date:</span><span class="data">2025-06-27</span></div>
         <div class="item"><span class="label">Investment ID:</span><span class="data">INVST-00123</span></div>
