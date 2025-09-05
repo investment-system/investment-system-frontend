@@ -10,22 +10,27 @@ const profileData = ref<any[]>([])
 const userStatus = ref("Inactive")
 const member = ref<any>(null)
 
-const toggleUserStatus = async () => {
+const updateUserStatus = async () => {
   try {
-    await api.patch(`/members/detail/${route.params.id}/`, {
-      registration_status: "paid",
-    })
+    const response = await api.get(`/transactions/admin/member/${route.params.id}/transactions/`)
+    const transactions = response.data
 
-    userStatus.value = "Active"
-    member.value.registration_status = "paid"
+    const hasRegistration = transactions.some((t: any) => t.source_type === "registration_payments")
+    const hasShare = transactions.some((t: any) => t.source_type === "share")
 
-    setTimeout (() => {
-      location.reload()
-    },1500)
+    if (hasRegistration && hasShare) {
+      await api.patch(`/members/detail/${route.params.id}/`, {
+        registration_status: "paid",
+      })
 
-    location.reload()
+      userStatus.value = "Active"
+      member.value.registration_status = "paid"
+    } else {
+      userStatus.value = "Inactive"
+      member.value.registration_status = "unpaid"
+    }
   } catch (error) {
-    console.error("Failed to update status:", error)
+    console.error("Failed to update status dynamically:", error)
   }
 }
 
@@ -51,11 +56,13 @@ onMounted(async () => {
     ]
 
     userStatus.value = member.value.registration_status === "paid" ? "Active" : "Inactive"
+
+    // 🔑 After fetching profile, also check transactions dynamically
+    await updateUserStatus()
   } catch (error) {
     console.error("Failed to fetch member detail:", error)
   }
 })
-
 </script>
 
 <template>
@@ -63,13 +70,11 @@ onMounted(async () => {
     <div class="profile-member-container">
       <div class="profile-header">
         <div class="avatar-wrapper">
-
           <img
               class="avatar-img"
               :src="member?.profile_picture || '/images/user-icon.png'"
               alt="Profile Picture"
           />
-
 
           <div class="status-badge" :class="userStatus.toLowerCase()">
             <UIcon name="i-heroicons-check-circle" class="status-icon"/>
@@ -81,14 +86,14 @@ onMounted(async () => {
           <p>Name: <span>{{ member?.full_name }}</span></p>
         </div>
 
+        <!-- Optional: keep button if you want manual re-check -->
         <button
             v-if="userStatus !== 'Active'"
             class="status-toggle-btn"
-            @click="toggleUserStatus"
+            @click="updateUserStatus"
         >
           Activate Account
         </button>
-
       </div>
 
       <div class="profile-info">
