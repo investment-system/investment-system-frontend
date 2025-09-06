@@ -44,11 +44,6 @@ onMounted(async () => {
       if (!localStorage.getItem(key)) {
         showPopup.value = true
         localStorage.setItem(key, "true")
-
-        // ⏱️ Auto-close after 5 seconds (adjust as needed)
-        setTimeout(() => {
-          showPopup.value = false
-        }, 5000)
       }
     }
 
