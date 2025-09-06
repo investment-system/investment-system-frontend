@@ -1,41 +1,49 @@
 <script setup>
-import {ref, computed, watch} from 'vue'
-import {useRoute} from 'vue-router'
-import {useProfile} from '~/composables/useProfile.ts'
+import { ref, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useProfile } from '~/composables/useProfile.ts'
 
-const {profileData} = useProfile()
+const { profileData } = useProfile()
 const route = useRoute()
 
 const settingLinks = ref([
-  {link: "/administrators/profile", title: "Profile", icon: "mdi-account"},
-  {link: "/administrators/profile/edit", title: "Edit Profile", icon: "mdi-account"},
-  {link: "/administrators/auth/change-password", title: "Change Password", icon: "mdi-lock"},
+  { link: "/administrators/profile", title: "Profile", icon: "mdi-account" },
+  { link: "/administrators/profile/edit", title: "Edit Profile", icon: "mdi-account" },
+  { link: "/administrators/auth/change-password", title: "Change Password", icon: "mdi-lock" },
 ])
 
+// hold the image URL
 const profilePicture = ref('')
+
+// whenever profileData changes, set profilePicture
+watch(profileData, (newVal) => {
+  if (newVal && newVal.profile_picture) {
+    profilePicture.value = newVal.profile_picture
+  } else {
+    profilePicture.value = '/images/user-pic.png' // fallback
+  }
+}, { immediate: true })
 
 const displayData = computed(() => {
   if (!profileData.value) return []
 
   const profile = profileData.value
-
   return [
-    {label: 'Full Name', value: profileData.value.user?.full_name || '-'},
-    {label: 'Email', value: profileData.value.user?.email || '-'},
-    {label: 'IC Number', value: profileData.value.ic_number || '-'},
-    {label: 'Gender', value: profileData.value.gender || '-'},
-    {label: 'Date of Birth', value: profileData.value.date_of_birth || '-'},
-    {label: 'Phone Number', value: profileData.value.phone_number || '-'},
-    {label: 'Address Line 1', value: profileData.value.address_line1 || '-'},
-    {label: 'Address Line 2', value: profileData.value.address_line2 || '-'},
-    {label: 'City', value: profileData.value.city || '-'},
-    {label: 'State', value: profileData.value.state || '-'},
-    {label: 'Postal Code', value: profileData.value.postal_code || '-'},
-    {label: 'Country', value: profileData.value.country || '-'},
-    {label: 'Position', value: profileData.value.position || '-'},
-    {label: 'Role', value: profileData.value.role || '-'}
+    { label: 'Full Name', value: profile.user?.full_name || '-' },
+    { label: 'Email', value: profile.user?.email || '-' },
+    { label: 'IC Number', value: profile.ic_number || '-' },
+    { label: 'Gender', value: profile.gender || '-' },
+    { label: 'Date of Birth', value: profile.date_of_birth || '-' },
+    { label: 'Phone Number', value: profile.phone_number || '-' },
+    { label: 'Address Line 1', value: profile.address_line1 || '-' },
+    { label: 'Address Line 2', value: profile.address_line2 || '-' },
+    { label: 'City', value: profile.city || '-' },
+    { label: 'State', value: profile.state || '-' },
+    { label: 'Postal Code', value: profile.postal_code || '-' },
+    { label: 'Country', value: profile.country || '-' },
+    { label: 'Position', value: profile.position || '-' },
+    { label: 'Role', value: profile.role || '-' }
   ]
-
 })
 </script>
 
@@ -66,10 +74,11 @@ const displayData = computed(() => {
         <div class="avatar-wrapper">
 
           <img
-              :src="profilePicture || '/images/user-pic.png'"
+              :src="profilePicture"
               alt="Profile Picture"
               class="avatar-img"
           />
+
 
         </div>
         <div class="user-info">
@@ -161,7 +170,7 @@ section {
 
     @media (min-width: 768px) {
       max-width: 1280px;
-      grid-template-columns:  1fr 3fr;
+      grid-template-columns:  2fr 3fr;
       gap: 20px;
     }
 
@@ -241,8 +250,8 @@ section {
 
     @media (min-width: 768px) {
       .form-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 0;
       }
 
       .avatar-wrapper {

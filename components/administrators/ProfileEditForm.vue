@@ -171,6 +171,8 @@ const saveProfile = async () => {
       }
     })
 
+    console.log('test print ', data)
+
     originalData.value = { ...form }
     hasAvatarChanged.value = false
 
