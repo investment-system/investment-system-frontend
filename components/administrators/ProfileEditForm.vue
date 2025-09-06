@@ -98,14 +98,9 @@ const loadUserProfile = async () => {
       avatar: data.profile_picture || '/images/user-icon.png',
     }
 
-    // Save original for reset
     originalData.value = { ...form }
     hasAvatarChanged.value = false
 
-    console.log("=== Full Profile Loaded ===")
-    console.log("Form Data:", form)
-    console.log("User Profile:", userProfile.value)
-    console.log("Original Data:", originalData.value)
 
   } catch (error) {
     console.error('Profile load error:', error)
@@ -132,7 +127,6 @@ const uploadAvatar = async () => {
 
     return data.profile_picture || data.avatar_url
 
-    console.log(data)
   } catch (error) {
     console.error('Avatar upload error:', error)
     throw new Error('Failed to upload avatar')
@@ -170,8 +164,6 @@ const saveProfile = async () => {
         'Content-Type': 'application/json'
       }
     })
-
-    console.log('test print ', data)
 
     originalData.value = { ...form }
     hasAvatarChanged.value = false
