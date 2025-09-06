@@ -484,12 +484,13 @@ onMounted(() => {
   .empty-state {
     text-align: center;
     padding: 20px 0;
+    height: 200px;
 
     .empty-state-content {
 
       img{
-        width: 70px;
-        height: 70px;
+        width: 100px;
+        height: 100px;
       }
 
     }
