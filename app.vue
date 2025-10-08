@@ -32,7 +32,6 @@
     list-style: none;
   }
 
-
   --primary-bg: #FDFCF9;
   --secondary-bg: #F5F5F5;
   --card-bg: #F1F1F1;
