@@ -6,6 +6,7 @@ const router = useRouter();
 
 onMounted(() => {
   router.push('/member/auth/login');
+
 });
 </script>
 
