@@ -25,34 +25,10 @@ const filteredShareStatus = computed(() => {
   )
 })
 
-const SOURCE_TYPE_LABELS: Record<string, string> = {
-  deposit: 'Deposit',
-  withdrawal: 'Withdrawal',
-  share: 'Share',
-  payment: 'Payment',
-  cancellation: 'Cancellation',
-  registration_payments: 'Registration Payment',
-  Profit_payments: 'Profit Payment'
-}
-const DIRECTION_LABELS: Record<string, string> = { in: 'In', out: 'Out', reinvest: 'Reinvest' }
-const PAYMENT_METHOD_LABELS: Record<string, string> = {
-  cash: 'Cash',
-  bank_transfer: 'Bank Transfer',
-  card: 'Card',
-  ewallet: 'E-Wallet'
-}
-
 const fields = ref([
-  { label: 'Source Type', model: 'source_type', type: 'select', editable: false, options: Object.entries(SOURCE_TYPE_LABELS).map(([value, label]) => ({ value, label })) },
-  { label: 'Direction', model: 'direction', type: 'select', editable: false, options: Object.entries(DIRECTION_LABELS).map(([value, label]) => ({ value, label })) },
   { label: 'Amount (MYR)', model: 'amount', type: 'number', editable: false },
-  { label: 'Payment Method', model: 'payment_method', type: 'select', editable: false, options: Object.entries(PAYMENT_METHOD_LABELS).map(([value, label]) => ({ value, label })) },
-  { label: 'Project Name', model: 'project_name', type: 'text', editable: true },
   { label: 'Share Date', model: 'share_date', type: 'date', editable: false },
-  { label: 'Return Rate (%)', model: 'share_return_rate', type: 'number', editable: true },
-  { label: 'Expected Maturity Date', model: 'expected_share_maturity_date', type: 'date', editable: true },
   { label: 'Status', model: 'status', type: 'select', editable: true, options: filteredShareStatus.value },
-  { label: 'Duration (Days)', model: 'share_duration_days', type: 'number', editable: true }
 ])
 
 const form = ref({

@@ -119,7 +119,7 @@ const handleSignup = async () => {
           </div>
 
           <button type="submit" class="signup-btn" :disabled="loading">
-            {{ loading ? 'Logging in...' : 'Sign Up' }}
+            {{ loading ? 'Sign Up...' : 'Sign Up' }}
           </button>
         </form>
 
