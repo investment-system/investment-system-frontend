@@ -370,6 +370,7 @@ onMounted(() => {
         }
       }
 
+
       .filter-select {
         flex: 1;
         padding: 8px 36px 8px 12px;
